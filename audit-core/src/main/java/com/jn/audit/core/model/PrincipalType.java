@@ -1,4 +1,4 @@
-package com.jn.audit.core;
+package com.jn.audit.core.model;
 
 public enum PrincipalType {
     authenticated,
