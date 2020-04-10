@@ -49,6 +49,7 @@
 
     <properties>
         <langx-java.version>2.2.3</langx-java.version>
+        <disruptor.version>3.4.2</disruptor.version>
     </properties>
 
     <modules>
@@ -60,6 +61,11 @@
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java</artifactId>
                 <version>${langx-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
