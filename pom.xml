@@ -65,6 +65,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.fangjinuo.langx</groupId>
+            <artifactId>langx-java</artifactId>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
