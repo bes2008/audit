@@ -53,7 +53,9 @@
     </properties>
 
     <modules>
+        <module>audit-mq</module>
         <module>audit-core</module>
+        <module>audit-notification</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -67,6 +69,23 @@
                 <artifactId>disruptor</artifactId>
                 <version>${disruptor.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.github.fangjinuo.audit</groupId>
+                <artifactId>audit-mq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.audit</groupId>
+                <artifactId>audit-notification</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.audit</groupId>
+                <artifactId>audit-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
