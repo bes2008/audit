@@ -19,7 +19,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {"com.jn.audit.examples.springmvcdemo.common"})
-@MapperScan("com.jn.sqlhelper.examples.common.dao")
+@MapperScan("com.jn.audit.examples.springmvcdemo.common.dao")
 public class MyBatisWithSpringBootTest {
     public static void main(String[] args) {
         SpringApplication.run(MyBatisWithSpringBootTest.class, args);
