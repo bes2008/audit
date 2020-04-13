@@ -1,13 +1,15 @@
 package com.jn.audit.core.model;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 public class Operation implements Serializable {
     public static final long serialVersionUID = 1L;
 
     private String operateCode;
     private String operateName;
-    private String parameters;
+    private Map<String, List<String>> parameters;
 
     public String getOperateCode() {
         return operateCode;
@@ -25,11 +27,11 @@ public class Operation implements Serializable {
         this.operateName = operateName;
     }
 
-    public String getParameters() {
+    public Map<String, List<String>> getParameters() {
         return parameters;
     }
 
-    public void setParameters(String parameters) {
+    public void setParameters(Map<String, List<String>> parameters) {
         this.parameters = parameters;
     }
 }
