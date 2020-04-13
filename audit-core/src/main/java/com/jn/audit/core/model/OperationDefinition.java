@@ -11,11 +11,11 @@ import java.io.Serializable;
 public class OperationDefinition implements Configuration, Serializable {
     public static final long serialVersionUID = 1L;
     private String id; // {required} the id , also the method full name
-    private String code;// {required}
-    private String name;// {required}
-    private String type;// {optional}
-    private String description;// {optional}
-    private OperationImportance importance;  // {optional}
+    private String code; // {required}  the operate code
+    private String name; // {required}  the operate name
+    private String type; // {optional}  the operate type
+    private String description;// {optional} the operate description
+    private OperationImportance importance;  // {optional} the importance
 
     public String getCode() {
         return Strings.isEmpty(code) ? this.id : this.code;
