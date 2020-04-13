@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>audit</artifactId>
+        <artifactId>audit-examples</artifactId>
         <groupId>com.github.fangjinuo.audit</groupId>
         <version>0.0.1</version>
     </parent>
@@ -12,6 +12,8 @@
     <artifactId>audit-examples-springmvcdemo</artifactId>
 
     <properties>
+        <mybatis.version>3.5.3</mybatis.version>
+        <mybatis.spring.version>2.0.3</mybatis.spring.version>
         <mybatis.springboot.version>2.1.1</mybatis.springboot.version>
         <swagger.version>2.9.2</swagger.version>
         <junit.version>4.12</junit.version>
@@ -19,10 +21,16 @@
         <spring.version>5.2.1.RELEASE</spring.version>
         <sqlhelper.version>3.0.2</sqlhelper.version>
         <easyjson.version>2.2.0</easyjson.version>
+
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis-spring</artifactId>
@@ -80,6 +88,26 @@
             <dependency>
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-mybatis-over-pagehelper</artifactId>
+                <version>${sqlhelper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.sqlhelper</groupId>
+                <artifactId>sqlhelper-common</artifactId>
+                <version>${sqlhelper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.sqlhelper</groupId>
+                <artifactId>sqlhelper-springjdbc</artifactId>
+                <version>${sqlhelper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.sqlhelper</groupId>
+                <artifactId>sqlhelper-springjdbc-spring-boot-starter</artifactId>
+                <version>${sqlhelper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.sqlhelper</groupId>
+                <artifactId>sqlhelper-springjdbc-spring-boot-autoconfigure</artifactId>
                 <version>${sqlhelper.version}</version>
             </dependency>
 
@@ -167,6 +195,29 @@
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.sqlhelper</groupId>
+            <artifactId>sqlhelper-springjdbc</artifactId>
+        </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.jn.sqlhelper.examples.test.mybatis.springboot.MyBatisWithSpringBootTest</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
