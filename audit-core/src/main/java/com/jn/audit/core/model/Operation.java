@@ -5,16 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 public class Operation implements Serializable {
-    private OperationDefinition define;
+    private OperationDefinition definition;
+
     private Map<String, List<String>> parameters; // {optional}
     private OperationResult result;
 
-    public OperationDefinition getDefine() {
-        return define;
+    public OperationDefinition getDefinition() {
+        return definition;
     }
 
-    public void setDefine(OperationDefinition define) {
-        this.define = define;
+    public void setDefinition(OperationDefinition definition) {
+        this.definition = definition;
     }
 
     public Map<String, List<String>> getParameters() {
