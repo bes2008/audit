@@ -199,6 +199,10 @@
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-springjdbc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.audit</groupId>
+            <artifactId>audit-core</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
