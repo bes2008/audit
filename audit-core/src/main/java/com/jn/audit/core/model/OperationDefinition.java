@@ -1,16 +1,19 @@
 package com.jn.audit.core.model;
 
+import com.jn.langx.configuration.Configuration;
+
 import java.io.Serializable;
 
 /**
  * may be in any style: xml, yaml, database
  */
-public class OperationDefinition implements Serializable {
+public class OperationDefinition implements Configuration, Serializable {
     public static final long serialVersionUID = 1L;
 
     private String code;// {required}   // id
     private String name;// {required}
     private String type;// {optional}
+    private String methodFQN; // {optional}
     private String description;// {optional}
     private OperationImportance importance;  // {optional}
 
@@ -32,6 +35,24 @@ public class OperationDefinition implements Serializable {
 
     public OperationImportance getImportance() {
         return importance;
+    }
+
+    @Override
+    public String getId() {
+        return code;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.code = id;
+    }
+
+    public String getMethodFQN() {
+        return methodFQN;
+    }
+
+    public void setMethodFQN(String methodFQN) {
+        this.methodFQN = methodFQN;
     }
 
     public void setImportance(OperationImportance importance) {
