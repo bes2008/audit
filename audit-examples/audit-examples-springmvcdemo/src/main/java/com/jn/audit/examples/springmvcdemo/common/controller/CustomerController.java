@@ -1,5 +1,6 @@
 package com.jn.audit.examples.springmvcdemo.common.controller;
 
+import com.jn.audit.core.annotation.Audit;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.Dates;
 import com.jn.sqlhelper.dialect.pagination.PagingRequest;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
-
+@Audit(enable = false)
 @Api
 @RestController
 @RequestMapping("/customers")

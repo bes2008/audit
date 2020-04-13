@@ -38,9 +38,9 @@ public class OperationDefinitionRepository extends AbstractConfigurationReposito
         importanceMap.put(importance.getName(), importance);
     }
 
-    public void registerDefinition(OperationDefinition operationDefinition) {
+    public void add(OperationDefinition operationDefinition) {
         Preconditions.checkNotNull(operationDefinition);
-        this.add(operationDefinition);
+        super.add(operationDefinition);
         definitionMap.put(operationDefinition.getCode(), operationDefinition);
         OperationImportance importance = operationDefinition.getImportance();
         if (importance != null) {
@@ -63,7 +63,7 @@ public class OperationDefinitionRepository extends AbstractConfigurationReposito
         Collects.forEach(definitions, new Consumer<OperationDefinition>() {
             @Override
             public void accept(OperationDefinition operationDefinition) {
-                registerDefinition(operationDefinition);
+                add(operationDefinition);
             }
         });
     }
