@@ -24,7 +24,7 @@ public class AuditEvent implements Serializable {
     /**
      * do what
      */
-    private Operate operate; // {required}
+    private Operation operation; // {required}
 
     public Principal getPrincipal() {
         return principal;
@@ -58,11 +58,11 @@ public class AuditEvent implements Serializable {
         this.resource = resource;
     }
 
-    public Operate getOperate() {
-        return operate;
+    public Operation getOperation() {
+        return operation;
     }
 
-    public void setOperate(Operate operate) {
-        this.operate = operate;
+    public void setOperation(Operation operation) {
+        this.operation = operation;
     }
 }

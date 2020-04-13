@@ -11,8 +11,8 @@ public class AuditEventBuilder implements Builder<AuditEvent> {
         return this;
     }
 
-    public AuditEventBuilder operate(Operate operate) {
-        event.setOperate(operate);
+    public AuditEventBuilder operation(Operation operation) {
+        event.setOperation(operation);
         return this;
     }
 

@@ -2,7 +2,7 @@ package com.jn.audit.core.model;
 
 import java.io.Serializable;
 
-public class Operate implements Serializable {
+public class Operation implements Serializable {
     public static final long serialVersionUID = 1L;
 
     private String operateCode;
