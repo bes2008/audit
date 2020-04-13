@@ -9,7 +9,9 @@ public class AuditEvent implements Serializable {
     private Principal principal; // {required}
 
     // when
-    private long time;  // {required} UTC time
+    private long startTime;// {required} UTC time
+    private long endTime;// {required} UTC time
+    private long duration;  // endTime - startTime
 
     /**
      * service , also the main target
@@ -26,6 +28,7 @@ public class AuditEvent implements Serializable {
      */
     private Operation operation; // {required}
 
+
     public Principal getPrincipal() {
         return principal;
     }
@@ -34,13 +37,6 @@ public class AuditEvent implements Serializable {
         this.principal = principal;
     }
 
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
 
     public Service getService() {
         return service;
@@ -64,5 +60,29 @@ public class AuditEvent implements Serializable {
 
     public void setOperation(Operation operation) {
         this.operation = operation;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }

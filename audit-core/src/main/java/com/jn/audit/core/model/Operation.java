@@ -5,26 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 public class Operation implements Serializable {
-    public static final long serialVersionUID = 1L;
+    private OperationDefine define;
+    private Map<String, List<String>> parameters; // {optional}
+    private OperationResult result;
 
-    private String operateCode;
-    private String operateName;
-    private Map<String, List<String>> parameters;
-
-    public String getOperateCode() {
-        return operateCode;
+    public OperationDefine getDefine() {
+        return define;
     }
 
-    public void setOperateCode(String operateCode) {
-        this.operateCode = operateCode;
-    }
-
-    public String getOperateName() {
-        return operateName;
-    }
-
-    public void setOperateName(String operateName) {
-        this.operateName = operateName;
+    public void setDefine(OperationDefine define) {
+        this.define = define;
     }
 
     public Map<String, List<String>> getParameters() {
@@ -33,5 +23,13 @@ public class Operation implements Serializable {
 
     public void setParameters(Map<String, List<String>> parameters) {
         this.parameters = parameters;
+    }
+
+    public OperationResult getResult() {
+        return result;
+    }
+
+    public void setResult(OperationResult result) {
+        this.result = result;
     }
 }
