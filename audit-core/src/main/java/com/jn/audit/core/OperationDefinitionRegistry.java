@@ -23,16 +23,16 @@ public class OperationDefinitionRegistry {
         return instance;
     }
 
-    public void addImportance(OperationImportance importance){
+    public void registerImportance(OperationImportance importance){
         importanceMap.put(importance.getName(), importance);
     }
 
-    public void addDefinition(OperationDefinition operationDefinition) {
+    public void registerDefinition(OperationDefinition operationDefinition) {
         Preconditions.checkNotNull(operationDefinition);
         definitionMap.put(operationDefinition.getCode(), operationDefinition);
         OperationImportance importance = operationDefinition.getImportance();
         if (importance != null) {
-            addImportance(importance);
+            registerImportance(importance);
         }
     }
 
