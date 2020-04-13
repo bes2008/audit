@@ -19,7 +19,7 @@ sqlhelper:
       subquery-paging-end-flag: "[PAGING_END]"
 logging:
   level:
-    root: warn
+    root: debug
     com:
       jn:
         sqlhelper:

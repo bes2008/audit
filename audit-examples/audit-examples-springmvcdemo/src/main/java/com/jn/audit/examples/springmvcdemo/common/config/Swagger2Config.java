@@ -32,7 +32,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.jn.sqlhelper.examples.common.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.jn.audit.examples.springmvcdemo.common.controller"))
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build();
@@ -40,7 +40,7 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("SqlHelper Examples")
+                .title("Audit Examples")
                 .description("https://github.com/fangjinuo  http://www.cnblogs.com/f1194361820")
                 .termsOfServiceUrl("https://github.com/fangjinuo")
                 .contact("fs1194361820@163.com")
