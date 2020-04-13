@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>audit</artifactId>
+        <groupId>com.github.fangjinuo.audit</groupId>
+        <version>0.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>audit-examples-springmvcdemo</artifactId>
+
+    <properties>
+        <mybatis.springboot.version>2.1.1</mybatis.springboot.version>
+        <swagger.version>2.9.2</swagger.version>
+        <junit.version>4.12</junit.version>
+        <spring.boot.version>2.2.1.RELEASE</spring.boot.version>
+        <spring.version>5.2.1.RELEASE</spring.version>
+        <sqlhelper.version>3.0.2</sqlhelper.version>
+        <easyjson.version>2.2.0</easyjson.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis.spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.springboot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
+                <version>${mybatis.springboot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jdbc</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.fangjinuo.sqlhelper</groupId>
+                <artifactId>sqlhelper-mybatis-spring-boot-starter</artifactId>
+                <version>${sqlhelper.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.fangjinuo.sqlhelper</groupId>
+                <artifactId>sqlhelper-dbutils</artifactId>
+                <version>${sqlhelper.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.sqlhelper</groupId>
+                <artifactId>sqlhelper-mybatis-over-pagehelper</artifactId>
+                <version>${sqlhelper.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.github.fangjinuo.sqlhelper</groupId>
+            <artifactId>sqlhelper-springjdbc-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.sqlhelper</groupId>
+            <artifactId>sqlhelper-springjdbc-spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.fangjinuo.sqlhelper</groupId>
+            <artifactId>sqlhelper-dbutils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+
+        <!-- startup mybatis -->
+
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.sqlhelper</groupId>
+            <artifactId>sqlhelper-mybatis-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- startup mybatis-plus -->
+        <!--
+        <dependency>
+            <groupId>com.github.fangjinuo.sqlhelper</groupId>
+            <artifactId>sqlhelper-mybatisplus-spring-boot-starter</artifactId>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>com.github.fangjinuo.easyjson</groupId>
+            <artifactId>easyjson-jackson</artifactId>
+            <version>${easyjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.fangjinuo.sqlhelper</groupId>
+            <artifactId>sqlhelper-common</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
