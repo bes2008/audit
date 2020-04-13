@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * may be in any style: xml, yaml, database
  */
-public class OperationDefine implements Serializable {
+public class OperationDefinition implements Serializable {
     public static final long serialVersionUID = 1L;
 
     private String code;// {required}   // id

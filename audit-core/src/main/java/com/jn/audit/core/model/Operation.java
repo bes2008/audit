@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Operation implements Serializable {
-    private OperationDefine define;
+    private OperationDefinition define;
     private Map<String, List<String>> parameters; // {optional}
     private OperationResult result;
 
-    public OperationDefine getDefine() {
+    public OperationDefinition getDefine() {
         return define;
     }
 
-    public void setDefine(OperationDefine define) {
+    public void setDefine(OperationDefinition define) {
         this.define = define;
     }
 
