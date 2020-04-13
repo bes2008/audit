@@ -1,29 +1,28 @@
-package com.jn.audit.core;
+package com.jn.audit.core.operation;
 
 import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.model.OperationImportance;
-import com.jn.langx.annotation.Singleton;
+import com.jn.langx.configuration.AbstractConfigurationRepository;
 import com.jn.langx.util.Preconditions;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Singleton
-public class OperationDefinitionRegistry {
+public class OperationDefinitionRepository extends AbstractConfigurationRepository {
     private Map<String, OperationImportance> importanceMap = new HashMap<String, OperationImportance>();
     private Map<String, OperationDefinition> definitionMap = new HashMap<String, OperationDefinition>();
 
 
-    private static final OperationDefinitionRegistry instance = new OperationDefinitionRegistry();
+    private static final OperationDefinitionRepository instance = new OperationDefinitionRepository();
 
-    private OperationDefinitionRegistry() {
+    private OperationDefinitionRepository() {
     }
 
-    public static OperationDefinitionRegistry getInstance() {
+    public static OperationDefinitionRepository getInstance() {
         return instance;
     }
 
-    public void registerImportance(OperationImportance importance){
+    public void registerImportance(OperationImportance importance) {
         importanceMap.put(importance.getName(), importance);
     }
 
@@ -36,11 +35,11 @@ public class OperationDefinitionRegistry {
         }
     }
 
-    public OperationImportance getImportance(String key){
+    public OperationImportance getImportance(String key) {
         return importanceMap.get(key);
     }
 
-    public OperationDefinition getDefinition(String code){
+    public OperationDefinition getDefinition(String code) {
         return definitionMap.get(code);
     }
 }
