@@ -1,6 +1,7 @@
 package com.jn.audit.core.model;
 
 import com.jn.langx.configuration.Configuration;
+import com.jn.langx.util.Strings;
 
 import java.io.Serializable;
 
@@ -9,16 +10,15 @@ import java.io.Serializable;
  */
 public class OperationDefinition implements Configuration, Serializable {
     public static final long serialVersionUID = 1L;
-
-    private String code;// {required}   // id
+    private String id; // {required} the id , also the method full name
+    private String code;// {required}
     private String name;// {required}
     private String type;// {optional}
-    private String methodFQN; // {optional}
     private String description;// {optional}
     private OperationImportance importance;  // {optional}
 
     public String getCode() {
-        return code;
+        return Strings.isEmpty(code) ? this.id : this.code;
     }
 
     public void setCode(String code) {
@@ -39,21 +39,14 @@ public class OperationDefinition implements Configuration, Serializable {
 
     @Override
     public String getId() {
-        return code;
+        return id;
     }
 
     @Override
     public void setId(String id) {
-        this.code = id;
+        this.id = id;
     }
 
-    public String getMethodFQN() {
-        return methodFQN;
-    }
-
-    public void setMethodFQN(String methodFQN) {
-        this.methodFQN = methodFQN;
-    }
 
     public void setImportance(OperationImportance importance) {
         this.importance = importance;
