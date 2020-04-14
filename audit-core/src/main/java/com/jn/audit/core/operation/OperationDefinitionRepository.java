@@ -67,4 +67,8 @@ public class OperationDefinitionRepository extends AbstractConfigurationReposito
             }
         });
     }
+
+    public Map<String, OperationImportance> getImportanceMap() {
+        return new HashMap<String, OperationImportance>(importanceMap);
+    }
 }
