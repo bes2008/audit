@@ -58,7 +58,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> {
                         startAuditInternal(wrappedRequest);
                         return null;
                     }
-                },null);
+                }, null);
             }
         }));
         return wrappedRequest;
