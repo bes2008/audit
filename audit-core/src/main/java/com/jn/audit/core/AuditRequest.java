@@ -7,6 +7,24 @@ public class AuditRequest<AuditedRequest,AuditedRequestContext> {
     private AuditedRequest request;
     private AuditedRequestContext requestContext;
     private boolean auditIt = true;
+    private long startTime;
+    private long endTime;
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
 
     public AuditEvent getAuditEvent() {
         return auditEvent;
