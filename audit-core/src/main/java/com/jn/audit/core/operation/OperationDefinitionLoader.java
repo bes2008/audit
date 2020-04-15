@@ -11,4 +11,6 @@ import java.util.List;
 public interface OperationDefinitionLoader extends FullLoadConfigurationLoader<OperationDefinition> {
     @NonNull
     List<OperationDefinition> reload(@Nullable List<OperationImportance> importances);
+
+    void setDefinitionFilePath(@NonNull String definitionFilePath);
 }

@@ -71,4 +71,8 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
     public OperationDefinition load(String id) {
         return reloadAll(null).get(id);
     }
+
+    public void setDefinitionFilePath(String definitionFilePath) {
+        this.definitionFilePath = definitionFilePath;
+    }
 }

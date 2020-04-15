@@ -2,10 +2,22 @@ package com.jn.audit.core;
 
 import com.jn.audit.mq.MessageTopicConfiguration;
 
-public class AuditSettings {
+import java.io.Serializable;
+
+public class AuditSettings implements Serializable {
+    public static final long serialVersionUID = 1L;
 
     /**************************************************
-     *
+     * Auditor
+     **************************************************/
+    /**
+     * @ses {@link Auditor#setAsyncAudit(boolean)}
+     */
+    private boolean asyncMode = false;
+
+
+    /**************************************************
+     * memory message queue
      **************************************************/
     private MessageTopicConfiguration topic;
 
@@ -15,6 +27,8 @@ public class AuditSettings {
     /**
      * units: seconds
      * scan interval, if <=0, will not refresh
+     *
+     * @see {@link com.jn.audit.core.operation.OperationDefinitionRepository#setReloadIntervalInSeconds(int)}
      */
     private int operationDefinitionReloadIntervalInSeconds = -1;
     private String operationDefinitionResource;
@@ -33,5 +47,13 @@ public class AuditSettings {
 
     public void setOperationDefinitionReloadIntervalInSeconds(int operationDefinitionReloadIntervalInSeconds) {
         this.operationDefinitionReloadIntervalInSeconds = operationDefinitionReloadIntervalInSeconds;
+    }
+
+    public boolean isAsyncMode() {
+        return asyncMode;
+    }
+
+    public void setAsyncMode(boolean asyncMode) {
+        this.asyncMode = asyncMode;
     }
 }
