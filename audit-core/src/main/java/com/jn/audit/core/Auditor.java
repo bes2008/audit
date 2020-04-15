@@ -51,7 +51,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         this.filterChain = filterChain;
     }
 
-    public void setAuditEventExtractor(AuditEventExtractor auditEventExtractor) {
+    public void setAuditEventExtractor(AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor) {
         this.auditEventExtractor = auditEventExtractor;
     }
 
