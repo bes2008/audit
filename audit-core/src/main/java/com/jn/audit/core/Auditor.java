@@ -2,6 +2,9 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.mq.Producer;
+import com.jn.langx.lifecycle.Destroyable;
+import com.jn.langx.lifecycle.Initializable;
+import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.concurrent.WrappedTasks;
@@ -12,13 +15,33 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executor;
 
-public class Auditor<AuditedRequest, AuditedRequestContext> {
+public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializable, Destroyable {
     private static Logger logger = LoggerFactory.getLogger(Auditor.class);
-    public static final ThreadLocalHolder<AuditRequest> auditRequestHolder = new ThreadLocalHolder<AuditRequest>();
+    public static ThreadLocalHolder<AuditRequest> auditRequestHolder = new ThreadLocalHolder<AuditRequest>();
     private AuditRequestFilterChain<AuditedRequest> filterChain;
     private AuditEventExtractor auditEventExtractor;
     private Producer<AuditEvent> producer;
     private Executor executor;
+    private boolean asyncAudit = false;
+
+    @Override
+    public void destroy() {
+        executor = null;
+    }
+
+    @Override
+    public void init() throws InitializationException {
+
+    }
+
+    public boolean isAsyncAudit() {
+        return asyncAudit && executor != null;
+    }
+
+    public void setAsyncAudit(boolean asyncAudit) {
+        this.asyncAudit = asyncAudit;
+    }
+
 
     public void setExecutor(Executor executor) {
         this.executor = executor;
@@ -37,7 +60,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> {
     }
 
     public void doAudit(AuditedRequest request, AuditedRequestContext ctx) {
-        if (executor != null) {
+        if (isAsyncAudit()) {
             finishAsyncAudit(startAsyncAudit(request, ctx));
         } else {
             finishSyncAudit(startSyncAudit(request, ctx));
@@ -46,6 +69,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> {
 
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAsyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = new AuditRequest<AuditedRequest, AuditedRequestContext>();
+        logger.warn("start async audit {}", wrappedRequest.toString());
         wrappedRequest.setStartTime(System.currentTimeMillis());
         final ClassLoader mThreadClassLoader = Thread.currentThread().getContextClassLoader();
         executor.execute(WrappedTasks.wrap(new Runnable() {
@@ -65,6 +89,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> {
 
     public AuditRequest<AuditedRequest, AuditedRequestContext> startSyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = new AuditRequest<AuditedRequest, AuditedRequestContext>();
+        logger.warn("start sync audit {}", wrappedRequest.toString());
         wrappedRequest.setStartTime(System.currentTimeMillis());
         startAuditInternal(wrappedRequest);
         auditRequestHolder.set(wrappedRequest);
@@ -94,12 +119,14 @@ public class Auditor<AuditedRequest, AuditedRequestContext> {
         } catch (Throwable ex) {
             logger.warn(ex.getMessage(), ex);
         } finally {
+            logger.warn("finish sync audit {}", wrappedRequest.toString());
             auditRequestHolder.reset();
         }
     }
 
     public void finishAsyncAudit(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         wrappedRequest.setEndTime(System.currentTimeMillis());
+        logger.warn("finish sync audit {}", wrappedRequest.toString());
         finishAuditInternal(wrappedRequest);
     }
 

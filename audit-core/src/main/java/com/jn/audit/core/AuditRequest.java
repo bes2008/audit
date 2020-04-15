@@ -2,7 +2,7 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
 
-public class AuditRequest<AuditedRequest,AuditedRequestContext> {
+public class AuditRequest<AuditedRequest, AuditedRequestContext> {
     private AuditEvent auditEvent;
     private AuditedRequest request;
     private AuditedRequestContext requestContext;
@@ -56,5 +56,10 @@ public class AuditRequest<AuditedRequest,AuditedRequestContext> {
 
     public void setRequestContext(AuditedRequestContext requestContext) {
         this.requestContext = requestContext;
+    }
+
+    @Override
+    public String toString() {
+        return request != null ? request.toString() : (requestContext != null ? requestContext.toString() : "audit it");
     }
 }
