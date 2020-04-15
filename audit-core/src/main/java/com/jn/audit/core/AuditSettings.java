@@ -20,6 +20,9 @@ public class AuditSettings implements Serializable {
      * memory message queue
      **************************************************/
     private MessageTopicConfiguration topic;
+    private String consumerWaitStrategy = "blocking";
+
+
 
     /**************************************************
      *  Operation Repository Settings
@@ -55,5 +58,21 @@ public class AuditSettings implements Serializable {
 
     public void setAsyncMode(boolean asyncMode) {
         this.asyncMode = asyncMode;
+    }
+
+    public MessageTopicConfiguration getTopic() {
+        return topic;
+    }
+
+    public void setTopic(MessageTopicConfiguration topic) {
+        this.topic = topic;
+    }
+
+    public String getConsumerWaitStrategy() {
+        return consumerWaitStrategy;
+    }
+
+    public void setConsumerWaitStrategy(String consumerWaitStrategy) {
+        this.consumerWaitStrategy = consumerWaitStrategy;
     }
 }

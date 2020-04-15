@@ -1,15 +1,23 @@
 package com.jn.audit.mq;
 
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
+import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
 
 import java.util.concurrent.Executor;
 
 public class MessageTopicConfiguration {
-    private int ringBufferSize; // power(2)
+    @NonNull
+    private int ringBufferSize = 8096; // power(2)
+    @NonNull
     private Executor executor;
-    private ProducerType producerType;
-    private WaitStrategy waitStrategy;
+    @NonNull
+    private ProducerType producerType = ProducerType.MULTI;
+    @Nullable
+    private WaitStrategy waitStrategy = new BlockingWaitStrategy();
+    @NonNull
     private MessageTranslator messageTranslator;
 
     public int getRingBufferSize() {
