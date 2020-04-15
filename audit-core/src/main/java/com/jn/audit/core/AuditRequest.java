@@ -2,10 +2,11 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
 
-public class AuditRequest<AuditedRequest> {
+public class AuditRequest<AuditedRequest,AuditedRequestContext> {
     private AuditEvent auditEvent;
     private AuditedRequest request;
-    private boolean auditIt;
+    private AuditedRequestContext requestContext;
+    private boolean auditIt = true;
 
     public AuditEvent getAuditEvent() {
         return auditEvent;
@@ -29,5 +30,13 @@ public class AuditRequest<AuditedRequest> {
 
     public void setAuditIt(boolean auditIt) {
         this.auditIt = auditIt;
+    }
+
+    public AuditedRequestContext getRequestContext() {
+        return requestContext;
+    }
+
+    public void setRequestContext(AuditedRequestContext requestContext) {
+        this.requestContext = requestContext;
     }
 }
