@@ -18,7 +18,6 @@ public class Auditor<AuditedRequest, AuditedRequestContext> {
     private AuditRequestFilterChain<AuditedRequest> filterChain;
     private AuditEventExtractor auditEventExtractor;
     private Producer<AuditEvent> producer;
-    private OperationExtractor<AuditedRequest, AuditedRequestContext> operationExtractor;
     private Executor executor;
 
     public void setExecutor(Executor executor) {
@@ -74,8 +73,6 @@ public class Auditor<AuditedRequest, AuditedRequestContext> {
 
 
     private AuditRequest<AuditedRequest, AuditedRequestContext> startAuditInternal(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
-
-        String operationName = operationExtractor.extractOperationName(wrappedRequest);
         boolean auditIt = true;
         // may be too long time
         if (Emptys.isNotEmpty(filterChain)) {
