@@ -18,8 +18,8 @@ import java.util.concurrent.Executor;
 public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializable, Destroyable {
     private static Logger logger = LoggerFactory.getLogger(Auditor.class);
     public static ThreadLocalHolder<AuditRequest> auditRequestHolder = new ThreadLocalHolder<AuditRequest>();
-    private AuditRequestFilterChain<AuditedRequest> filterChain;
-    private AuditEventExtractor auditEventExtractor;
+    private AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> filterChain;
+    private AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor;
     private Producer<AuditEvent> producer;
     private Executor executor;
     private boolean asyncAudit = false;
@@ -47,7 +47,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         this.executor = executor;
     }
 
-    public void setFilterChain(AuditRequestFilterChain<AuditedRequest> filterChain) {
+    public void setFilterChain(AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> filterChain) {
         this.filterChain = filterChain;
     }
 

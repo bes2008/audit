@@ -5,21 +5,21 @@ import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
 
-public class AuditRequestFilterChain<AuditedRequest> implements AuditRequestFilter<AuditedRequest> {
+public class AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> implements AuditRequestFilter<AuditedRequest, AuditedRequestContext> {
 
-    private List<AuditRequestFilter<AuditedRequest>> filters = Collects.newArrayList();
+    private List<AuditRequestFilter<AuditedRequest, AuditedRequestContext>> filters = Collects.newArrayList();
 
     @Override
-    public boolean accept(final AuditRequest<AuditedRequest> auditRequest) {
-        return Collects.allMatch(filters, new Predicate<AuditRequestFilter<AuditedRequest>>() {
+    public boolean accept(final AuditRequest<AuditedRequest, AuditedRequestContext> auditRequest) {
+        return Collects.allMatch(filters, new Predicate<AuditRequestFilter<AuditedRequest, AuditedRequestContext>>() {
             @Override
-            public boolean test(AuditRequestFilter<AuditedRequest> filter) {
+            public boolean test(AuditRequestFilter<AuditedRequest, AuditedRequestContext> filter) {
                 return filter.accept(auditRequest);
             }
         });
     }
 
-    public void addFilter(AuditRequestFilter<AuditedRequest> filter) {
+    public void addFilter(AuditRequestFilter<AuditedRequest, AuditedRequestContext> filter) {
         filters.add(filter);
     }
 }
