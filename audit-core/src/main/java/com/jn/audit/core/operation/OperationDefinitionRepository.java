@@ -4,7 +4,6 @@ import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.model.OperationImportance;
 import com.jn.langx.configuration.AbstractConfigurationRepository;
 import com.jn.langx.configuration.ConfigurationWriter;
-import com.jn.langx.configuration.FullLoadConfigurationLoader;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -13,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OperationDefinitionRepository extends AbstractConfigurationRepository<OperationDefinition, FullLoadConfigurationLoader<OperationDefinition>, ConfigurationWriter<OperationDefinition>> {
+public class OperationDefinitionRepository extends AbstractConfigurationRepository<OperationDefinition, OperationDefinitionLoader, ConfigurationWriter<OperationDefinition>> {
     /**
      * key: OperationImportance#getKey()
      */
@@ -59,7 +58,8 @@ public class OperationDefinitionRepository extends AbstractConfigurationReposito
     @Override
     public void reload() {
         super.reload();
-        List<OperationDefinition> definitions = loader.loadAll();
+        List<OperationImportance> importances = Collects.newArrayList();
+        List<OperationDefinition> definitions = loader.reload(importances);
         Collects.forEach(definitions, new Consumer<OperationDefinition>() {
             @Override
             public void accept(OperationDefinition operationDefinition) {

@@ -11,11 +11,15 @@
 
     <artifactId>audit-core</artifactId>
     <dependencies>
-
-
         <dependency>
             <groupId>com.github.fangjinuo.audit</groupId>
             <artifactId>audit-mq</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.25</version>
         </dependency>
     </dependencies>
 
