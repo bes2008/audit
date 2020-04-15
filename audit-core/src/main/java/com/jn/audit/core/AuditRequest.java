@@ -2,9 +2,10 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
 
-public class AuditRequestWrapper<AuditedRequest> {
+public class AuditRequest<AuditedRequest> {
     private AuditEvent auditEvent;
     private AuditedRequest request;
+    private boolean auditIt;
 
     public AuditEvent getAuditEvent() {
         return auditEvent;
@@ -20,5 +21,13 @@ public class AuditRequestWrapper<AuditedRequest> {
 
     public void setRequest(AuditedRequest request) {
         this.request = request;
+    }
+
+    public boolean isAuditIt() {
+        return auditIt;
+    }
+
+    public void setAuditIt(boolean auditIt) {
+        this.auditIt = auditIt;
     }
 }
