@@ -8,8 +8,9 @@ public class Principal implements Serializable {
     private String principalId;// {required} the user id
     private String principalName;// {required} the user name
     private PrincipalType principalType;// {required} the user type
-    private String clientIp;    // {required} ip
-    private int clientPort;     // {required} port
+    private String clientIp;    // {optional} ip
+    private String clientHost; // {optional} ip
+    private int clientPort;     // {optional} port
 
     public String getPrincipalId() {
         return principalId;
@@ -49,5 +50,13 @@ public class Principal implements Serializable {
 
     public void setClientPort(int clientPort) {
         this.clientPort = clientPort;
+    }
+
+    public String getClientHost() {
+        return clientHost;
+    }
+
+    public void setClientHost(String clientHost) {
+        this.clientHost = clientHost;
     }
 }

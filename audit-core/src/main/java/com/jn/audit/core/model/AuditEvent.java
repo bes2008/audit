@@ -20,6 +20,7 @@ public class AuditEvent implements Serializable {
 
     /**
      * target, also the subject target
+     * maybe extract from Operation parameters
      */
     private Resource resource; // {optional}
 

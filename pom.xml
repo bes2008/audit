@@ -58,6 +58,7 @@
         <module>audit-notification</module>
         <module>audit-spring</module>
         <module>audit-examples</module>
+        <module>audit-servlet</module>
     </modules>
     <dependencyManagement>
         <dependencies>

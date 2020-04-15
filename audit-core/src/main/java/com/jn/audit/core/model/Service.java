@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class Service implements Serializable {
     public static final long serialVersionUID = 1L;
 
-    private String serviceId;
-    private String serviceName; // {required}
-    private String serviceProtocol; // HTTP, HTTPS, TCP
+    private String serviceId;   // {optional}, if not specified, equal
+    private String serviceName; // {required} the service application
+    private String serviceProtocol; // HTTP, HTTPS, TCP etc ...
     private String serviceIp;
     private int servicePort;
 
