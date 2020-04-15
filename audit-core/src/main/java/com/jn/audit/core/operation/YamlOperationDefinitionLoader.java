@@ -7,6 +7,7 @@ import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.io.IOs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -46,8 +47,9 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
 
         Resource operationDefinitionResource = Resources.loadFileResource(definitionFilePath, YamlOperationDefinitionLoader.class.getClassLoader());
 
+        InputStream inputStream = null;
         try {
-            InputStream inputStream = operationDefinitionResource.getInputStream();
+            inputStream = operationDefinitionResource.getInputStream();
             Yaml yaml = new Yaml();
             Iterable<Object> iterable = yaml.loadAll(inputStream);
             Iterator iterator = iterable.iterator();
@@ -59,6 +61,8 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
             }
         } catch (Throwable ex) {
             logger.warn(ex.getMessage(), ex);
+        } finally {
+            IOs.close(inputStream);
         }
         return definitionMap;
     }

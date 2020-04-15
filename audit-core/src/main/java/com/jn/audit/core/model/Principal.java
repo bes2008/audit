@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class Principal implements Serializable {
     public static final long serialVersionUID = 1L;
 
-    private String principalId;
-    private String principalName;
-    private PrincipalType principalType;
+    private String principalId;// {required} the user id
+    private String principalName;// {required} the user name
+    private PrincipalType principalType;// {required} the user type
     private String clientIp;    // {required} ip
     private int clientPort;     // {required} port
 
