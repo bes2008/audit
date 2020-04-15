@@ -30,7 +30,10 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
     @NonNull
     @Override
     public List<OperationDefinition> reload(List<OperationImportance> importances) {
+        return Collects.newArrayList(reloadAll(importances).values());
+    }
 
+    private Map<String, OperationDefinition> reloadAll(List<OperationImportance> importances) {
         final Map<String, OperationImportance> importanceMap = new HashMap<String, OperationImportance>();
         Collects.forEach(importances, new Consumer<OperationImportance>() {
             @Override
@@ -38,7 +41,8 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 importanceMap.put(importance.getName(), importance);
             }
         });
-        List<OperationDefinition> definitions = Collects.newArrayList();
+
+        Map<String, OperationDefinition> definitionMap = Collects.<String, OperationDefinition>emptyHashMap();
 
         Resource operationDefinitionResource = Resources.loadFileResource(definitionFilePath, YamlOperationDefinitionLoader.class.getClassLoader());
 
@@ -56,11 +60,11 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
         } catch (Throwable ex) {
             logger.warn(ex.getMessage(), ex);
         }
-        return definitions;
+        return definitionMap;
     }
 
     @Override
     public OperationDefinition load(String id) {
-        return null;
+        return reloadAll(null).get(id);
     }
 }
