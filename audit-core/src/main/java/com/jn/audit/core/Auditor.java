@@ -2,8 +2,10 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.mq.Producer;
+import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.concurrent.WrappedTasks;
+import com.jn.langx.util.function.Function;
 import com.jn.langx.util.struct.ThreadLocalHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,10 +48,17 @@ public class Auditor<AuditedRequest, AuditedRequestContext> {
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAsyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = new AuditRequest<AuditedRequest, AuditedRequestContext>();
         wrappedRequest.setStartTime(System.currentTimeMillis());
+        final ClassLoader mThreadClassLoader = Thread.currentThread().getContextClassLoader();
         executor.execute(WrappedTasks.wrap(new Runnable() {
             @Override
             public void run() {
-                startAuditInternal(wrappedRequest);
+                ClassLoaders.doAction(mThreadClassLoader, new Function<Object, Object>() {
+                    @Override
+                    public Object apply(Object input) {
+                        startAuditInternal(wrappedRequest);
+                        return null;
+                    }
+                },null);
             }
         }));
         return wrappedRequest;
