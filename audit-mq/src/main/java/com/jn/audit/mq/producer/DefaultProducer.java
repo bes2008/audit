@@ -1,5 +1,7 @@
-package com.jn.audit.mq;
+package com.jn.audit.mq.producer;
 
+import com.jn.audit.mq.MessageTopicDispatcher;
+import com.jn.audit.mq.Producer;
 import com.jn.langx.util.Objects;
 import com.jn.langx.util.Strings;
 
