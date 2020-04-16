@@ -3,6 +3,9 @@ package com.jn.audit.core;
 import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.mq.*;
 import com.jn.audit.mq.allocator.RoundRobinTopicAllocator;
+import com.jn.audit.mq.event.TopicEvent;
+import com.jn.langx.event.EventPublisher;
+import com.jn.langx.event.local.SimpleEventPublisher;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
@@ -20,10 +23,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class SimpleAuditorFactory implements AuditorFactory<AuditSettings> {
+public class SimpleAuditorFactory<Settings extends AuditSettings> implements AuditorFactory<Settings> {
     private static final Logger logger = LoggerFactory.getLogger(SimpleAuditorFactory.class);
 
-    protected WaitStrategy findDefaultWaitStrategy(String name) {
+    protected WaitStrategy findDefaultWaitStrategy(Settings settings) {
+        String name = settings.getConsumerWaitStrategy();
         BuiltinWaitStrategyFactory factory = new BuiltinWaitStrategyFactory();
         if (Strings.isEmpty(name)) {
             name = "blocking";
@@ -40,7 +44,8 @@ public class SimpleAuditorFactory implements AuditorFactory<AuditSettings> {
         return factory.get("blocking");
     }
 
-    protected MessageTranslator findMessageTranslator(String className) {
+    protected MessageTranslator findMessageTranslator(Settings settings) {
+        String className = settings.getMessageTranslator();
         if (Strings.isEmpty(className)) {
             className = Reflects.getFQNClassName(DefaultMessageTranslator.class);
         }
@@ -54,7 +59,8 @@ public class SimpleAuditorFactory implements AuditorFactory<AuditSettings> {
     }
 
 
-    protected TopicAllocator findTopicAllocator(String className) {
+    protected TopicAllocator findTopicAllocator(Settings settings) {
+        String className = settings.getTopicAllocator();
         if (Strings.isEmpty(className)) {
             className = Reflects.getFQNClassName(RoundRobinTopicAllocator.class);
         }
@@ -67,7 +73,7 @@ public class SimpleAuditorFactory implements AuditorFactory<AuditSettings> {
         }
     }
 
-    protected Executor getDefaultExecutor(AuditSettings settings) {
+    protected Executor getDefaultExecutor(Settings settings) {
         if (settings.getExecutor() != null) {
             return settings.getExecutor();
         }
@@ -82,20 +88,31 @@ public class SimpleAuditorFactory implements AuditorFactory<AuditSettings> {
         return null;
     }
 
+    protected EventPublisher findEventPublisher(Settings settings) {
+        return new SimpleEventPublisher();
+    }
+
+    protected void initFilterChain(AuditRequestFilterChain chain, Settings settings) {
+
+    }
+
     @Override
-    public Auditor get(AuditSettings settings) {
+    public Auditor get(Settings settings) {
         Auditor auditor = new Auditor();
         auditor.setAsyncAudit(settings.isAsyncMode());
+
+        // event publisher
+        EventPublisher eventPublisher = findEventPublisher(settings);
 
         // executor
         final Executor defaultExecutor = getDefaultExecutor(settings);
         // dispatcher
         final MessageTopicDispatcher dispatcher = new MessageTopicDispatcher();
         // message translator
-        final MessageTranslator translator = findMessageTranslator(settings.getMessageTranslator());
+        final MessageTranslator translator = findMessageTranslator(settings);
 
         // topics
-        final WaitStrategy defaultWaitStrategy = findDefaultWaitStrategy(settings.getConsumerWaitStrategy());
+        final WaitStrategy defaultWaitStrategy = findDefaultWaitStrategy(settings);
         List<MessageTopicConfiguration> topicConfigs = settings.getTopics();
         Collects.forEach(topicConfigs, new Consumer<MessageTopicConfiguration>() {
             @Override
@@ -120,18 +137,23 @@ public class SimpleAuditorFactory implements AuditorFactory<AuditSettings> {
         });
 
         // topic allocator
-        TopicAllocator topicAllocator = findTopicAllocator(settings.getTopicAllocator());
-
+        TopicAllocator topicAllocator = findTopicAllocator(settings);
+        eventPublisher.addEventListener(TopicEvent.DOMAIN, topicAllocator);
 
         // producer
         SimpleProducer<AuditEvent> simpleProducer = new SimpleProducer<AuditEvent>();
         simpleProducer.setMessageTopicDispatcher(dispatcher);
         simpleProducer.setTopicAllocator(topicAllocator);
 
-        // filter chain
+        // executor
         if (auditor.getExecutor() == null) {
             auditor.setExecutor(defaultExecutor);
         }
+
+        // filter chain
+        AuditRequestFilterChain filterChain = new AuditRequestFilterChain();
+        initFilterChain(filterChain, settings);
+        auditor.setFilterChain(filterChain);
 
         return auditor;
     }
