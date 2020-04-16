@@ -4,7 +4,7 @@ import com.jn.langx.util.Objects;
 import com.jn.langx.util.Strings;
 
 /**
- * Just send message the 'DEFAULT' topic if the topicName is not specified
+ * Just send message to the 'DEFAULT' topic if the topicName is not specified
  *
  * @param <M>
  */
