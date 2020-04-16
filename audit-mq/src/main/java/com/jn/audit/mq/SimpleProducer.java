@@ -17,7 +17,10 @@ public class SimpleProducer<M> implements Producer<M> {
     private TopicAllocator<M> topicAllocator;
     private MessageTopicDispatcher dispatcher;
 
-    @Override
+    public TopicAllocator<M> getTopicAllocator() {
+        return topicAllocator;
+    }
+
     public void setTopicAllocator(TopicAllocator<M> topicAllocator) {
         this.topicAllocator = topicAllocator;
     }
