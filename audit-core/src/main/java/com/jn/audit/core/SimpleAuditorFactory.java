@@ -2,12 +2,14 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.mq.*;
+import com.jn.audit.mq.allocator.AbstractMultipleCandidateTopicAllocator;
 import com.jn.audit.mq.allocator.DefaultTopicAllocator;
 import com.jn.audit.mq.event.TopicEvent;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.event.local.SimpleEventPublisher;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.ClassLoaders;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
@@ -29,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class SimpleAuditorFactory<Settings extends AuditSettings> implements AuditorFactory<Settings> {
     private static final Logger logger = LoggerFactory.getLogger(SimpleAuditorFactory.class);
 
-    protected WaitStrategy findDefaultWaitStrategy(Settings settings) {
+    protected WaitStrategy getDefaultWaitStrategy(Settings settings) {
         String name = settings.getConsumerWaitStrategy();
         BuiltinWaitStrategyFactory factory = new BuiltinWaitStrategyFactory();
         if (Strings.isEmpty(name)) {
@@ -70,12 +72,19 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         try {
             Class clazz = ClassLoaders.loadClass(className, SimpleAuditorFactory.class.getClassLoader());
             TopicAllocator ac = Reflects.<TopicAllocator>newInstance(clazz);
-            return Preconditions.checkNotNull(ac, new Supplier<Object[], String>() {
+            ac = Preconditions.checkNotNull(ac, new Supplier<Object[], String>() {
                 @Override
                 public String get(Object[] args) {
                     return StringTemplates.formatWithPlaceholder("Can't create an instance for calss: {}", args[0]);
                 }
             }, className);
+            if (ac instanceof AbstractMultipleCandidateTopicAllocator) {
+                List<String> topics = settings.getTopics();
+                if (Emptys.isNotEmpty(topics)) {
+                    ((AbstractMultipleCandidateTopicAllocator) ac).setCandidateTopics(topics);
+                }
+            }
+            return ac;
         } catch (Throwable ex) {
             logger.warn("error when load a class or create instance: {}", className);
             return Reflects.newInstance(DefaultTopicAllocator.class);
@@ -132,7 +141,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         final MessageTranslator translator = getMessageTranslator(settings);
 
         // topics
-        final WaitStrategy defaultWaitStrategy = findDefaultWaitStrategy(settings);
+        final WaitStrategy defaultWaitStrategy = getDefaultWaitStrategy(settings);
         List<MessageTopicConfiguration> topicConfigs = settings.getTopicsConfigs();
         Collects.forEach(topicConfigs, new Consumer<MessageTopicConfiguration>() {
             @Override

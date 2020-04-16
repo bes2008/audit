@@ -35,6 +35,21 @@ public class AuditSettings implements Serializable {
      * @see com.jn.audit.mq.BuiltinWaitStrategyFactory
      */
     private String consumerWaitStrategy = "blocking";
+
+    /**
+     * the candidate topics
+     * 
+     * @see {@link com.jn.audit.mq.allocator.AbstractMultipleCandidateTopicAllocator#setCandidateTopics(List)}
+     */
+    private List<String> topics;
+
+    public List<String> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<String> topics) {
+        this.topics = topics;
+    }
     /**
      * the class name of your custom message translator.
      */

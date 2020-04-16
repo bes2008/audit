@@ -8,10 +8,6 @@ public class RoundRobinTopicAllocator<M> extends AbstractMultipleCandidateTopicA
 
     private volatile int nextIndex = 0;
 
-    public RoundRobinTopicAllocator(List<String> topics) {
-        super(topics);
-    }
-
     @Override
     public String apply(M input) {
         int i = nextIndex;

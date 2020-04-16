@@ -15,7 +15,7 @@ public abstract class AbstractMultipleCandidateTopicAllocator<M> implements Topi
     private final Set<String> watchedTopics = Collects.newHashSet();
     protected final Set<String> validTopics = new CopyOnWriteArraySet<String>();
 
-    public AbstractMultipleCandidateTopicAllocator(List<String> candidateTopics) {
+    public void setCandidateTopics(List<String> candidateTopics) {
         this.watchedTopics.addAll(candidateTopics);
     }
 

@@ -7,10 +7,9 @@ import java.util.List;
 
 public class HashedTopicAllocator<M> extends AbstractMultipleCandidateTopicAllocator<M> {
 
-    private final Function<M, Integer> hasher;
+    private Function<M, Integer> hasher;
 
-    public HashedTopicAllocator(List<String> topics, Function<M, Integer> hasher) {
-        super(topics);
+    public void setHasher(Function<M, Integer> hasher) {
         this.hasher = hasher;
     }
 
