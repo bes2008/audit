@@ -1,5 +1,8 @@
 package com.jn.audit.mq;
 
-public interface Producer<M> {
-    void publish(String topicName, M message);
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
+
+public interface Producer<M> extends TopicAllocator<M> {
+    void publish(@Nullable String topicName, @NonNull M message);
 }

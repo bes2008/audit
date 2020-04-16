@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopic.class);
-    private String name;
+    private String name = "DEFAULT";
     private Disruptor<Holder<M>> disruptor;
     private MessageTopicConfiguration configuration;
     private volatile boolean running = false;

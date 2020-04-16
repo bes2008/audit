@@ -10,6 +10,9 @@ import java.util.concurrent.Executor;
 
 public class MessageTopicConfiguration {
     @NonNull
+    private String name = "DEFAULT";
+
+    @NonNull
     private int ringBufferSize = 8096; // power(2)
     @NonNull
     private Executor executor;
@@ -58,5 +61,13 @@ public class MessageTopicConfiguration {
 
     public void setMessageTranslator(MessageTranslator messageTranslator) {
         this.messageTranslator = messageTranslator;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

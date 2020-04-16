@@ -6,10 +6,11 @@ import com.jn.langx.util.collection.Collects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 @Singleton
-public class MessageTopicDispatcher {
+public class MessageTopicDispatcher{
     private static final Logger logger = LoggerFactory.getLogger(MessageTopicDispatcher.class);
     private static final MessageTopicDispatcher dispatcher = new MessageTopicDispatcher();
     private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
@@ -19,6 +20,10 @@ public class MessageTopicDispatcher {
 
     public static MessageTopicDispatcher getInstance() {
         return dispatcher;
+    }
+
+    public List<String> getTopicNames(){
+        return Collects.newArrayList(topicMap.keySet());
     }
 
     public void registerTopic(MessageTopic messageTopic) {

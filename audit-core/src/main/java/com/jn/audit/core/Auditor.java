@@ -133,6 +133,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     private void finishAuditInternal(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         if (wrappedRequest != null) {
             String topic = null;
+
             producer.publish(topic, wrappedRequest.getAuditEvent());
         }
     }
