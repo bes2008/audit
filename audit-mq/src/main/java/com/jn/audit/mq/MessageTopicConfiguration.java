@@ -1,5 +1,6 @@
 package com.jn.audit.mq;
 
+import com.jn.audit.mq.producer.DefaultTopicAllocator;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.lmax.disruptor.BlockingWaitStrategy;
@@ -10,7 +11,7 @@ import java.util.concurrent.Executor;
 
 public class MessageTopicConfiguration {
     @NonNull
-    private String name = "DEFAULT";
+    private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
 
     @NonNull
     private int ringBufferSize = 8096; // power(2)

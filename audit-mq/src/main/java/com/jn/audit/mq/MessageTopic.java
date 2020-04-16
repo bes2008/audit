@@ -1,5 +1,6 @@
 package com.jn.audit.mq;
 
+import com.jn.audit.mq.producer.DefaultTopicAllocator;
 import com.jn.langx.lifecycle.Destroyable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopic.class);
-    private String name = "DEFAULT";
+    private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
     private Disruptor<Holder<M>> disruptor;
     private MessageTopicConfiguration configuration;
     private volatile boolean running = false;
