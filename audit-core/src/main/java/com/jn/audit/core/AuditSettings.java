@@ -3,6 +3,7 @@ package com.jn.audit.core;
 import com.jn.audit.mq.MessageTopicConfiguration;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class AuditSettings implements Serializable {
     public static final long serialVersionUID = 1L;
@@ -19,7 +20,7 @@ public class AuditSettings implements Serializable {
     /**************************************************
      * memory message queue
      **************************************************/
-    private MessageTopicConfiguration topic;
+    private List<MessageTopicConfiguration> topics;
     private String consumerWaitStrategy = "blocking";
 
 
@@ -60,12 +61,12 @@ public class AuditSettings implements Serializable {
         this.asyncMode = asyncMode;
     }
 
-    public MessageTopicConfiguration getTopic() {
-        return topic;
+    public List<MessageTopicConfiguration> getTopics() {
+        return topics;
     }
 
-    public void setTopic(MessageTopicConfiguration topic) {
-        this.topic = topic;
+    public void setTopics(List<MessageTopicConfiguration> topics) {
+        this.topics = topics;
     }
 
     public String getConsumerWaitStrategy() {
