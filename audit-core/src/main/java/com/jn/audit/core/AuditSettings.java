@@ -26,11 +26,11 @@ public class AuditSettings implements Serializable {
     /**************************************************
      * memory message queue
      **************************************************/
-    private List<MessageTopicConfiguration> topics;
+    private List<MessageTopicConfiguration> topicsConfigs;
     /**
      * specified default consumer wait strategy.
      * <p>
-     * if a wait strategy in {@link #topics} is not specified, will using it
+     * if a wait strategy in {@link #topicsConfigs} is not specified, will using it
      *
      * @see com.jn.audit.mq.BuiltinWaitStrategyFactory
      */
@@ -79,12 +79,12 @@ public class AuditSettings implements Serializable {
         this.asyncMode = asyncMode;
     }
 
-    public List<MessageTopicConfiguration> getTopics() {
-        return topics;
+    public List<MessageTopicConfiguration> getTopicsConfigs() {
+        return topicsConfigs;
     }
 
-    public void setTopics(List<MessageTopicConfiguration> topics) {
-        this.topics = topics;
+    public void setTopicsConfigs(List<MessageTopicConfiguration> topicsConfigs) {
+        this.topicsConfigs = topicsConfigs;
     }
 
     public String getConsumerWaitStrategy() {

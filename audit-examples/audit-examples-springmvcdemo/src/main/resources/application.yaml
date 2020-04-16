@@ -30,7 +30,8 @@ logging:
 
 audit:
   async-mode: true
-  topics:
+  topics: [DEFAULT, LOGIN_LOGOUT]
+  topicConfigs:
     - name: DEFAULT
       ring-buffer-size: 1024
       producer-type: MULTI
