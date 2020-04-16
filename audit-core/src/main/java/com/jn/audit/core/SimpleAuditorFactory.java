@@ -2,16 +2,19 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.mq.*;
-import com.jn.audit.mq.allocator.RoundRobinTopicAllocator;
+import com.jn.audit.mq.allocator.DefaultTopicAllocator;
 import com.jn.audit.mq.event.TopicEvent;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.event.local.SimpleEventPublisher;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.ClassLoaders;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.reflect.Reflects;
 import com.lmax.disruptor.WaitStrategy;
 import org.slf4j.Logger;
@@ -44,7 +47,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         return factory.get("blocking");
     }
 
-    protected MessageTranslator findMessageTranslator(Settings settings) {
+    protected MessageTranslator getMessageTranslator(Settings settings) {
         String className = settings.getMessageTranslator();
         if (Strings.isEmpty(className)) {
             className = Reflects.getFQNClassName(DefaultMessageTranslator.class);
@@ -59,17 +62,23 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
     }
 
 
-    protected TopicAllocator findTopicAllocator(Settings settings) {
+    protected TopicAllocator getTopicAllocator(Settings settings) {
         String className = settings.getTopicAllocator();
         if (Strings.isEmpty(className)) {
-            className = Reflects.getFQNClassName(RoundRobinTopicAllocator.class);
+            className = Reflects.getFQNClassName(DefaultTopicAllocator.class);
         }
         try {
             Class clazz = ClassLoaders.loadClass(className, SimpleAuditorFactory.class.getClassLoader());
-            return Reflects.<TopicAllocator>newInstance(clazz);
+            TopicAllocator ac = Reflects.<TopicAllocator>newInstance(clazz);
+            return Preconditions.checkNotNull(ac, new Supplier<Object[], String>() {
+                @Override
+                public String get(Object[] args) {
+                    return StringTemplates.formatWithPlaceholder("Can't create an instance for calss: {}", args[0]);
+                }
+            }, className);
         } catch (Throwable ex) {
             logger.warn("error when load a class or create instance: {}", className);
-            return Reflects.newInstance(RoundRobinTopicAllocator.class);
+            return Reflects.newInstance(DefaultTopicAllocator.class);
         }
     }
 
@@ -88,7 +97,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         return null;
     }
 
-    protected EventPublisher findEventPublisher(Settings settings) {
+    protected EventPublisher getEventPublisher(Settings settings) {
         return new SimpleEventPublisher();
     }
 
@@ -96,22 +105,31 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
 
     }
 
+    protected MessageTopicDispatcher getMessageTopicDispatcher(Settings settings) {
+        return new MessageTopicDispatcher();
+    }
+
+    protected Producer<AuditEvent> getProducer(Settings settings) {
+        return new SimpleProducer<AuditEvent>();
+    }
+
+
     @Override
     public Auditor get(Settings settings) {
         Auditor auditor = new Auditor();
         auditor.setAsyncAudit(settings.isAsyncMode());
 
         // event publisher
-        EventPublisher eventPublisher = findEventPublisher(settings);
+        EventPublisher eventPublisher = getEventPublisher(settings);
 
         // executor
         final Executor defaultExecutor = getDefaultExecutor(settings);
         // dispatcher
-        final MessageTopicDispatcher dispatcher = new MessageTopicDispatcher();
+        final MessageTopicDispatcher dispatcher = getMessageTopicDispatcher(settings);
         dispatcher.setTopicEventPublisher(eventPublisher);
 
         // message translator
-        final MessageTranslator translator = findMessageTranslator(settings);
+        final MessageTranslator translator = getMessageTranslator(settings);
 
         // topics
         final WaitStrategy defaultWaitStrategy = findDefaultWaitStrategy(settings);
@@ -142,14 +160,14 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
 
 
         // topic allocator
-        TopicAllocator topicAllocator = findTopicAllocator(settings);
+        TopicAllocator topicAllocator = getTopicAllocator(settings);
         eventPublisher.addEventListener(TopicEvent.DOMAIN, topicAllocator);
 
         // producer
-        SimpleProducer<AuditEvent> simpleProducer = new SimpleProducer<AuditEvent>();
-        simpleProducer.setMessageTopicDispatcher(dispatcher);
-        simpleProducer.setTopicAllocator(topicAllocator);
-        auditor.setProducer(simpleProducer);
+        Producer<AuditEvent> producer = getProducer(settings);
+        producer.setMessageTopicDispatcher(dispatcher);
+        producer.setTopicAllocator(topicAllocator);
+        auditor.setProducer(producer);
 
         // executor
         if (auditor.getExecutor() == null) {

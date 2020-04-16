@@ -2,7 +2,7 @@ package com.jn.audit.core;
 
 import com.jn.audit.mq.DefaultMessageTranslator;
 import com.jn.audit.mq.MessageTopicConfiguration;
-import com.jn.audit.mq.allocator.RoundRobinTopicAllocator;
+import com.jn.audit.mq.allocator.DefaultTopicAllocator;
 import com.jn.langx.util.reflect.Reflects;
 
 import java.io.Serializable;
@@ -40,7 +40,7 @@ public class AuditSettings implements Serializable {
      */
     private String messageTranslator = Reflects.getFQNClassName(DefaultMessageTranslator.class);
 
-    private String topicAllocator=Reflects.getFQNClassName(RoundRobinTopicAllocator.class);
+    private String topicAllocator = Reflects.getFQNClassName(DefaultTopicAllocator.class);
 
 
     /**************************************************

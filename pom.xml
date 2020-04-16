@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.2.5</langx-java.version>
+        <langx-java.version>2.2.7</langx-java.version>
         <disruptor.version>3.4.2</disruptor.version>
     </properties>
 

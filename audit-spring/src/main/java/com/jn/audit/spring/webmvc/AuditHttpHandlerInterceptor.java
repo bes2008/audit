@@ -22,14 +22,14 @@ public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
-            auditor.doAudit(request, method);
+            auditor.startAudit(request, method);
         }
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+        auditor.finishAudit(Auditor.auditRequestHolder.get());
     }
 
     @Override

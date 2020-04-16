@@ -11,7 +11,6 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
         Operation operation = new Operation();
         Principal principal = new Principal();
         AuditEvent event = new AuditEventBuilder().principal(principal).service(service).resource(resource).operation(operation).build();
-
         extractPrincipal(wrappedRequest, event, principal);
         extractOperation(wrappedRequest, event, operation);
         extractService(wrappedRequest, event, service);
