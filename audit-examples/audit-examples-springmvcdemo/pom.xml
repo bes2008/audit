@@ -114,7 +114,10 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-
+        <dependency>
+            <groupId>com.github.fangjinuo.audit</groupId>
+            <artifactId>audit-servlet</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.audit</groupId>
             <artifactId>audit-spring</artifactId>

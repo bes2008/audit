@@ -2,6 +2,7 @@ package com.jn.audit.examples.springmvcdemo.common.config;
 
 import com.jn.audit.core.Auditor;
 import com.jn.audit.core.SimpleAuditorFactory;
+import com.jn.audit.examples.springmvcdemo.common.audit.DemoAuditExtractor;
 import com.jn.audit.mq.MessageTopicDispatcher;
 import com.jn.audit.mq.consumer.DebugConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,14 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties({AuditProperties.class})
 public class AuditConfig {
     @Bean
-    public Auditor auditor(@Autowired AuditProperties auditSettings) {
-        return new SimpleAuditorFactory<AuditProperties>().get(auditSettings);
+    public Auditor auditor(@Autowired AuditProperties auditSettings, @Autowired DemoAuditExtractor auditExtractor) {
+        Auditor auditor = new SimpleAuditorFactory<AuditProperties>().get(auditSettings);
+        auditor.setAuditEventExtractor(auditExtractor);
+        return auditor;
     }
 
     @Bean
-    public MessageTopicDispatcher messageTopicDispatcher(Auditor auditor) {
+    public MessageTopicDispatcher messageTopicDispatcher(@Autowired Auditor auditor) {
         return auditor.getProducer().getMessageTopicDispatcher();
     }
 

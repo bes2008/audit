@@ -87,7 +87,11 @@
                 <artifactId>audit-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.github.fangjinuo.audit</groupId>
+                <artifactId>audit-servlet</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
