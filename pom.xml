@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.2.4</langx-java.version>
+        <langx-java.version>2.2.5</langx-java.version>
         <disruptor.version>3.4.2</disruptor.version>
     </properties>
 
@@ -79,7 +79,7 @@
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.audit</groupId>
-                <artifactId>audit-notification</artifactId>
+                <artifactId>audit-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
