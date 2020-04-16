@@ -12,12 +12,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-@Singleton
 public class MessageTopicDispatcher {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopicDispatcher.class);
-    private static final MessageTopicDispatcher dispatcher = new MessageTopicDispatcher();
     private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
-    private EventPublisher<TopicEvent> topicEventPublisher = new SimpleEventPublisher();
+    private EventPublisher<TopicEvent> topicEventPublisher;
 
     private MessageTopicDispatcher() {
     }
@@ -26,8 +24,8 @@ public class MessageTopicDispatcher {
         return topicEventPublisher;
     }
 
-    public static MessageTopicDispatcher getInstance() {
-        return dispatcher;
+    public void setTopicEventPublisher(EventPublisher<TopicEvent> topicEventPublisher) {
+        this.topicEventPublisher = topicEventPublisher;
     }
 
     public List<String> getTopicNames() {
@@ -45,7 +43,7 @@ public class MessageTopicDispatcher {
     public void publish(String topicName, Object message) {
         MessageTopic topic = topicMap.get(topicName);
         if (Objects.isNull(topic)) {
-            logger.warn("Can't find a topic : {}", topicName);
+            logger.warn("Can't find the specified topic : {}", topicName);
         } else {
             topic.publish(message);
         }
