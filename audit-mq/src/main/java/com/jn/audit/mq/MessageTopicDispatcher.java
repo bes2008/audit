@@ -1,6 +1,9 @@
 package com.jn.audit.mq;
 
+import com.jn.audit.mq.event.TopicEvent;
 import com.jn.langx.annotation.Singleton;
+import com.jn.langx.event.EventPublisher;
+import com.jn.langx.event.local.SimpleEventPublisher;
 import com.jn.langx.util.Objects;
 import com.jn.langx.util.collection.Collects;
 import org.slf4j.Logger;
@@ -10,19 +13,24 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
-public class MessageTopicDispatcher{
+public class MessageTopicDispatcher {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopicDispatcher.class);
     private static final MessageTopicDispatcher dispatcher = new MessageTopicDispatcher();
     private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
+    private EventPublisher<TopicEvent> topicEventPublisher = new SimpleEventPublisher();
 
     private MessageTopicDispatcher() {
+    }
+
+    public EventPublisher<TopicEvent> getTopicEventPublisher() {
+        return topicEventPublisher;
     }
 
     public static MessageTopicDispatcher getInstance() {
         return dispatcher;
     }
 
-    public List<String> getTopicNames(){
+    public List<String> getTopicNames() {
         return Collects.newArrayList(topicMap.keySet());
     }
 

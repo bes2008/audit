@@ -1,6 +1,6 @@
 package com.jn.audit.mq;
 
-import com.jn.audit.mq.producer.DefaultTopicAllocator;
+import com.jn.audit.mq.allocator.DefaultTopicAllocator;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.lmax.disruptor.BlockingWaitStrategy;

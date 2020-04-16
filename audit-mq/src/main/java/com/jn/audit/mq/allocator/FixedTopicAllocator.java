@@ -1,4 +1,4 @@
-package com.jn.audit.mq.producer;
+package com.jn.audit.mq.allocator;
 
 import com.jn.audit.mq.TopicAllocator;
 import com.jn.langx.annotation.NonNull;

@@ -1,6 +1,6 @@
 package com.jn.audit.mq;
 
-import com.jn.audit.mq.producer.DefaultTopicAllocator;
+import com.jn.audit.mq.allocator.DefaultTopicAllocator;
 import com.jn.langx.lifecycle.Destroyable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
