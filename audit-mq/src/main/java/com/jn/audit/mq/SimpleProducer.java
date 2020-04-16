@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public class SimpleProducer<M> implements Producer<M> {
     private static final Logger logger = LoggerFactory.getLogger(SimpleProducer.class);
     private TopicAllocator<M> topicAllocator;
+    private MessageTopicDispatcher dispatcher;
 
     @Override
     public void setTopicAllocator(TopicAllocator<M> topicAllocator) {
@@ -29,13 +30,17 @@ public class SimpleProducer<M> implements Producer<M> {
     @Override
     public void publish(@Nullable String topicName, @NonNull M message) {
         Preconditions.checkNotNull(message);
-        MessageTopicDispatcher dispatcher = MessageTopicDispatcher.getInstance();
         topicName = getTopic(topicName, message);
         if (Strings.isEmpty(topicName)) {
             logger.warn("not found an invalid topic for the message: {}", message);
             return;
         }
         dispatcher.publish(topicName, message);
+    }
+
+    @Override
+    public void setMessageTopicDispatcher(MessageTopicDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
 
     private String getTopic(String topicName, M message) {

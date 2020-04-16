@@ -9,4 +9,6 @@ public interface Producer<M> {
     void publish(@Nullable String topicName, @NonNull M message);
 
     void setTopicAllocator(TopicAllocator<M> allocator);
+
+    void setMessageTopicDispatcher(MessageTopicDispatcher dispatcher);
 }

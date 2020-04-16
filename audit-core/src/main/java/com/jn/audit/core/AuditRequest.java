@@ -9,6 +9,15 @@ public class AuditRequest<AuditedRequest, AuditedRequestContext> {
     private boolean auditIt = true;
     private long startTime;
     private long endTime;
+    private String topic;
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 
     public long getEndTime() {
         return endTime;
