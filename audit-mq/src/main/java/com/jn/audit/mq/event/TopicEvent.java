@@ -4,14 +4,15 @@ import com.jn.audit.mq.MessageTopic;
 import com.jn.langx.event.DomainEvent;
 
 public class TopicEvent extends DomainEvent<MessageTopic> {
+    public static final String DOMAIN = "TOPIC";
     private TopicEventType type;
 
-    public TopicEvent(String eventDomain, MessageTopic source) {
-        super(eventDomain, source);
+    public TopicEvent(MessageTopic source) {
+        super(DOMAIN, source);
     }
 
-    public TopicEvent(String eventDomain, MessageTopic source, TopicEventType type) {
-        super(eventDomain, source);
+    public TopicEvent(MessageTopic source, TopicEventType type) {
+        super(DOMAIN, source);
         setType(type);
     }
 

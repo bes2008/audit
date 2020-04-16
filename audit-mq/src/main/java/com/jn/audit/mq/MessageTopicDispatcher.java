@@ -1,10 +1,11 @@
 package com.jn.audit.mq;
 
 import com.jn.audit.mq.event.TopicEvent;
-import com.jn.langx.annotation.Singleton;
+import com.jn.audit.mq.event.TopicEventType;
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.event.EventPublisher;
-import com.jn.langx.event.local.SimpleEventPublisher;
 import com.jn.langx.util.Objects;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +33,18 @@ public class MessageTopicDispatcher {
         return Collects.newArrayList(topicMap.keySet());
     }
 
-    public void registerTopic(MessageTopic messageTopic) {
+    public void registerTopic(@NonNull MessageTopic messageTopic) {
+        Preconditions.checkNotNull(messageTopic);
         topicMap.put(messageTopic.getName(), messageTopic);
+        topicEventPublisher.publish(new TopicEvent(messageTopic, TopicEventType.ADD));
     }
 
     public void unregisterTopic(String name) {
-        topicMap.remove(name);
+        Preconditions.checkNotNull(name);
+        MessageTopic topic = topicMap.remove(name);
+        if (topic != null) {
+            topicEventPublisher.publish(new TopicEvent(topic, TopicEventType.REMOVE));
+        }
     }
 
     public void publish(String topicName, Object message) {
