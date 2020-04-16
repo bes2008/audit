@@ -3,7 +3,6 @@ package com.jn.audit.mq;
 import com.jn.audit.mq.allocator.DefaultTopicAllocator;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
 
@@ -20,9 +19,9 @@ public class MessageTopicConfiguration {
     @NonNull
     private ProducerType producerType = ProducerType.MULTI;
     @Nullable
-    private WaitStrategy waitStrategy = new BlockingWaitStrategy();
+    private WaitStrategy waitStrategy;
     @NonNull
-    private MessageTranslator messageTranslator;
+    private MessageTranslator messageTranslator = new DefaultMessageTranslator();
 
     public int getRingBufferSize() {
         return ringBufferSize;

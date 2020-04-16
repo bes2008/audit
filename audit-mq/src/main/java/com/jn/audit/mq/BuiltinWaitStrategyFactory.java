@@ -9,4 +9,8 @@ public class BuiltinWaitStrategyFactory implements Factory<String, WaitStrategy>
     public WaitStrategy get(String name) {
         return MQs.builtinWaitStrategyMap.get(name);
     }
+
+    public boolean isBuiltin(String name) {
+        return get(name) != null;
+    }
 }

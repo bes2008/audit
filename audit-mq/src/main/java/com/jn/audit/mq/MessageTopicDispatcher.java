@@ -18,7 +18,7 @@ public class MessageTopicDispatcher {
     private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
     private EventPublisher<TopicEvent> topicEventPublisher;
 
-    private MessageTopicDispatcher() {
+    public MessageTopicDispatcher() {
     }
 
     public EventPublisher<TopicEvent> getTopicEventPublisher() {

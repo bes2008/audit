@@ -2,6 +2,8 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.mq.Producer;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.Destroyable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
@@ -18,11 +20,15 @@ import java.util.concurrent.Executor;
 public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializable, Destroyable {
     private static Logger logger = LoggerFactory.getLogger(Auditor.class);
     public static ThreadLocalHolder<AuditRequest> auditRequestHolder = new ThreadLocalHolder<AuditRequest>();
+    @NonNull
     private AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> filterChain;
+    @NonNull
     private AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor;
+    @NonNull
     private Producer<AuditEvent> producer;
+    @Nullable
     private Executor executor;
-    private boolean asyncAudit = false;
+    private boolean asyncAudit = true;
 
     @Override
     public void destroy() {
@@ -47,8 +53,16 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         this.executor = executor;
     }
 
+    public Executor getExecutor() {
+        return executor;
+    }
+
     public void setFilterChain(AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> filterChain) {
         this.filterChain = filterChain;
+    }
+
+    public AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> getFilterChain() {
+        return filterChain;
     }
 
     public void setAuditEventExtractor(AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor) {

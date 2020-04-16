@@ -1,9 +1,13 @@
 package com.jn.audit.core;
 
+import com.jn.audit.mq.DefaultMessageTranslator;
 import com.jn.audit.mq.MessageTopicConfiguration;
+import com.jn.audit.mq.allocator.RoundRobinTopicAllocator;
+import com.jn.langx.util.reflect.Reflects;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class AuditSettings implements Serializable {
     public static final long serialVersionUID = 1L;
@@ -14,15 +18,29 @@ public class AuditSettings implements Serializable {
     /**
      * @ses {@link Auditor#setAsyncAudit(boolean)}
      */
-    private boolean asyncMode = false;
+    private boolean asyncMode = true;
+
+    private Executor executor;
 
 
     /**************************************************
      * memory message queue
      **************************************************/
     private List<MessageTopicConfiguration> topics;
+    /**
+     * specified default consumer wait strategy.
+     * <p>
+     * if a wait strategy in {@link #topics} is not specified, will using it
+     *
+     * @see com.jn.audit.mq.BuiltinWaitStrategyFactory
+     */
     private String consumerWaitStrategy = "blocking";
+    /**
+     * the class name of your custom message translator.
+     */
+    private String messageTranslator = Reflects.getFQNClassName(DefaultMessageTranslator.class);
 
+    private String topicAllocator=Reflects.getFQNClassName(RoundRobinTopicAllocator.class);
 
 
     /**************************************************
@@ -75,5 +93,29 @@ public class AuditSettings implements Serializable {
 
     public void setConsumerWaitStrategy(String consumerWaitStrategy) {
         this.consumerWaitStrategy = consumerWaitStrategy;
+    }
+
+    public String getMessageTranslator() {
+        return messageTranslator;
+    }
+
+    public void setMessageTranslator(String messageTranslator) {
+        this.messageTranslator = messageTranslator;
+    }
+
+    public String getTopicAllocator() {
+        return topicAllocator;
+    }
+
+    public void setTopicAllocator(String topicAllocator) {
+        this.topicAllocator = topicAllocator;
+    }
+
+    public Executor getExecutor() {
+        return executor;
+    }
+
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
     }
 }
