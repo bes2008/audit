@@ -26,3 +26,15 @@ logging:
           examples:
             common:
               dao: trace
+
+
+audit:
+  async-mode: true
+  topics:
+    - name: DEFAULT
+      ring-buffer-size: 1024
+      producer-type: MULTI
+    - name: LOGIN_LOGOUT
+      ring-buffer-size: 512
+      producer-type: SINGLE
+  operation-definition-resource: classpath:audit.yml

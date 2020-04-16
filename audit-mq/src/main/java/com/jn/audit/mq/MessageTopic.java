@@ -26,6 +26,7 @@ public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
     private volatile boolean running = false;
     private final MessageHolderFactory<M> messageHolderFactory = new MessageHolderFactory<M>();
     private final ConcurrentHashMap<String, Consumer<M>> consumerMap = new ConcurrentHashMap<String, Consumer<M>>();
+    private boolean inited = false;
 
     public String getName() {
         return this.name;
@@ -60,6 +61,9 @@ public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
 
     @Override
     public void startup() {
+        if (!inited) {
+            init();
+        }
         running = true;
         disruptor.start();
     }

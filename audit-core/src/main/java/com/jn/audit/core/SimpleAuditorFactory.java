@@ -108,6 +108,8 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         final Executor defaultExecutor = getDefaultExecutor(settings);
         // dispatcher
         final MessageTopicDispatcher dispatcher = new MessageTopicDispatcher();
+        dispatcher.setTopicEventPublisher(eventPublisher);
+
         // message translator
         final MessageTranslator translator = findMessageTranslator(settings);
 
@@ -132,9 +134,12 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
                     topicConfig.setMessageTranslator(translator);
                 }
                 topic.setConfiguration(topicConfig);
+                topic.init();
                 dispatcher.registerTopic(topic);
+
             }
         });
+
 
         // topic allocator
         TopicAllocator topicAllocator = findTopicAllocator(settings);
@@ -144,6 +149,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         SimpleProducer<AuditEvent> simpleProducer = new SimpleProducer<AuditEvent>();
         simpleProducer.setMessageTopicDispatcher(dispatcher);
         simpleProducer.setTopicAllocator(topicAllocator);
+        auditor.setProducer(simpleProducer);
 
         // executor
         if (auditor.getExecutor() == null) {

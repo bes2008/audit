@@ -4,16 +4,18 @@ import com.jn.audit.mq.event.TopicEvent;
 import com.jn.audit.mq.event.TopicEventType;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.event.EventPublisher;
+import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.Objects;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
-public class MessageTopicDispatcher {
+public class MessageTopicDispatcher implements Lifecycle {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopicDispatcher.class);
     private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
     private EventPublisher<TopicEvent> topicEventPublisher;
@@ -47,7 +49,16 @@ public class MessageTopicDispatcher {
         }
     }
 
-    public void publish(String topicName, Object message) {
+    public void publish(String topicName, final Object message) {
+        if ("*".equals(topicName)) {
+            Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+                @Override
+                public void accept(String key, MessageTopic topic) {
+                    topic.publish(message);
+                }
+            });
+        }
+
         MessageTopic topic = topicMap.get(topicName);
         if (Objects.isNull(topic)) {
             logger.warn("Can't find the specified topic : {}", topicName);
@@ -56,13 +67,46 @@ public class MessageTopicDispatcher {
         }
     }
 
-    public <M> void subscribe(String topicName, Consumer<M> consumer, String... dependencies) {
-        MessageTopic topic = topicMap.get(topicName);
-        if (Objects.isNull(topic)) {
-            logger.warn("Can't find a topic : {}", topicName);
+    public <M> void subscribe(String topicName, final Consumer<M> consumer, final String... dependencies) {
+        if ("*".equals(topicName)) {
+            Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+                @Override
+                public void accept(String key, MessageTopic topic) {
+                    topic.subscribe(consumer, dependencies);
+                }
+            });
         } else {
-            topic.subscribe(consumer, dependencies);
+            MessageTopic topic = topicMap.get(topicName);
+            if (Objects.isNull(topic)) {
+                logger.warn("Can't find a topic : {}", topicName);
+            } else {
+                topic.subscribe(consumer, dependencies);
+            }
         }
     }
 
+
+    @Override
+    public void startup() {
+        Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+            @Override
+            public void accept(String key, MessageTopic value) {
+                value.startup();
+            }
+        });
+    }
+
+    @Override
+    public void shutdown() {
+        Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+            @Override
+            public void accept(String key, MessageTopic value) {
+                try {
+                    value.shutdown();
+                } catch (Throwable ex) {
+                    logger.error("error:{}, stack:{}", ex.getMessage(), ex);
+                }
+            }
+        });
+    }
 }

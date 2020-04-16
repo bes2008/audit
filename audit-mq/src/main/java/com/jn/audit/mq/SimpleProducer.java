@@ -38,15 +38,22 @@ public class SimpleProducer<M> implements Producer<M> {
         dispatcher.publish(topicName, message);
     }
 
-    @Override
-    public void setMessageTopicDispatcher(MessageTopicDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
-
     private String getTopic(String topicName, M message) {
         if (Strings.isEmpty(topicName)) {
             return topicAllocator.apply(message);
         }
         return topicName;
     }
+
+    @Override
+    public void setMessageTopicDispatcher(MessageTopicDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+    }
+
+    @Override
+    public MessageTopicDispatcher getMessageTopicDispatcher() {
+        return dispatcher;
+    }
+
+
 }

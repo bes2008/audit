@@ -1,6 +1,8 @@
 package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
+import com.jn.audit.mq.MessageTopicDispatcher;
+import com.jn.audit.mq.MessageTopicDispatcherAware;
 import com.jn.audit.mq.Producer;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -17,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executor;
 
-public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializable, Destroyable {
+public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializable, Destroyable, MessageTopicDispatcherAware {
     private static Logger logger = LoggerFactory.getLogger(Auditor.class);
     public static ThreadLocalHolder<AuditRequest> auditRequestHolder = new ThreadLocalHolder<AuditRequest>();
     @NonNull
@@ -71,6 +73,11 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     public void setProducer(Producer<AuditEvent> producer) {
         this.producer = producer;
+    }
+
+
+    public Producer<AuditEvent> getProducer() {
+        return producer;
     }
 
     public void doAudit(AuditedRequest request, AuditedRequestContext ctx) {
@@ -156,5 +163,13 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         }
     }
 
+    @Override
+    public MessageTopicDispatcher getMessageTopicDispatcher() {
+        return producer.getMessageTopicDispatcher();
+    }
 
+    @Override
+    public void setMessageTopicDispatcher(MessageTopicDispatcher dispatcher) {
+        producer.setMessageTopicDispatcher(dispatcher);
+    }
 }
