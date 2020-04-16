@@ -132,9 +132,14 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     private void finishAuditInternal(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         if (wrappedRequest != null) {
-            String topic = null;
-
-            producer.publish(topic, wrappedRequest.getAuditEvent());
+            AuditEvent event = wrappedRequest.getAuditEvent();
+            if (wrappedRequest.isAuditIt() && event != null) {
+                event.setStartTime(wrappedRequest.getStartTime());
+                event.setEndTime(wrappedRequest.getEndTime());
+                event.setDuration(wrappedRequest.getEndTime() - wrappedRequest.getStartTime());
+                String topic = producer.apply(event);
+                producer.publish(topic, event);
+            }
         }
     }
 
