@@ -15,6 +15,7 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.reflect.Reflects;
@@ -122,10 +123,23 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         return new SimpleProducer<AuditEvent>();
     }
 
+    protected Function2 getAuditRequestFactory() {
+        return new Function2() {
+            @Override
+            public Object apply(Object request, Object ctx) {
+                AuditRequest wrappedRequest = new AuditRequest();
+                wrappedRequest.setRequest(request);
+                wrappedRequest.setRequestContext(ctx);
+                return wrappedRequest;
+            }
+        };
+    }
+
 
     @Override
     public Auditor get(Settings settings) {
         Auditor auditor = new Auditor();
+        auditor.setAuditRequestFactory(getAuditRequestFactory());
         auditor.setAsyncAudit(settings.isAsyncMode());
 
         // event publisher
