@@ -96,7 +96,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         if (settings.getExecutor() != null) {
             return settings.getExecutor();
         }
-        if (settings.isAsyncMode() || Collects.anyMatch(settings.getTopicsConfigs(), new Predicate<MessageTopicConfiguration>() {
+        if (settings.isAsyncMode() || Collects.anyMatch(settings.getTopicConfigs(), new Predicate<MessageTopicConfiguration>() {
             @Override
             public boolean test(MessageTopicConfiguration configuration) {
                 return configuration.getExecutor() == null;
@@ -156,7 +156,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
 
         // topics
         final WaitStrategy defaultWaitStrategy = getDefaultWaitStrategy(settings);
-        List<MessageTopicConfiguration> topicConfigs = settings.getTopicsConfigs();
+        List<MessageTopicConfiguration> topicConfigs = settings.getTopicConfigs();
         Collects.forEach(topicConfigs, new Consumer<MessageTopicConfiguration>() {
             @Override
             public void accept(MessageTopicConfiguration topicConfig) {
