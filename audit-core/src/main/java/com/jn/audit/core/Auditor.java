@@ -14,6 +14,7 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.concurrent.WrappedTasks;
 import com.jn.langx.util.concurrent.completion.CompletableFuture;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.struct.ThreadLocalHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     @Nullable
     private Executor executor;
     private boolean asyncAudit = true;
+    private Function2<AuditedRequest, AuditedRequestContext, AuditRequest<AuditedRequest, AuditedRequestContext>> auditRequestFactory;
 
     @Override
     public void destroy() {
@@ -105,9 +107,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     }
 
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAsyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
-        final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = new AuditRequest<AuditedRequest, AuditedRequestContext>();
-        wrappedRequest.setRequest(request);
-        wrappedRequest.setRequestContext(ctx);
+        final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = createAuditRequest(request, ctx);
         auditRequestHolder.set(wrappedRequest);
         logger.warn("start async audit {}", wrappedRequest.toString());
         wrappedRequest.setStartTime(System.currentTimeMillis());
@@ -128,9 +128,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     }
 
     public AuditRequest<AuditedRequest, AuditedRequestContext> startSyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
-        final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = new AuditRequest<AuditedRequest, AuditedRequestContext>();
-        wrappedRequest.setRequest(request);
-        wrappedRequest.setRequestContext(ctx);
+        final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = createAuditRequest(request, ctx);
         logger.warn("start sync audit {}", wrappedRequest.toString());
         wrappedRequest.setStartTime(System.currentTimeMillis());
         startAuditInternal(wrappedRequest);
@@ -211,5 +209,26 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     @Override
     public void setMessageTopicDispatcher(MessageTopicDispatcher dispatcher) {
         producer.setMessageTopicDispatcher(dispatcher);
+    }
+
+    private AuditRequest<AuditedRequest, AuditedRequestContext> createAuditRequest(AuditedRequest auditedRequest, AuditedRequestContext ctx) {
+        AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = null;
+        if (auditRequestFactory != null) {
+            wrappedRequest = auditRequestFactory.apply(auditedRequest, ctx);
+        }
+        if (wrappedRequest == null) {
+            wrappedRequest = new AuditRequest<AuditedRequest, AuditedRequestContext>();
+            wrappedRequest.setRequest(auditedRequest);
+            wrappedRequest.setRequestContext(ctx);
+        }
+        return wrappedRequest;
+    }
+
+    public Function2<AuditedRequest, AuditedRequestContext, AuditRequest<AuditedRequest, AuditedRequestContext>> getAuditRequestFactory() {
+        return auditRequestFactory;
+    }
+
+    public void setAuditRequestFactory(Function2<AuditedRequest, AuditedRequestContext, AuditRequest<AuditedRequest, AuditedRequestContext>> auditRequestFactory) {
+        this.auditRequestFactory = auditRequestFactory;
     }
 }

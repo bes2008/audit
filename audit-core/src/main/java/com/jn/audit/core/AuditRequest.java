@@ -69,6 +69,6 @@ public class AuditRequest<AuditedRequest, AuditedRequestContext> {
 
     @Override
     public String toString() {
-        return request != null ? request.toString() : (requestContext != null ? requestContext.toString() : "audit it");
+        return requestContext != null ? requestContext.toString() : (request != null ? request.toString() : "audit it");
     }
 }
