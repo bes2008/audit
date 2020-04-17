@@ -27,7 +27,8 @@ public class DefaultMessageTranslator<M> implements MessageTranslator<M> {
     }
 
     @Override
-    public void translateTo(Holder<M> event, long sequence) {
+    public void translateTo(MessageHolder<M> event, long sequence) {
+        event.setTopicName(getTopicName());
         event.set(message);
     }
 }

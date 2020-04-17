@@ -7,10 +7,10 @@ import com.lmax.disruptor.EventTranslator;
  * 多个topic不能共用同一个translator
  * @param <M>
  */
-public interface MessageTranslator<M> extends EventTranslator<Holder<M>> ,TopicNameAware {
+public interface MessageTranslator<M> extends EventTranslator<MessageHolder<M>> ,TopicNameAware {
     void setMessage(M message);
     M getMessage();
 
     @Override
-    void translateTo(Holder<M> event, long sequence);
+    void translateTo(MessageHolder<M> event, long sequence);
 }
