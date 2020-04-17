@@ -1,6 +1,7 @@
 package com.jn.audit.mq.consumer;
 
 import com.jn.audit.mq.Consumer;
+import com.jn.audit.mq.MessageHolder;
 import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ public class DebugConsumer<M> implements Consumer<M> {
     }
 
     @Override
-    public void onEvent(Holder<M> event, long sequence, boolean endOfBatch) throws Exception {
+    public void onEvent(MessageHolder<M> event, long sequence, boolean endOfBatch) throws Exception {
         logger.info("handling sequence:{}, endOfBatch:{}, message:{}", sequence, endOfBatch, event.get());
     }
 

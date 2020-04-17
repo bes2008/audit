@@ -3,6 +3,7 @@ package com.jn.audit.mq;
 import com.jn.audit.mq.allocator.DefaultTopicAllocator;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.reflect.Reflects;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
 
@@ -20,6 +21,8 @@ public class MessageTopicConfiguration {
     private ProducerType producerType = ProducerType.MULTI;
     @Nullable
     private WaitStrategy waitStrategy;
+
+    private String messageTranslatorClass= Reflects.getFQNClassName(DefaultMessageTranslator.class);
     @NonNull
     private MessageTranslator messageTranslator = new DefaultMessageTranslator();
 
@@ -53,6 +56,14 @@ public class MessageTopicConfiguration {
 
     public void setWaitStrategy(WaitStrategy waitStrategy) {
         this.waitStrategy = waitStrategy;
+    }
+
+    public String getMessageTranslatorClass() {
+        return messageTranslatorClass;
+    }
+
+    public void setMessageTranslatorClass(String messageTranslatorClass) {
+        this.messageTranslatorClass = messageTranslatorClass;
     }
 
     public MessageTranslator getMessageTranslator() {

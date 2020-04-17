@@ -110,14 +110,6 @@ public class AuditSettings implements Serializable {
         this.consumerWaitStrategy = consumerWaitStrategy;
     }
 
-    public String getMessageTranslator() {
-        return messageTranslator;
-    }
-
-    public void setMessageTranslator(String messageTranslator) {
-        this.messageTranslator = messageTranslator;
-    }
-
     public String getTopicAllocator() {
         return topicAllocator;
     }

@@ -50,8 +50,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         return factory.get("blocking");
     }
 
-    protected MessageTranslator getMessageTranslator(Settings settings) {
-        String className = settings.getMessageTranslator();
+    protected MessageTranslator newMessageTranslator(String className) {
         if (Strings.isEmpty(className)) {
             className = Reflects.getFQNClassName(DefaultMessageTranslator.class);
         }
@@ -151,9 +150,6 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         final MessageTopicDispatcher dispatcher = getMessageTopicDispatcher(settings);
         dispatcher.setTopicEventPublisher(eventPublisher);
 
-        // message translator
-        final MessageTranslator translator = getMessageTranslator(settings);
-
         // topics
         final WaitStrategy defaultWaitStrategy = getDefaultWaitStrategy(settings);
         List<MessageTopicConfiguration> topicConfigs = settings.getTopicConfigs();
@@ -171,9 +167,16 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
                 if (topicConfig.getWaitStrategy() == null) {
                     topicConfig.setWaitStrategy(defaultWaitStrategy);
                 }
-                if (topicConfig.getMessageTranslator() == null) {
-                    topicConfig.setMessageTranslator(translator);
+                MessageTranslator translator = topicConfig.getMessageTranslator();
+                if (translator == null) {
+                    if (Strings.isNotEmpty(topicConfig.getMessageTranslatorClass())) {
+                        translator = newMessageTranslator(topicConfig.getMessageTranslatorClass());
+                    }
+                    if (translator == null) {
+                        translator = new DefaultMessageTranslator();
+                    }
                 }
+                topicConfig.setMessageTranslator(translator);
                 topic.setConfiguration(topicConfig);
                 topic.init();
                 dispatcher.registerTopic(topic);

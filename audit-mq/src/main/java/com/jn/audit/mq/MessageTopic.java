@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopic.class);
     private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
-    private Disruptor<Holder<M>> disruptor;
+    private Disruptor<MessageHolder<M>> disruptor;
     private MessageTopicConfiguration configuration;
     private volatile boolean running = false;
     private final MessageHolderFactory<M> messageHolderFactory = new MessageHolderFactory<M>();
@@ -89,20 +89,23 @@ public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
     @Override
     public void init() throws InitializationException {
         if (configuration.getWaitStrategy() != null) {
-            disruptor = new Disruptor<Holder<M>>(messageHolderFactory,
+            disruptor = new Disruptor<MessageHolder<M>>(messageHolderFactory,
                     configuration.getRingBufferSize(),
                     configuration.getExecutor(),
                     configuration.getProducerType(),
                     configuration.getWaitStrategy());
         } else {
-            disruptor = new Disruptor<Holder<M>>(messageHolderFactory,
+            disruptor = new Disruptor<MessageHolder<M>>(messageHolderFactory,
                     configuration.getRingBufferSize(),
                     configuration.getExecutor());
         }
+        inited = true;
     }
 
     public void publish(M message) {
-        configuration.getMessageTranslator().setMessage(message);
-        disruptor.publishEvent(configuration.getMessageTranslator());
+        MessageTranslator translator = configuration.getMessageTranslator();
+        translator.setMessage(message);
+        translator.setTopicName(getName());
+        disruptor.publishEvent(translator);
     }
 }
