@@ -11,6 +11,12 @@
 
     <artifactId>audit-core</artifactId>
     <dependencies>
+
+        <dependency>
+            <groupId>com.github.fangjinuo.easyjson</groupId>
+            <artifactId>easyjson-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.github.fangjinuo.audit</groupId>
             <artifactId>audit-mq</artifactId>

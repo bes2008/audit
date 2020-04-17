@@ -1,5 +1,7 @@
 package com.jn.audit.core.model;
 
+import com.jn.easyjson.core.JSONBuilderProvider;
+
 import java.io.Serializable;
 
 public class AuditEvent implements Serializable {
@@ -85,5 +87,14 @@ public class AuditEvent implements Serializable {
 
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public String toString() {
+        return JSONBuilderProvider.create()
+                .prettyFormat(true)
+                .serializeNulls(true)
+                .build()
+                .toJson(this);
     }
 }

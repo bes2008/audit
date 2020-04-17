@@ -134,6 +134,9 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         };
     }
 
+    public List<MessageTopicConfiguration> getTopicConfigurations(Settings settings) {
+        return settings.getTopicConfigs();
+    }
 
     @Override
     public Auditor get(Settings settings) {
@@ -152,7 +155,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
 
         // topics
         final WaitStrategy defaultWaitStrategy = getDefaultWaitStrategy(settings);
-        List<MessageTopicConfiguration> topicConfigs = settings.getTopicConfigs();
+        List<MessageTopicConfiguration> topicConfigs = getTopicConfigurations(settings);
         Collects.forEach(topicConfigs, new Consumer<MessageTopicConfiguration>() {
             @Override
             public void accept(MessageTopicConfiguration topicConfig) {

@@ -26,8 +26,15 @@ import java.lang.reflect.Method;
 @Configuration
 @EnableConfigurationProperties({AuditProperties.class})
 public class AuditConfig {
+    @Autowired
+    private MessageTopicDispatcher dispatcher;
+
     @Bean
-    public Auditor auditor(@Autowired AuditProperties auditSettings, @Autowired DemoAuditExtractor auditExtractor) {
+    @Autowired
+    public Auditor auditor(AuditProperties auditSettings,
+                           DemoAuditExtractor auditExtractor,
+                           MessageTopicDispatcher dispatcher,
+                           DebugConsumer debugConsumer) {
         Auditor auditor = new SimpleAuditorFactory<AuditProperties>(){
             @Override
             protected Function2 getAuditRequestFactory() {
@@ -38,21 +45,25 @@ public class AuditConfig {
                     }
                 };
             }
+
+            @Override
+            protected MessageTopicDispatcher getMessageTopicDispatcher(AuditProperties settings) {
+                return dispatcher;
+            }
+
+
         }.get(auditSettings);
         auditor.setAuditEventExtractor(auditExtractor);
+
+        dispatcher.subscribe("*", debugConsumer);
+
+        dispatcher.startup();
         return auditor;
     }
 
     @Bean
-    public MessageTopicDispatcher messageTopicDispatcher(@Autowired Auditor auditor) {
-        return auditor.getProducer().getMessageTopicDispatcher();
-    }
-
-    @Autowired
-    private void initTopic(MessageTopicDispatcher dispatcher, DebugConsumer debugConsumer) {
-        dispatcher.subscribe("*", debugConsumer);
-
-        dispatcher.startup();
+    public MessageTopicDispatcher messageTopicDispatcher() {
+        return new MessageTopicDispatcher();
     }
 
     @Bean
