@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OperationParserRegistry {
+public class OperationDefinitionParserRegistry {
     private Map<Class<? extends Annotation>, OperationMethodAnnotationParser<?>> annotationParserMap = new LinkedHashMap<Class<? extends Annotation>, OperationMethodAnnotationParser<?>>();
     private Map<String, OperationRepositoryParser> repositoryParserMap = new LinkedHashMap<String, OperationRepositoryParser>();
 

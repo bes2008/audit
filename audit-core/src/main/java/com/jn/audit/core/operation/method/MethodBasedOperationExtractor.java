@@ -5,7 +5,7 @@ import com.jn.audit.core.OperationExtractor;
 import com.jn.audit.core.model.Operation;
 import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.operation.OperationIdGenerator;
-import com.jn.audit.core.operation.OperationParserRegistry;
+import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.langx.cache.Cache;
 import com.jn.langx.cache.CacheBuilder;
 import com.jn.langx.util.collection.Collects;
@@ -33,7 +33,7 @@ public class MethodBasedOperationExtractor<AuditedRequest> implements OperationE
             .softKey(true)
             .build();
 
-    private OperationParserRegistry operationParserRegistry;
+    private OperationDefinitionParserRegistry operationParserRegistry;
 
     private OperationIdGenerator<AuditedRequest, Method> operationIdGenerator;
 
@@ -74,11 +74,11 @@ public class MethodBasedOperationExtractor<AuditedRequest> implements OperationE
         this.methodOperationDefinitionCache = methodOperationDefinitionCache;
     }
 
-    public OperationParserRegistry getOperationParserRegistry() {
+    public OperationDefinitionParserRegistry getOperationParserRegistry() {
         return operationParserRegistry;
     }
 
-    public void setOperationParserRegistry(OperationParserRegistry operationParserRegistry) {
+    public void setOperationParserRegistry(OperationDefinitionParserRegistry operationParserRegistry) {
         this.operationParserRegistry = operationParserRegistry;
     }
 
