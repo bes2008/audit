@@ -36,6 +36,7 @@ public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<Http
 
     @Override
     public void extractOperation(AuditRequest<HttpServletRequest, Method> wrappedRequest, AuditEvent event, Operation operation) {
+        Method method  = wrappedRequest.getRequestContext();
 
     }
 }
