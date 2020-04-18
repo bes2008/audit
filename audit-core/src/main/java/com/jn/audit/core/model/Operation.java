@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class Operation implements Serializable {
     private OperationDefinition definition;
-
     private Map<String, List<String>> parameters; // {optional}
     private OperationResult result;
 
