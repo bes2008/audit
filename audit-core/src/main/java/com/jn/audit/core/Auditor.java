@@ -140,11 +140,12 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     private AuditRequest<AuditedRequest, AuditedRequestContext> startAuditInternal(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         boolean auditIt = true;
         // may be too long time
+        AuditEvent auditEvent = auditEventExtractor.get(wrappedRequest);
+        wrappedRequest.setAuditEvent(auditEvent);
         if (Emptys.isNotEmpty(filterChain)) {
             auditIt = filterChain.accept(wrappedRequest);
         }
         if (auditIt) {
-            AuditEvent auditEvent = auditEventExtractor.get(wrappedRequest);
             wrappedRequest.setAuditEvent(auditEvent);
             wrappedRequest.setAuditIt(auditIt);
         }
