@@ -26,7 +26,11 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     public static ThreadLocalHolder<AuditRequest> auditRequestHolder = new ThreadLocalHolder<AuditRequest>();
     private static ThreadLocalHolder<CompletableFuture<Void>> asyncTaskHolder = new ThreadLocalHolder<CompletableFuture<Void>>();
     @NonNull
-    private AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> filterChain;
+    private AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> beforeExtractFilterChain;
+
+    @NonNull
+    private AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> afterExtractFilterChain;
+
     @NonNull
     private AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor;
     @NonNull
@@ -63,13 +67,6 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         return executor;
     }
 
-    public void setFilterChain(AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> filterChain) {
-        this.filterChain = filterChain;
-    }
-
-    public AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> getFilterChain() {
-        return filterChain;
-    }
 
     public void setAuditEventExtractor(AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor) {
         this.auditEventExtractor = auditEventExtractor;
@@ -140,10 +137,17 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     private AuditRequest<AuditedRequest, AuditedRequestContext> startAuditInternal(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         boolean auditIt = true;
         // may be too long time
+        if (Emptys.isNotEmpty(beforeExtractFilterChain)) {
+            auditIt = beforeExtractFilterChain.accept(wrappedRequest);
+        }
+        if (!auditIt) {
+            wrappedRequest.setAuditIt(auditIt);
+            return wrappedRequest;
+        }
         AuditEvent auditEvent = auditEventExtractor.get(wrappedRequest);
         wrappedRequest.setAuditEvent(auditEvent);
-        if (Emptys.isNotEmpty(filterChain)) {
-            auditIt = filterChain.accept(wrappedRequest);
+        if (Emptys.isNotEmpty(afterExtractFilterChain)) {
+            auditIt = afterExtractFilterChain.accept(wrappedRequest);
         }
         if (auditIt) {
             wrappedRequest.setAuditEvent(auditEvent);
@@ -231,5 +235,25 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     public void setAuditRequestFactory(Function2<AuditedRequest, AuditedRequestContext, AuditRequest<AuditedRequest, AuditedRequestContext>> auditRequestFactory) {
         this.auditRequestFactory = auditRequestFactory;
+    }
+
+    public AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> getBeforeExtractFilterChain() {
+        return beforeExtractFilterChain;
+    }
+
+    public void setBeforeExtractFilterChain(AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> beforeExtractFilterChain) {
+        this.beforeExtractFilterChain = beforeExtractFilterChain;
+    }
+
+    public AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> getAfterExtractFilterChain() {
+        return afterExtractFilterChain;
+    }
+
+    public void setAfterExtractFilterChain(AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> afterExtractFilterChain) {
+        this.afterExtractFilterChain = afterExtractFilterChain;
+    }
+
+    public AuditEventExtractor<AuditedRequest, AuditedRequestContext> getAuditEventExtractor() {
+        return auditEventExtractor;
     }
 }
