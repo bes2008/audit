@@ -110,7 +110,11 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         return new SimpleEventPublisher();
     }
 
-    protected void initFilterChain(AuditRequestFilterChain chain, Settings settings) {
+    protected void initBeforeFilterChain(AuditRequestFilterChain chain, Settings settings) {
+
+    }
+
+    protected void initAfterFilterChain(AuditRequestFilterChain chain, Settings settings) {
 
     }
 
@@ -203,11 +207,15 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
             auditor.setExecutor(defaultExecutor);
         }
 
-        // filter chain
-        AuditRequestFilterChain filterChain = new AuditRequestFilterChain();
-        initFilterChain(filterChain, settings);
-        auditor.setFilterChain(filterChain);
+        // before filter chain
+        AuditRequestFilterChain beforeFilterChain = new AuditRequestFilterChain();
+        initBeforeFilterChain(beforeFilterChain, settings);
+        auditor.setBeforeExtractFilterChain(beforeFilterChain);
 
+        // after filter chain
+        AuditRequestFilterChain afterFilterChain = new AuditRequestFilterChain();
+        initAfterFilterChain(beforeFilterChain, settings);
+        auditor.setBeforeExtractFilterChain(beforeFilterChain);
         return auditor;
     }
 }
