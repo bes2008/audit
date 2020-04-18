@@ -27,7 +27,7 @@ public class MethodBasedOperationExtractor<AuditedRequest> implements OperationE
             .softKey(true)
             .build();
 
-    private OperationAnnotationParserRegistry annotationParserRegistry = new OperationAnnotationParserRegistry();
+    private OperationParserRegistry annotationParserRegistry = new OperationParserRegistry();
 
     @Override
     public Operation get(AuditRequest<AuditedRequest, Method> wrappedRequest) {

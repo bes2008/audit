@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OperationAnnotationParserRegistry {
+public class OperationParserRegistry {
     private Map<Class<? extends Annotation>, OperationAnnotationParser<?>> parserMap = new LinkedHashMap<Class<? extends Annotation>, OperationAnnotationParser<?>>();
 
     public void registry(Class<? extends Annotation> annotation, OperationAnnotationParser<?> parser) {
