@@ -1,10 +1,9 @@
 package com.jn.audit.core.operation;
 
+import com.jn.audit.core.operation.repository.OperationRepositoryParser;
+import com.jn.audit.core.operation.method.OperationMethodAnnotationParser;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer2;
-import com.jn.langx.util.struct.Entry;
-import com.jn.langx.util.struct.Pair;
 
 import java.lang.annotation.Annotation;
 import java.util.LinkedHashMap;
@@ -12,22 +11,33 @@ import java.util.List;
 import java.util.Map;
 
 public class OperationParserRegistry {
-    private Map<Class<? extends Annotation>, OperationAnnotationParser<?>> parserMap = new LinkedHashMap<Class<? extends Annotation>, OperationAnnotationParser<?>>();
+    private Map<Class<? extends Annotation>, OperationMethodAnnotationParser<?>> annotationParserMap = new LinkedHashMap<Class<? extends Annotation>, OperationMethodAnnotationParser<?>>();
+    private Map<String, OperationRepositoryParser> repositoryParserMap = new LinkedHashMap<String, OperationRepositoryParser>();
 
-    public void registry(Class<? extends Annotation> annotation, OperationAnnotationParser<?> parser) {
-        Preconditions.checkNotNull(annotation);
+    public void registry(OperationMethodAnnotationParser<? extends Annotation> parser) {
         Preconditions.checkNotNull(parser);
-        parserMap.put(annotation, parser);
+        annotationParserMap.put(parser.getAnnotation(), parser);
     }
 
-    public List<Pair<Class<? extends Annotation>, OperationAnnotationParser<?>>> getParsers() {
-        final List<Pair<Class<? extends Annotation>, OperationAnnotationParser<?>>> list = Collects.newArrayList();
-        Collects.forEach(parserMap, new Consumer2<Class<? extends Annotation>, OperationAnnotationParser<?>>() {
-            @Override
-            public void accept(Class<? extends Annotation> key, OperationAnnotationParser<?> value) {
-                list.add(new Entry<Class<? extends Annotation>, OperationAnnotationParser<?>>(key, value));
-            }
-        });
-        return list;
+    public void registry(OperationRepositoryParser parser) {
+        Preconditions.checkNotNull(parser);
+        repositoryParserMap.put(parser.getName(), parser);
     }
+
+    public List<OperationMethodAnnotationParser<? extends Annotation>> getAnnotationParsers() {
+        return Collects.asList(annotationParserMap.values());
+    }
+
+    public OperationMethodAnnotationParser<? extends Annotation> getAnnotationParser(Class<? extends Annotation> annotationClass) {
+        return annotationParserMap.get(annotationClass);
+    }
+
+    public OperationRepositoryParser getRepositoryParser(String parserName) {
+        return repositoryParserMap.get(parserName);
+    }
+
+    public List<OperationRepositoryParser> getRepositoryParsers() {
+        return Collects.asList(repositoryParserMap.values());
+    }
+
 }

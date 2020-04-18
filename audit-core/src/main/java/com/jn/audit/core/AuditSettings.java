@@ -1,5 +1,6 @@
 package com.jn.audit.core;
 
+import com.jn.audit.core.operation.repository.OperationDefinitionRepository;
 import com.jn.audit.mq.DefaultMessageTranslator;
 import com.jn.audit.mq.MessageTopicConfiguration;
 import com.jn.audit.mq.allocator.DefaultTopicAllocator;
@@ -65,7 +66,7 @@ public class AuditSettings implements Serializable {
      * units: seconds
      * scan interval, if <=0, will not refresh
      *
-     * @see {@link com.jn.audit.core.operation.OperationDefinitionRepository#setReloadIntervalInSeconds(int)}
+     * @see {@link OperationDefinitionRepository#setReloadIntervalInSeconds(int)}
      */
     private int operationDefinitionReloadIntervalInSeconds = -1;
     private String operationDefinitionResource;

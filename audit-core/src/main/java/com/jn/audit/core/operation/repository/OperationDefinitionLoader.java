@@ -1,4 +1,4 @@
-package com.jn.audit.core.operation;
+package com.jn.audit.core.operation.repository;
 
 import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.model.OperationImportance;
