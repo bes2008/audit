@@ -1,6 +1,8 @@
 package com.jn.audit.core.model;
 
 import com.jn.easyjson.core.JSONBuilderProvider;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 
 import java.io.Serializable;
 
@@ -8,6 +10,7 @@ public class AuditEvent implements Serializable {
     public static final long serialVersionUID = 1L;
 
     // who
+    @NonNull
     private Principal principal; // {required}
 
     // when
@@ -18,17 +21,20 @@ public class AuditEvent implements Serializable {
     /**
      * service , also the main target
      */
+    @NonNull
     private Service service; // {required}
 
     /**
      * target, also the subject target
      * maybe extract from Operation parameters
      */
+    @Nullable
     private Resource resource; // {optional}
 
     /**
      * do what
      */
+    @NonNull
     private Operation operation; // {required}
 
 

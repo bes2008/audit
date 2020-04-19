@@ -202,6 +202,18 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         if (wrappedRequest != null) {
             AuditEvent event = wrappedRequest.getAuditEvent();
             if (wrappedRequest.isAuditIt() && event != null) {
+                if(event.getService()==null){
+                    logger.warn("Can't find an valid service for request: {}",wrappedRequest);
+                    return;
+                }
+                if(event.getPrincipal()==null){
+                    logger.warn("Can't find an valid principal for request: {}",wrappedRequest);
+                    return;
+                }
+                if(event.getOperation()==null){
+                    logger.warn("Can't find an valid operation for request: {}",wrappedRequest);
+                    return;
+                }
                 event.setStartTime(wrappedRequest.getStartTime());
                 event.setEndTime(wrappedRequest.getEndTime());
                 event.setDuration(wrappedRequest.getEndTime() - wrappedRequest.getStartTime());

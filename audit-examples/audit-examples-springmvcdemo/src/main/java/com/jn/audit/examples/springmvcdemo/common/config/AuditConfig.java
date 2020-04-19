@@ -1,19 +1,19 @@
 package com.jn.audit.examples.springmvcdemo.common.config;
 
 import com.jn.audit.core.AuditEventExtractor;
+import com.jn.audit.core.AuditRequestFilterChain;
 import com.jn.audit.core.Auditor;
 import com.jn.audit.core.SimpleAuditorFactory;
+import com.jn.audit.core.filter.MethodAuditAnnotationFilter;
 import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.OperationParametersExtractor;
-import com.jn.audit.core.operation.method.OperationAnnotationParser;
 import com.jn.audit.core.operation.method.OperationMethodExtractor;
 import com.jn.audit.mq.MessageTopicDispatcher;
 import com.jn.audit.mq.consumer.DebugConsumer;
 import com.jn.audit.servlet.ServletAuditEventExtractor;
 import com.jn.audit.servlet.ServletAuditRequest;
 import com.jn.audit.servlet.ServletHttpParametersExtractor;
-import com.jn.audit.servlet.ServletUrlOperationIdGenerator;
 import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
 import com.jn.langx.util.function.Function2;
 import org.springframework.beans.factory.ObjectProvider;
@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -42,13 +41,13 @@ public class AuditConfig {
     @Bean
     public OperationMethodExtractor<HttpServletRequest> operationMethodExtractor(
             @Autowired @Qualifier("multipleLevelOperationDefinitionRepository")
-            MultipleLevelConfigurationRepository multipleLevelConfigurationRepository,
+                    MultipleLevelConfigurationRepository multipleLevelConfigurationRepository,
             ObjectProvider<OperationIdGenerator<HttpServletRequest, Method>> operationIdGenerators,
             @Autowired @Qualifier("servletHttpParametersExtractor")
-            OperationParametersExtractor<HttpServletRequest,Method> httpOperationParametersExtractor,
+                    OperationParametersExtractor<HttpServletRequest, Method> httpOperationParametersExtractor,
             @Autowired @Qualifier("operationDefinitionParserRegistry")
-            OperationDefinitionParserRegistry definitionParserRegistry
-            ){
+                    OperationDefinitionParserRegistry definitionParserRegistry
+    ) {
         OperationMethodExtractor<HttpServletRequest> operationExtractor = new OperationMethodExtractor<>();
         operationExtractor.setOperationDefinitionRepository(multipleLevelConfigurationRepository);
         operationExtractor.setOperationIdGenerators(operationIdGenerators.orderedStream().collect(Collectors.toList()));
@@ -82,6 +81,11 @@ public class AuditConfig {
                         return new ServletAuditRequest(request, method);
                     }
                 };
+            }
+
+            @Override
+            protected void initBeforeFilterChain(AuditRequestFilterChain chain, AuditProperties settings) {
+                chain.addFilter(new MethodAuditAnnotationFilter<>());
             }
 
             @Override
