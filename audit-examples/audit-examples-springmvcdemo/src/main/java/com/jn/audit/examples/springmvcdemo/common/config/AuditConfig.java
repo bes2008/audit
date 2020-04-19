@@ -1,9 +1,6 @@
 package com.jn.audit.examples.springmvcdemo.common.config;
 
-import com.jn.audit.core.AuditEventExtractor;
-import com.jn.audit.core.AuditRequestFilterChain;
-import com.jn.audit.core.Auditor;
-import com.jn.audit.core.SimpleAuditorFactory;
+import com.jn.audit.core.*;
 import com.jn.audit.core.filter.MethodAuditAnnotationFilter;
 import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
@@ -19,7 +16,7 @@ import com.jn.langx.util.function.Function2;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,8 +25,14 @@ import java.lang.reflect.Method;
 import java.util.stream.Collectors;
 
 @Configuration
-@EnableConfigurationProperties({AuditProperties.class})
 public class AuditConfig {
+
+    @Bean
+    @ConfigurationProperties(prefix = "audit")
+    public AuditSettings auditSettings() {
+        return new AuditSettings();
+    }
+
     @Autowired
     private MessageTopicDispatcher dispatcher;
 
@@ -68,11 +71,11 @@ public class AuditConfig {
 
     @Bean
     @Autowired
-    public Auditor auditor(AuditProperties auditSettings,
+    public Auditor auditor(AuditSettings auditSettings,
                            MessageTopicDispatcher dispatcher,
                            DebugConsumer debugConsumer,
                            AuditEventExtractor auditEventExtractor) {
-        Auditor auditor = new SimpleAuditorFactory<AuditProperties>() {
+        Auditor auditor = new SimpleAuditorFactory<AuditSettings>() {
             @Override
             protected Function2 getAuditRequestFactory() {
                 return new Function2<HttpServletRequest, Method, ServletAuditRequest>() {
@@ -84,12 +87,12 @@ public class AuditConfig {
             }
 
             @Override
-            protected void initBeforeFilterChain(AuditRequestFilterChain chain, AuditProperties settings) {
+            protected void initBeforeFilterChain(AuditRequestFilterChain chain, AuditSettings settings) {
                 chain.addFilter(new MethodAuditAnnotationFilter<>());
             }
 
             @Override
-            protected MessageTopicDispatcher getMessageTopicDispatcher(AuditProperties settings) {
+            protected MessageTopicDispatcher getMessageTopicDispatcher(AuditSettings settings) {
                 return dispatcher;
             }
 
