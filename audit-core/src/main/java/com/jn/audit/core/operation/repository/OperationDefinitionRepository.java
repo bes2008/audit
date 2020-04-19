@@ -11,22 +11,23 @@ import com.jn.langx.util.function.Consumer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class OperationDefinitionRepository extends AbstractConfigurationRepository<OperationDefinition, OperationDefinitionLoader, ConfigurationWriter<OperationDefinition>> {
     /**
      * key: OperationImportance#getKey()
      */
-    private Map<String, OperationImportance> importanceMap = new HashMap<String, OperationImportance>();
+    private Map<String, OperationImportance> importanceMap = new ConcurrentHashMap<String, OperationImportance>();
     /**
      * key: code
      * value: definition
      */
-    private Map<String, OperationDefinition> definitionMap = new HashMap<String, OperationDefinition>();
+    private Map<String, OperationDefinition> definitionMap = new ConcurrentHashMap<String, OperationDefinition>();
 
 
     private static final OperationDefinitionRepository instance = new OperationDefinitionRepository();
 
-    private OperationDefinitionRepository() {
+    public OperationDefinitionRepository() {
     }
 
     public static OperationDefinitionRepository getInstance() {

@@ -1,7 +1,9 @@
 package com.jn.audit.core.model;
 
 import com.jn.langx.configuration.Configuration;
+import com.jn.langx.util.Objects;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.hash.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -66,5 +68,45 @@ public class OperationDefinition implements Configuration, Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OperationDefinition that = (OperationDefinition) o;
+
+        if(!Objects.equals(id, that.id)){
+            return false;
+        }
+        if(!Objects.equals(name, that.name)){
+            return false;
+        }
+        if(!Objects.equals(code, that.code)){
+            return false;
+        }
+        if(!Objects.equals(type, that.type)){
+            return false;
+        }
+        if(!Objects.equals(importance, that.importance)){
+            return false;
+        }
+        if(!Objects.equals(description, that.description)){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .with(id)
+                .with(name)
+                .with(code)
+                .with(type)
+                .with(importance)
+                .with(description)
+                .build();
     }
 }

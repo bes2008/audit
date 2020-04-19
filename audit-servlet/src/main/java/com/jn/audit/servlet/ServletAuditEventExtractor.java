@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<HttpServletRequest, Method> {
+
     @Override
     public Service extractService(AuditRequest<HttpServletRequest, Method> wrappedRequest) {
         HttpServletRequest request = wrappedRequest.getRequest();
