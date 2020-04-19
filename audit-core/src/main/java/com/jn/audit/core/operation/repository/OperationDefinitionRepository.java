@@ -59,8 +59,8 @@ public class OperationDefinitionRepository extends AbstractConfigurationReposito
     @Override
     public void reload() {
         super.reload();
-        List<OperationImportance> importances = Collects.newArrayList();
-        List<OperationDefinition> definitions = loader.reload(importances);
+        Map<String, OperationImportance> importanceMap = Collects.emptyHashMap(true);
+        List<OperationDefinition> definitions = loader.reload(importanceMap);
         Collects.forEach(definitions, new Consumer<OperationDefinition>() {
             @Override
             public void accept(OperationDefinition operationDefinition) {

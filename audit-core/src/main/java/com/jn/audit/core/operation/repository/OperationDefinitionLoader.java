@@ -7,10 +7,11 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.configuration.FullLoadConfigurationLoader;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OperationDefinitionLoader extends FullLoadConfigurationLoader<OperationDefinition> {
     @NonNull
-    List<OperationDefinition> reload(@Nullable List<OperationImportance> importances);
+    List<OperationDefinition> reload(@Nullable Map<String,OperationImportance> importances);
 
     void setDefinitionFilePath(@NonNull String definitionFilePath);
 }

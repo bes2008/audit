@@ -29,7 +29,7 @@ logging:
 
 operation:
   definition:
-    location: classpath:operation.yml
+    location: classpath:/operation.yml
 audit:
   async-mode: true
   topics: [DEFAULT, LOGIN_LOGOUT]

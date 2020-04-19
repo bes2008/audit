@@ -48,7 +48,7 @@ public class OperationConfig {
     }
 
     @Bean
-    public OperationDefinitionLoader yamlOperationDefinitionLoader(@Value("operation.definition.location") String location) {
+    public OperationDefinitionLoader yamlOperationDefinitionLoader(@Value("${operation.definition.location}") String location) {
         YamlOperationDefinitionLoader loader = new YamlOperationDefinitionLoader();
         loader.setDefinitionFilePath(location);
         return loader;
