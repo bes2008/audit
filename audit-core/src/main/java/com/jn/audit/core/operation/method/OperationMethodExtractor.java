@@ -136,6 +136,9 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
                 String operationDefinitionId = Reflects.getMethodString(method);
                 operationDefinition.set((OperationDefinition) operationDefinitionRepository.getById(operationDefinitionId));
             }
+            if (!operationDefinition.isNull()) {
+                methodOperationDefinitionCache.set(method, operationDefinition.get().getId());
+            }
         }
         return operationDefinition.get();
     }

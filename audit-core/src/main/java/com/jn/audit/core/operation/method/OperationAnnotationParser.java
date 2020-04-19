@@ -12,6 +12,7 @@ public class OperationAnnotationParser implements OperationMethodAnnotationDefin
         return Operation.class;
     }
 
+
     @Override
     public OperationDefinition parse(Method method) {
         Operation operation = Reflects.getAnnotation(method, getAnnotation());
