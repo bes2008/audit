@@ -19,6 +19,7 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Holder;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -50,7 +51,7 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
 
     private OperationParametersExtractor<AuditedRequest, Method> operationParametersExtractor;
 
-    private Map<String, List<String>> extractOperationParameters(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
+    private Map<String, List<? extends Serializable>> extractOperationParameters(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
         return Emptys.isNull(operationParametersExtractor) ? null : operationParametersExtractor.get(wrappedRequest);
     }
 
