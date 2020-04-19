@@ -50,8 +50,16 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     }
 
-    public boolean isAsyncAudit() {
-        return asyncAudit && executor != null;
+    public boolean isAsyncAudit(AuditedRequest request) {
+        if (asyncAudit && executor != null && request != null) {
+            try {
+                Class httpServletRequest = ClassLoaders.loadClass("javax.servlet.http.HttpServletRequest", request.getClass().getClassLoader());
+                return httpServletRequest == null;
+            } catch (ClassNotFoundException ex) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setAsyncAudit(boolean asyncAudit) {
@@ -66,8 +74,6 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     public Executor getExecutor() {
         return executor;
     }
-
-
 
 
     public void setProducer(Producer<AuditEvent> producer) {
@@ -86,7 +92,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
      * @param ctx
      */
     public void doAudit(AuditedRequest request, AuditedRequestContext ctx) {
-        if (isAsyncAudit()) {
+        if (isAsyncAudit(request)) {
             finishAsyncAudit(startAsyncAudit(request, ctx));
         } else {
             finishSyncAudit(startSyncAudit(request, ctx));
@@ -94,7 +100,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     }
 
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
-        if (isAsyncAudit()) {
+        if (isAsyncAudit(request)) {
             return startAsyncAudit(request, ctx);
         } else {
             return startSyncAudit(request, ctx);
@@ -156,10 +162,10 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
 
     public void finishAudit(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
-        if (isAsyncAudit()) {
+        if (isAsyncAudit(wrappedRequest.getRequest())) {
             finishAsyncAudit(wrappedRequest);
         } else {
-            finishAudit(wrappedRequest);
+            finishSyncAudit(wrappedRequest);
         }
     }
 

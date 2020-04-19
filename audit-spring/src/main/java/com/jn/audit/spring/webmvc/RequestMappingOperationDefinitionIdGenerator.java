@@ -20,6 +20,9 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
             RequestMappingAccessor<?> accessor = RequestMappingAccessorFactory.createAccessor(mappingOfMethod);
             List<RequestMethod> httpMethods = accessor.getMethods();
             List<String> paths = accessor.getPaths();
+            if (Emptys.isEmpty(paths)) {
+                paths = accessor.getValues();
+            }
             List<String> controllerPaths = RequestMappings.getURLTemplates(method.getDeclaringClass());
             if (Objects.isEmpty(httpMethods) || Emptys.isEmpty(paths) || Emptys.isEmpty(controllerPaths)) {
                 return null;

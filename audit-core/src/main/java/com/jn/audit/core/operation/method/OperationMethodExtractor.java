@@ -133,7 +133,7 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
 
             if (operationDefinition.isNull()) {
                 // 2.2.2 using method full name (exclude parameters)
-                String operationDefinitionId = Reflects.getMethodString(method);
+                String operationDefinitionId = Reflects.getFQNClassName(method.getDeclaringClass()) + "." + method.getName();
                 operationDefinition.set((OperationDefinition) operationDefinitionRepository.getById(operationDefinitionId));
             }
             if (!operationDefinition.isNull()) {

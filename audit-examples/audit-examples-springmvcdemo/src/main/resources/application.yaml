@@ -27,7 +27,9 @@ logging:
             common:
               dao: trace
 
-
+operation:
+  definition:
+    location: classpath:operation.yml
 audit:
   async-mode: true
   topics: [DEFAULT, LOGIN_LOGOUT]
@@ -38,4 +40,3 @@ audit:
     - name: LOGIN_LOGOUT
       ring-buffer-size: 512
       producer-type: SINGLE
-  operation-definition-resource: classpath:audit.yml

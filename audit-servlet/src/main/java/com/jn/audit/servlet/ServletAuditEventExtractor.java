@@ -20,8 +20,11 @@ public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<Http
         service.setServiceIp(request.getLocalAddr());
         service.setServiceProtocol(request.getProtocol());
         String context = request.getServletContext().getServletContextName();
-        if(Strings.isNotEmpty(context)){
-            context = request.getContextPath().substring(1);
+        if (Strings.isNotEmpty(context)) {
+            context = request.getContextPath();
+            if (context.startsWith("/")) {
+                context = context.substring(1);
+            }
         }
         service.setServiceName(context);
         return service;

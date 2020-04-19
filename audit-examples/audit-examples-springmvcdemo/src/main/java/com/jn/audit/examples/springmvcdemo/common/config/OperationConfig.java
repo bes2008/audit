@@ -63,7 +63,7 @@ public class OperationConfig {
             @Autowired OperationDefinitionLoader yamlLoader
     ) {
         OperationDefinitionRepository repository = new OperationDefinitionRepository();
-        repository.setName("Operation-Definition");
+        repository.setName("Operation-Definition-Repository-YAML");
         repository.setCache(operationDefinitionCache);
         repository.setTimer(timer);
         repository.setConfigurationLoader(yamlLoader);
@@ -74,10 +74,20 @@ public class OperationConfig {
     @Bean("multipleLevelOperationDefinitionRepository")
     public MultipleLevelConfigurationRepository multipleLevelOperationDefinitionRepository(
             @Autowired @Qualifier("yamlOperationDefinitionRepository")
-                    OperationDefinitionRepository yamlRepository
+                    OperationDefinitionRepository yamlRepository,
+            @Autowired
+                    Timer timer
     ) {
         MultipleLevelConfigurationRepository repository = new MultipleLevelConfigurationRepository();
         repository.addRepository(yamlRepository);
+        repository.setName("Operation-Definition-Multiple-Repository");
+        repository.setCache(CacheBuilder.<String, OperationDefinition>newBuilder()
+                .initialCapacity(500)
+                .capacityHeightWater(0.95f)
+                .timer(timer)
+                .concurrencyLevel(Runtime.getRuntime().availableProcessors())
+                .build());
+        repository.startup();
         return repository;
     }
 

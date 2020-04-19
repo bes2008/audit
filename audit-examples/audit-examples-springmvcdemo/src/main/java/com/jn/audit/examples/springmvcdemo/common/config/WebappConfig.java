@@ -53,7 +53,8 @@ public class WebappConfig implements WebMvcConfigurer, ApplicationContextAware {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         AuditHttpHandlerInterceptor interceptor = ctx.getBean(AuditHttpHandlerInterceptor.class);
-        registry.addInterceptor(interceptor);
+        InterceptorRegistration registration = registry.addInterceptor(interceptor);
+        registration.addPathPatterns("/customers/**", "/users/**");
     }
 
     @Override
