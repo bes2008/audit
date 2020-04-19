@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>audit-examples-springmvcdemo</module>
+        <module>audit-examples-servlet</module>
     </modules>
 
     <build>
