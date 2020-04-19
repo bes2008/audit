@@ -214,8 +214,8 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
 
         // after filter chain
         AuditRequestFilterChain afterFilterChain = new AuditRequestFilterChain();
-        initAfterFilterChain(beforeFilterChain, settings);
-        auditor.setBeforeExtractFilterChain(beforeFilterChain);
+        initAfterFilterChain(afterFilterChain, settings);
+        auditor.setAfterExtractFilterChain(beforeFilterChain);
         return auditor;
     }
 }

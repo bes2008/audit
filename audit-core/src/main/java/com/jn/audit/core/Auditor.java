@@ -68,9 +68,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     }
 
 
-    public void setAuditEventExtractor(AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor) {
-        this.auditEventExtractor = auditEventExtractor;
-    }
+
 
     public void setProducer(Producer<AuditEvent> producer) {
         this.producer = producer;
@@ -255,5 +253,9 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     public AuditEventExtractor<AuditedRequest, AuditedRequestContext> getAuditEventExtractor() {
         return auditEventExtractor;
+    }
+
+    public void setAuditEventExtractor(AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor) {
+        this.auditEventExtractor = auditEventExtractor;
     }
 }

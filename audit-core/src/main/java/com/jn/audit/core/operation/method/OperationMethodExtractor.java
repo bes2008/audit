@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * 根据 method 来获取 Operation
  * <p>
- * 重点是根据 method 来获取 OperationDefaintion
+ * 重点是根据 method 来获取 OperationDefinition
  * 根据method查找operation definition的步骤：
  * 1. get operation definition from cache
  * 2. parse method
