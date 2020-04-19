@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class RequestMappings {
+    public static boolean hasAnyRequestMappingAnnotation(AnnotatedElement annotatedElement) {
+        return findFirstRequestMappingAnnotation(annotatedElement) != null;
+    }
 
     public static boolean hasRequestMappingAnnotation(AnnotatedElement annotatedElement) {
         return getRequestMapping(annotatedElement) != null;
@@ -68,7 +71,7 @@ public class RequestMappings {
         });
     }
 
-    public static Annotation findFirstRequestMappingAnnotation(Method method) {
+    public static Annotation findFirstRequestMappingAnnotation(AnnotatedElement method) {
         return Pipeline.of(Reflects.getAnnotations(method)).findFirst(new Predicate<Annotation>() {
             @Override
             public boolean test(Annotation annotation) {
