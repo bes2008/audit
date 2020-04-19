@@ -78,6 +78,8 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
         Operation operation = new Operation();
         OperationDefinition definition = findOperationDefinition(wrappedRequest);
         operation.setDefinition(definition);
+        Map<String, List<? extends Serializable>> parameters = extractOperationParameters(wrappedRequest);
+        operation.setParameters(parameters);
         return operation;
     }
 
