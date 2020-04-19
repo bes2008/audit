@@ -1,7 +1,6 @@
 package com.jn.audit.core.operation;
 
 import com.jn.audit.core.AuditRequest;
-import com.jn.audit.core.model.Operation;
 import com.jn.langx.util.function.Supplier;
 
 import java.util.List;

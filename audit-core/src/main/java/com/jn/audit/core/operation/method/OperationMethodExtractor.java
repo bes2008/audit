@@ -33,7 +33,7 @@ import java.util.Map;
  * 2. parse method
  * 2.1) parse annotations based on parser registry
  * 2.2) parse from configuration file
- * 2.2.1) using custom operation name generator
+ * 2.2.1) using custom operation id generator
  * 2.2.2) using method full name (exclude parameters)
  *
  * @param <AuditedRequest>
@@ -104,7 +104,7 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
 
             // 2.2) parse from configuration file
             if (operationDefinition.isNull()) {
-                // 2.2.1 using custom operation name generator
+                // 2.2.1 using custom operation id generator
                 Collects.forEach(operationIdGenerators, new Consumer<OperationIdGenerator<AuditedRequest, Method>>() {
                     @Override
                     public void accept(OperationIdGenerator<AuditedRequest, Method> generator) {
