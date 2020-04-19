@@ -1,6 +1,7 @@
 package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
+import com.jn.audit.core.model.OperationResult;
 
 public class AuditRequest<AuditedRequest, AuditedRequestContext> {
     private AuditEvent auditEvent;
@@ -10,6 +11,7 @@ public class AuditRequest<AuditedRequest, AuditedRequestContext> {
     private long startTime;
     private long endTime;
     private String topic;
+    private OperationResult result;
 
     public String getTopic() {
         return topic;
@@ -65,6 +67,14 @@ public class AuditRequest<AuditedRequest, AuditedRequestContext> {
 
     public void setRequestContext(AuditedRequestContext requestContext) {
         this.requestContext = requestContext;
+    }
+
+    public OperationResult getResult() {
+        return result;
+    }
+
+    public void setResult(OperationResult result) {
+        this.result = result;
     }
 
     @Override
