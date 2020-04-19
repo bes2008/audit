@@ -39,15 +39,6 @@ public class AuditConfig {
         return new ServletHttpParametersExtractor();
     }
 
-    @Order(3)
-    @Bean
-    public OperationIdGenerator<HttpServletRequest, Method> urlOperationIdGenerator(){
-        return   new ServletUrlOperationIdGenerator();
-    }
-
-
-
-
     @Bean
     public OperationMethodExtractor<HttpServletRequest> operationMethodExtractor(
             @Autowired @Qualifier("multipleLevelOperationDefinitionRepository")

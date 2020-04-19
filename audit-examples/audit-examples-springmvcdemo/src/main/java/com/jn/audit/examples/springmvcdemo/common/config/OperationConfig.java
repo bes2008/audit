@@ -2,12 +2,15 @@ package com.jn.audit.examples.springmvcdemo.common.config;
 
 import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
+import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.method.OperationAnnotationParser;
 import com.jn.audit.core.operation.method.OperationMethodAnnotationDefinitionParser;
 import com.jn.audit.core.operation.repository.OperationDefinitionLoader;
 import com.jn.audit.core.operation.repository.OperationDefinitionRepository;
 import com.jn.audit.core.operation.repository.OperationRepositoryParser;
 import com.jn.audit.core.operation.repository.YamlOperationDefinitionLoader;
+import com.jn.audit.servlet.ServletUrlOperationIdGenerator;
+import com.jn.audit.spring.webmvc.RequestMappingOperationDefinitionIdGenerator;
 import com.jn.langx.cache.Cache;
 import com.jn.langx.cache.CacheBuilder;
 import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
@@ -22,6 +25,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
 @Configuration
@@ -78,7 +83,7 @@ public class OperationConfig {
 
     @Bean
     @Order(0)
-    public OperationAnnotationParser operationAnnotationParser(){
+    public OperationAnnotationParser operationAnnotationParser() {
         return new OperationAnnotationParser();
     }
 
@@ -87,7 +92,7 @@ public class OperationConfig {
     public OperationDefinitionParserRegistry operationDefinitionParserRegistry(
             ObjectProvider<OperationMethodAnnotationDefinitionParser> methodAnnotationDefinitionParsers,
             ObjectProvider<OperationRepositoryParser> repositoryDefinitionParsers
-    ){
+    ) {
         OperationDefinitionParserRegistry registry = new OperationDefinitionParserRegistry();
         methodAnnotationDefinitionParsers.orderedStream().forEach(new Consumer<OperationMethodAnnotationDefinitionParser>() {
             @Override
@@ -104,5 +109,16 @@ public class OperationConfig {
         return registry;
     }
 
+    @Order(3)
+    @Bean
+    public OperationIdGenerator<HttpServletRequest, Method> urlOperationDefinitionIdGenerator() {
+        return new ServletUrlOperationIdGenerator();
+    }
+
+    @Order(2)
+    @Bean
+    public OperationIdGenerator<HttpServletRequest, Method> requestMappingOperationDefinitionIdGenerator() {
+        return new RequestMappingOperationDefinitionIdGenerator();
+    }
 
 }
