@@ -217,6 +217,9 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
                 event.setStartTime(wrappedRequest.getStartTime());
                 event.setEndTime(wrappedRequest.getEndTime());
                 event.setDuration(wrappedRequest.getEndTime() - wrappedRequest.getStartTime());
+                if(wrappedRequest.getResult()!=null){
+                    event.getOperation().setResult(wrappedRequest.getResult());
+                }
                 producer.publish(wrappedRequest.getTopic(), event);
             }
         }
