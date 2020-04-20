@@ -1,12 +1,14 @@
 package com.jn.audit.core.model;
 
+import com.jn.langx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 public class Operation implements Serializable {
     private OperationDefinition definition;
-    private Map<String, List<String>> parameters; // {optional}
+    private Map<String, List<? extends Serializable>> parameters; // {optional}
     private OperationResult result;
 
     public OperationDefinition getDefinition() {
@@ -17,11 +19,11 @@ public class Operation implements Serializable {
         this.definition = definition;
     }
 
-    public Map<String, List<String>> getParameters() {
+    public Map<String, List<? extends Serializable>> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map<String, List<String>> parameters) {
+    public void setParameters(Map<String, List<? extends Serializable>> parameters) {
         this.parameters = parameters;
     }
 
@@ -31,5 +33,11 @@ public class Operation implements Serializable {
 
     public void setResult(OperationResult result) {
         this.result = result;
+    }
+
+    public static void copyTo(@NonNull Operation source, @NonNull Operation destination) {
+        destination.setResult(source.getResult());
+        destination.setParameters(source.getParameters());
+        destination.setDefinition(source.getDefinition());
     }
 }

@@ -50,8 +50,16 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     }
 
-    public boolean isAsyncAudit() {
-        return asyncAudit && executor != null;
+    public boolean isAsyncAudit(AuditedRequest request) {
+        if (asyncAudit && executor != null && request != null) {
+            try {
+                Class httpServletRequest = ClassLoaders.loadClass("javax.servlet.http.HttpServletRequest", request.getClass().getClassLoader());
+                return httpServletRequest == null;
+            } catch (ClassNotFoundException ex) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setAsyncAudit(boolean asyncAudit) {
@@ -67,10 +75,6 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         return executor;
     }
 
-
-    public void setAuditEventExtractor(AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor) {
-        this.auditEventExtractor = auditEventExtractor;
-    }
 
     public void setProducer(Producer<AuditEvent> producer) {
         this.producer = producer;
@@ -88,7 +92,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
      * @param ctx
      */
     public void doAudit(AuditedRequest request, AuditedRequestContext ctx) {
-        if (isAsyncAudit()) {
+        if (isAsyncAudit(request)) {
             finishAsyncAudit(startAsyncAudit(request, ctx));
         } else {
             finishSyncAudit(startSyncAudit(request, ctx));
@@ -96,7 +100,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     }
 
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
-        if (isAsyncAudit()) {
+        if (isAsyncAudit(request)) {
             return startAsyncAudit(request, ctx);
         } else {
             return startSyncAudit(request, ctx);
@@ -158,10 +162,10 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
 
     public void finishAudit(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
-        if (isAsyncAudit()) {
+        if (isAsyncAudit(wrappedRequest.getRequest())) {
             finishAsyncAudit(wrappedRequest);
         } else {
-            finishAudit(wrappedRequest);
+            finishSyncAudit(wrappedRequest);
         }
     }
 
@@ -198,9 +202,24 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         if (wrappedRequest != null) {
             AuditEvent event = wrappedRequest.getAuditEvent();
             if (wrappedRequest.isAuditIt() && event != null) {
+                if(event.getService()==null){
+                    logger.warn("Can't find an valid service for request: {}",wrappedRequest);
+                    return;
+                }
+                if(event.getPrincipal()==null){
+                    logger.warn("Can't find an valid principal for request: {}",wrappedRequest);
+                    return;
+                }
+                if(event.getOperation()==null){
+                    logger.warn("Can't find an valid operation for request: {}",wrappedRequest);
+                    return;
+                }
                 event.setStartTime(wrappedRequest.getStartTime());
                 event.setEndTime(wrappedRequest.getEndTime());
                 event.setDuration(wrappedRequest.getEndTime() - wrappedRequest.getStartTime());
+                if(wrappedRequest.getResult()!=null){
+                    event.getOperation().setResult(wrappedRequest.getResult());
+                }
                 producer.publish(wrappedRequest.getTopic(), event);
             }
         }
@@ -255,5 +274,9 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     public AuditEventExtractor<AuditedRequest, AuditedRequestContext> getAuditEventExtractor() {
         return auditEventExtractor;
+    }
+
+    public void setAuditEventExtractor(AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor) {
+        this.auditEventExtractor = auditEventExtractor;
     }
 }

@@ -3,10 +3,15 @@ package com.jn.audit.core.operation.repository;
 import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.model.OperationImportance;
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
+import com.jn.langx.configuration.InvalidConfigurationFileException;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
+import com.jn.langx.util.Objects;
+import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.io.IOs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,42 +35,119 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
 
     @NonNull
     @Override
-    public List<OperationDefinition> reload(List<OperationImportance> importances) {
+    public List<OperationDefinition> reload(Map<String,OperationImportance> importances) {
         return Collects.newArrayList(reloadAll(importances).values());
     }
 
-    private Map<String, OperationDefinition> reloadAll(List<OperationImportance> importances) {
+    private Map<String, OperationDefinition> reloadAll(Map<String,OperationImportance> importances) {
         final Map<String, OperationImportance> importanceMap = new HashMap<String, OperationImportance>();
-        Collects.forEach(importances, new Consumer<OperationImportance>() {
-            @Override
-            public void accept(OperationImportance importance) {
-                importanceMap.put(importance.getName(), importance);
-            }
-        });
-
+        if(importances!=null) {
+            importanceMap.putAll(importances);
+        }
         Map<String, OperationDefinition> definitionMap = Collects.<String, OperationDefinition>emptyHashMap();
 
-        Resource operationDefinitionResource = Resources.loadFileResource(definitionFilePath, YamlOperationDefinitionLoader.class.getClassLoader());
+        Resource operationDefinitionResource = Resources.loadResource(definitionFilePath, YamlOperationDefinitionLoader.class.getClassLoader());
 
         InputStream inputStream = null;
+
         try {
             inputStream = operationDefinitionResource.getInputStream();
             Yaml yaml = new Yaml();
             Iterable<Object> iterable = yaml.loadAll(inputStream);
             Iterator iterator = iterable.iterator();
+
+            // getAll
+            Map<String, Object> segments = new HashMap<String, Object>();
             while (iterator.hasNext()) {
                 Object obj = iterator.next();
                 if (obj instanceof Map) {
-                    System.out.println(obj.toString());
+                    segments.putAll((Map) obj);
                 }
             }
+            // load importanceMap
+            if (segments.containsKey("operationImportance")) {
+                doLoadImportanceMap(importanceMap, (Map) segments.get("operationImportance"));
+                if(importances!=null) {
+                    importances.putAll(importanceMap);
+                }
+            } else {
+                logger.warn("Had not any operationImportance found in the location:{}", definitionFilePath);
+                throw new InvalidConfigurationFileException(definitionFilePath);
+            }
+            // load definitions
+            if (segments.containsKey("operationDefinitions")) {
+                doLoadDefinitions(definitionMap, importanceMap, (Map<String, Map<String, Object>>) segments.get("operationDefinitions"));
+            } else {
+                logger.warn("Had not any operationImportance found in the location:{}", definitionFilePath);
+                throw new InvalidConfigurationFileException(definitionFilePath);
+            }
         } catch (Throwable ex) {
-            logger.warn(ex.getMessage(), ex);
+            throw Throwables.wrapAsRuntimeException(ex);
         } finally {
             IOs.close(inputStream);
         }
         return definitionMap;
     }
+
+    private void doLoadImportanceMap(@NonNull final Map<String, OperationImportance> importanceMap, @Nullable Map<String, Object> rawMap) {
+        Collects.forEach(rawMap, new Consumer2<String, Object>() {
+            @Override
+            public void accept(String key, Object value) {
+                OperationImportance importance = new OperationImportance();
+                importance.setKey(key);
+                importance.setValue(value.toString());
+                importanceMap.put(key, importance);
+            }
+        });
+    }
+
+    private void doLoadDefinitions(@NonNull final Map<String, OperationDefinition> definitionMap, final Map<String, OperationImportance> importanceMap, Map<String, Map<String, Object>> rawMap) {
+        Collects.forEach(rawMap, new Consumer2<String, Map<String, Object>>() {
+            @Override
+            public void accept(String id, Map<String, Object> propertyPairMap) {
+                OperationDefinition definition = new OperationDefinition();
+                // id
+                definition.setId(id);
+                // code
+                Object code = propertyPairMap.get("code");
+                if (Objects.isEmpty(code)) {
+                    logger.warn("Found an invalid operation definition: id:{}, code is empty", id);
+                    return;
+                }
+                definition.setCode(code.toString());
+                // name
+                Object name = propertyPairMap.get("name");
+                if (Objects.isEmpty(name)) {
+                    logger.warn("Found an invalid operation definition: id:{}, name is empty", id);
+                    return;
+                }
+                definition.setName(name.toString());
+                // type
+                Object type = propertyPairMap.get("type");
+                if (type != null) {
+                    definition.setType(type.toString());
+                }
+                // description
+                Object description = propertyPairMap.get("description");
+                if (type != null) {
+                    definition.setDescription(type.toString());
+                }
+                // importance
+                Object importanceKey = propertyPairMap.get("importance");
+                if (Objects.isEmpty(importanceKey)) {
+                    importanceKey = Collects.findFirst(importanceMap.keySet(), Functions.<String>nonNullPredicate());
+                }
+                if (Objects.isEmpty(importanceKey)) {
+                    logger.warn("Found an invalid operation definition: id:{}, importance is empty", id);
+                    return;
+                }
+                OperationImportance importance = importanceMap.get(importanceKey.toString());
+                definition.setImportance(importance);
+                definitionMap.put(id, definition);
+            }
+        });
+    }
+
 
     @Override
     public OperationDefinition load(String id) {

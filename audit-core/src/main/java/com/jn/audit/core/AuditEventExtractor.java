@@ -5,12 +5,12 @@ import com.jn.langx.util.function.Supplier;
 
 public interface AuditEventExtractor<AuditedRequest, AuditedRequestContext> extends Supplier<AuditRequest<AuditedRequest, AuditedRequestContext>, AuditEvent> {
 
-    void extractService(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest, AuditEvent event, Service service);
+    Service extractService(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest);
 
-    void extractPrincipal(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest, AuditEvent event, Principal principal);
+    Principal extractPrincipal(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest);
 
-    void extractResource(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest, AuditEvent event, Resource resource);
+    Resource extractResource(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest);
 
-    void extractOperation(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest, AuditEvent event, Operation operation);
+    Operation extractOperation(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest);
 
 }

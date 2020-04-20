@@ -7,9 +7,9 @@ import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationExtractor;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.OperationParametersExtractor;
-import com.jn.audit.core.operation.repository.OperationDefinitionRepository;
 import com.jn.langx.cache.Cache;
 import com.jn.langx.cache.CacheBuilder;
+import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Emptys;
@@ -19,6 +19,7 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Holder;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -27,37 +28,40 @@ import java.util.Map;
 /**
  * 根据 method 来获取 Operation
  * <p>
- * 重点是根据 method 来获取 OperationDefaintion
+ * 重点是根据 method 来获取 OperationDefinition
  * 根据method查找operation definition的步骤：
  * 1. get operation definition from cache
  * 2. parse method
  * 2.1) parse annotations based on parser registry
  * 2.2) parse from configuration file
- * 2.2.1) using custom operation name generator
+ * 2.2.1) using custom operation id generator
  * 2.2.2) using method full name (exclude parameters)
  *
  * @param <AuditedRequest>
  */
 public class OperationMethodExtractor<AuditedRequest> implements OperationExtractor<AuditedRequest, Method>, Initializable {
     private volatile boolean inited = false;
-    private Cache<Method, OperationDefinition> methodOperationDefinitionCache;
+    /**
+     * value: operation definition id
+     */
+    private Cache<Method, String> methodOperationDefinitionCache;
 
     private OperationDefinitionParserRegistry operationParserRegistry;
 
     private List<OperationIdGenerator<AuditedRequest, Method>> operationIdGenerators;
 
-    private OperationDefinitionRepository operationDefinitionRepository;
+    private MultipleLevelConfigurationRepository operationDefinitionRepository;
 
     private OperationParametersExtractor<AuditedRequest, Method> operationParametersExtractor;
 
-    private Map<String, List<String>> extractOperationParameters(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
+    private Map<String, List<? extends Serializable>> extractOperationParameters(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
         return Emptys.isNull(operationParametersExtractor) ? null : operationParametersExtractor.get(wrappedRequest);
     }
 
     @Override
     public void init() throws InitializationException {
         if (methodOperationDefinitionCache == null) {
-            methodOperationDefinitionCache = CacheBuilder.<Method, OperationDefinition>newBuilder()
+            methodOperationDefinitionCache = CacheBuilder.<Method, String>newBuilder()
                     .initialCapacity(100)
                     .capacityHeightWater(0.75f)
                     .softKey(true)
@@ -74,42 +78,52 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
         Operation operation = new Operation();
         OperationDefinition definition = findOperationDefinition(wrappedRequest);
         operation.setDefinition(definition);
+        Map<String, List<? extends Serializable>> parameters = extractOperationParameters(wrappedRequest);
+        operation.setParameters(parameters);
         return operation;
+    }
+
+    private OperationDefinition getOperationDefinitionByCachedId(Method method) {
+        String id = methodOperationDefinitionCache.get(method);
+        if (Emptys.isNotEmpty(id)) {
+            return (OperationDefinition) operationDefinitionRepository.getById(id);
+        }
+        return null;
     }
 
     public OperationDefinition findOperationDefinition(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
         final Method method = wrappedRequest.getRequestContext();
         // step 1: get operation definition from cache
-        final Holder<OperationDefinition> operationDefinition = new Holder<OperationDefinition>(methodOperationDefinitionCache.get(method));
+        final Holder<OperationDefinition> operationDefinition = new Holder<OperationDefinition>(getOperationDefinitionByCachedId(method));
 
         if (operationDefinition.isNull()) {
             // step 2: parse method
             // step 2.1 parse annotations based on parser registry
-            Collects.forEach(operationParserRegistry.getAnnotationParsers(), new Predicate<OperationMethodAnnotationParser<? extends Annotation>>() {
+            Collects.forEach(operationParserRegistry.getAnnotationParsers(), new Predicate<OperationMethodAnnotationDefinitionParser<? extends Annotation>>() {
                 @Override
-                public boolean test(OperationMethodAnnotationParser<? extends Annotation> parser) {
+                public boolean test(OperationMethodAnnotationDefinitionParser<? extends Annotation> parser) {
                     return Reflects.getAnnotation(method, parser.getAnnotation()) != null;
                 }
-            }, new Consumer<OperationMethodAnnotationParser<? extends Annotation>>() {
+            }, new Consumer<OperationMethodAnnotationDefinitionParser<? extends Annotation>>() {
                 @Override
-                public void accept(OperationMethodAnnotationParser<? extends Annotation> parser) {
+                public void accept(OperationMethodAnnotationDefinitionParser<? extends Annotation> parser) {
                     operationDefinition.set(parser.parse(method));
                 }
-            }, new Predicate<OperationMethodAnnotationParser<? extends Annotation>>() {
+            }, new Predicate<OperationMethodAnnotationDefinitionParser<? extends Annotation>>() {
                 @Override
-                public boolean test(OperationMethodAnnotationParser<? extends Annotation> parser) {
+                public boolean test(OperationMethodAnnotationDefinitionParser<? extends Annotation> parser) {
                     return !operationDefinition.isNull();
                 }
             });
 
             // 2.2) parse from configuration file
             if (operationDefinition.isNull()) {
-                // 2.2.1 using custom operation name generator
+                // 2.2.1 using custom operation id generator
                 Collects.forEach(operationIdGenerators, new Consumer<OperationIdGenerator<AuditedRequest, Method>>() {
                     @Override
                     public void accept(OperationIdGenerator<AuditedRequest, Method> generator) {
                         String operationDefinitionId = generator.get(wrappedRequest);
-                        operationDefinition.set(operationDefinitionRepository.getById(operationDefinitionId));
+                        operationDefinition.set((OperationDefinition) operationDefinitionRepository.getById(operationDefinitionId));
                     }
                 }, new Predicate<OperationIdGenerator<AuditedRequest, Method>>() {
                     @Override
@@ -121,18 +135,30 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
 
             if (operationDefinition.isNull()) {
                 // 2.2.2 using method full name (exclude parameters)
-                String operationDefinitionId = Reflects.getMethodString(method);
-                operationDefinition.set(operationDefinitionRepository.getById(operationDefinitionId));
+                String operationDefinitionId = Reflects.getFQNClassName(method.getDeclaringClass()) + "." + method.getName();
+                operationDefinition.set((OperationDefinition) operationDefinitionRepository.getById(operationDefinitionId));
+            }
+            if (!operationDefinition.isNull()) {
+                methodOperationDefinitionCache.set(method, operationDefinition.get().getId());
             }
         }
         return operationDefinition.get();
     }
 
-    public Cache<Method, OperationDefinition> getMethodOperationDefinitionCache() {
+
+    public MultipleLevelConfigurationRepository getOperationDefinitionRepository() {
+        return operationDefinitionRepository;
+    }
+
+    public void setOperationDefinitionRepository(MultipleLevelConfigurationRepository operationDefinitionRepository) {
+        this.operationDefinitionRepository = operationDefinitionRepository;
+    }
+
+    public Cache<Method, String> getMethodOperationDefinitionCache() {
         return methodOperationDefinitionCache;
     }
 
-    public void setMethodOperationDefinitionCache(Cache<Method, OperationDefinition> methodOperationDefinitionCache) {
+    public void setMethodOperationDefinitionCache(Cache<Method, String> methodOperationDefinitionCache) {
         this.methodOperationDefinitionCache = methodOperationDefinitionCache;
     }
 
@@ -156,13 +182,6 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
         this.operationIdGenerators.add(generator);
     }
 
-    public OperationDefinitionRepository getOperationDefinitionRepository() {
-        return operationDefinitionRepository;
-    }
-
-    public void setOperationDefinitionRepository(OperationDefinitionRepository operationDefinitionRepository) {
-        this.operationDefinitionRepository = operationDefinitionRepository;
-    }
 
     public OperationParametersExtractor<AuditedRequest, Method> getOperationParametersExtractor() {
         return operationParametersExtractor;
@@ -171,4 +190,6 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
     public void setOperationParametersExtractor(OperationParametersExtractor<AuditedRequest, Method> operationParametersExtractor) {
         this.operationParametersExtractor = operationParametersExtractor;
     }
+
+
 }

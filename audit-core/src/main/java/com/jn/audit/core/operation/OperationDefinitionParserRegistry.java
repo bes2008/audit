@@ -1,7 +1,7 @@
 package com.jn.audit.core.operation;
 
 import com.jn.audit.core.operation.repository.OperationRepositoryParser;
-import com.jn.audit.core.operation.method.OperationMethodAnnotationParser;
+import com.jn.audit.core.operation.method.OperationMethodAnnotationDefinitionParser;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 
@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 public class OperationDefinitionParserRegistry {
-    private Map<Class<? extends Annotation>, OperationMethodAnnotationParser<?>> annotationParserMap = new LinkedHashMap<Class<? extends Annotation>, OperationMethodAnnotationParser<?>>();
+    private Map<Class<? extends Annotation>, OperationMethodAnnotationDefinitionParser<?>> annotationParserMap = new LinkedHashMap<Class<? extends Annotation>, OperationMethodAnnotationDefinitionParser<?>>();
     private Map<String, OperationRepositoryParser> repositoryParserMap = new LinkedHashMap<String, OperationRepositoryParser>();
 
-    public void registry(OperationMethodAnnotationParser<? extends Annotation> parser) {
+    public void registry(OperationMethodAnnotationDefinitionParser<? extends Annotation> parser) {
         Preconditions.checkNotNull(parser);
         annotationParserMap.put(parser.getAnnotation(), parser);
     }
@@ -24,11 +24,11 @@ public class OperationDefinitionParserRegistry {
         repositoryParserMap.put(parser.getName(), parser);
     }
 
-    public List<OperationMethodAnnotationParser<? extends Annotation>> getAnnotationParsers() {
+    public List<OperationMethodAnnotationDefinitionParser<? extends Annotation>> getAnnotationParsers() {
         return Collects.asList(annotationParserMap.values());
     }
 
-    public OperationMethodAnnotationParser<? extends Annotation> getAnnotationParser(Class<? extends Annotation> annotationClass) {
+    public OperationMethodAnnotationDefinitionParser<? extends Annotation> getAnnotationParser(Class<? extends Annotation> annotationClass) {
         return annotationParserMap.get(annotationClass);
     }
 
