@@ -88,8 +88,8 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     /**
      * 该方法应用于 非AOP情况下， 即不需要在某个方法前、后执行的情况。
      *
-     * @param request
-     * @param ctx
+     * @param request the request
+     * @param ctx the request context
      */
     public void doAudit(AuditedRequest request, AuditedRequestContext ctx) {
         if (isAsyncAudit(request)) {

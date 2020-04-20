@@ -31,7 +31,8 @@ operation:
   definition:
     location: classpath:/operation.yml
 audit:
-  async-mode: true
+  enabled: true
+  async-mode: false
   topics: [DEFAULT, LOGIN_LOGOUT]
   topic-configs:
     - name: DEFAULT
@@ -40,3 +41,6 @@ audit:
     - name: LOGIN_LOGOUT
       ring-buffer-size: 512
       producer-type: SINGLE
+  http-interceptor-patterns:
+    - /consumers/**
+    - /users/**

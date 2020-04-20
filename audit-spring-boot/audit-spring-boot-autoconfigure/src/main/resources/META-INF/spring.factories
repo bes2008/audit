@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.jn.audit.spring.boot.autoconfigure.AuditAutoConfiguration,\
+  com.jn.audit.spring.boot.autoconfigure.OperationAutoConfiguration,\
+  com.jn.audit.spring.boot.autoconfigure.AuditEntranceConfiguration,\
+  com.jn.audit.spring.boot.autoconfigure.WebappInterceptorRegisterConfiguration

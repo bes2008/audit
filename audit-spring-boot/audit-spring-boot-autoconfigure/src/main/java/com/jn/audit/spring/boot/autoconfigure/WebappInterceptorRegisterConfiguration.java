@@ -1,7 +1,12 @@
-package com.jn.audit.examples.springmvcdemo.common.config;
+package com.jn.audit.spring.boot.autoconfigure;
 
-import com.jn.audit.spring.webmvc.AuditHttpHandlerInterceptor;
+import com.jn.langx.util.Emptys;
+import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
@@ -12,13 +17,27 @@ import org.springframework.validation.Validator;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
 
+@ConditionalOnWebApplication
+@ConditionalOnBean(name = "auditHttpHandlerInterceptor")
+@EnableConfigurationProperties(AuditProperties.class)
 @Configuration
-public class WebappConfig implements WebMvcConfigurer, ApplicationContextAware {
+public class WebappInterceptorRegisterConfiguration implements WebMvcConfigurer, ApplicationContextAware {
     private ApplicationContext ctx;
+    private AuditProperties properties;
+
+    public AuditProperties getProperties() {
+        return properties;
+    }
+
+    @Autowired
+    public void setProperties(AuditProperties properties) {
+        this.properties = properties;
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -52,9 +71,13 @@ public class WebappConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        AuditHttpHandlerInterceptor interceptor = ctx.getBean(AuditHttpHandlerInterceptor.class);
+        HandlerInterceptor interceptor = (HandlerInterceptor) ctx.getBean("auditHttpHandlerInterceptor");
         InterceptorRegistration registration = registry.addInterceptor(interceptor);
-        registration.addPathPatterns("/customers/**", "/users/**");
+        List<String> pathPatterns = properties.getHttpInterceptorPatterns();
+        if (Emptys.isEmpty(pathPatterns)) {
+            pathPatterns = Collects.newArrayList("**");
+        }
+        registration.addPathPatterns(pathPatterns);
     }
 
     @Override

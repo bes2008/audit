@@ -19,6 +19,7 @@ public class MessageTopicDispatcher implements Lifecycle {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopicDispatcher.class);
     private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
     private EventPublisher<TopicEvent> topicEventPublisher;
+    private volatile boolean running = false;
 
     public MessageTopicDispatcher() {
     }
@@ -50,6 +51,9 @@ public class MessageTopicDispatcher implements Lifecycle {
     }
 
     public void publish(String topicName, final Object message) {
+        if (!running) {
+            logger.warn("Publish message to topic {} fail, the message topic dispatcher is not running", topicName);
+        }
         if ("*".equals(topicName)) {
             Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
                 @Override
@@ -88,16 +92,20 @@ public class MessageTopicDispatcher implements Lifecycle {
 
     @Override
     public void startup() {
-        Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
-            @Override
-            public void accept(String key, MessageTopic value) {
-                value.startup();
-            }
-        });
+        if (!running) {
+            Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+                @Override
+                public void accept(String key, MessageTopic value) {
+                    value.startup();
+                }
+            });
+            running = true;
+        }
     }
 
     @Override
     public void shutdown() {
+        running = false;
         Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
             @Override
             public void accept(String key, MessageTopic value) {

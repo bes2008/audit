@@ -1,4 +1,4 @@
-package com.jn.audit.examples.springmvcdemo.common.config;
+package com.jn.audit.spring.boot.autoconfigure;
 
 import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
@@ -21,6 +21,10 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -30,14 +34,16 @@ import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
 @Configuration
-public class OperationConfig {
+public class OperationAutoConfiguration {
 
-    @Bean
+    @Bean(name = "Operation-Timer")
+    @ConditionalOnMissingBean(name = {"Operation-Timer"})
     public Timer timer() {
         return WheelTimers.newHashedWheelTimer(new CommonThreadFactory());
     }
 
     @Bean("operationDefinitionCache")
+    @ConditionalOnMissingBean(name = {"operationDefinitionCache"})
     public Cache<String, OperationDefinition> operationDefinitionCache(@Autowired Timer timer) {
         return CacheBuilder.<String, OperationDefinition>newBuilder()
                 .initialCapacity(500)
@@ -48,13 +54,17 @@ public class OperationConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(value = {OperationDefinitionLoader.class})
     public OperationDefinitionLoader yamlOperationDefinitionLoader(@Value("${operation.definition.location}") String location) {
         YamlOperationDefinitionLoader loader = new YamlOperationDefinitionLoader();
         loader.setDefinitionFilePath(location);
         return loader;
     }
 
+
     @Bean("yamlOperationDefinitionRepository")
+    @ConditionalOnMissingBean(value = {OperationDefinitionRepository.class})
+    @ConditionalOnBean(value = {OperationDefinitionLoader.class})
     public OperationDefinitionRepository yamlOperationDefinitionRepository(
             @Autowired @Qualifier("operationDefinitionCache")
                     Cache<String, OperationDefinition> operationDefinitionCache,
@@ -72,10 +82,11 @@ public class OperationConfig {
     }
 
     @Bean("multipleLevelOperationDefinitionRepository")
+    @ConditionalOnMissingBean(name = "multipleLevelOperationDefinitionRepository")
     public MultipleLevelConfigurationRepository multipleLevelOperationDefinitionRepository(
             @Autowired @Qualifier("yamlOperationDefinitionRepository")
                     OperationDefinitionRepository yamlRepository,
-            @Autowired
+            @Autowired @Qualifier("Operation-Timer")
                     Timer timer
     ) {
         MultipleLevelConfigurationRepository repository = new MultipleLevelConfigurationRepository();
@@ -92,12 +103,14 @@ public class OperationConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(value = {OperationAnnotationParser.class})
     @Order(0)
     public OperationAnnotationParser operationAnnotationParser() {
         return new OperationAnnotationParser();
     }
 
     @Autowired
+    @ConditionalOnMissingBean(value = {OperationDefinitionParserRegistry.class})
     @Bean("operationDefinitionParserRegistry")
     public OperationDefinitionParserRegistry operationDefinitionParserRegistry(
             ObjectProvider<OperationMethodAnnotationDefinitionParser> methodAnnotationDefinitionParsers,
@@ -121,14 +134,16 @@ public class OperationConfig {
 
     @Order(3)
     @Bean
+    @ConditionalOnWebApplication
     public OperationIdGenerator<HttpServletRequest, Method> urlOperationDefinitionIdGenerator() {
         return new ServletUrlOperationIdGenerator();
     }
 
+
     @Order(2)
     @Bean
+    @ConditionalOnWebApplication
     public OperationIdGenerator<HttpServletRequest, Method> requestMappingOperationDefinitionIdGenerator() {
         return new RequestMappingOperationDefinitionIdGenerator();
     }
-
 }
