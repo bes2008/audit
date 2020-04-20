@@ -18,7 +18,7 @@
         <swagger.version>2.9.2</swagger.version>
         <junit.version>4.12</junit.version>
         <spring.boot.version>2.2.1.RELEASE</spring.boot.version>
-        <spring.version>5.2.1.RELEASE</spring.version>
+        <spring.version>5.2.4.RELEASE</spring.version>
         <sqlhelper.version>3.0.2</sqlhelper.version>
         <easyjson.version>2.2.0</easyjson.version>
 

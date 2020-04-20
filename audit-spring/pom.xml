@@ -10,7 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>audit-spring</artifactId>
-
+    <properties>
+        <spring.version>5.2.4.RELEASE</spring.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.github.fangjinuo.audit</groupId>
@@ -27,13 +29,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>5.2.4.RELEASE</version>
+            <version>${spring.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>5.2.1.RELEASE</version>
+            <version>${spring.version}</version>
             <optional>true</optional>
         </dependency>
 
