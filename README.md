@@ -6,7 +6,7 @@ A common audit framework for java application.
 教程 : https://fangjinuo.gitee.io/docs/index.html
 
 ## Example
-给一个SpringBoot应用快速加上审计功能
+给一个SpringBoot应用快速加上审计功能，也可以直接去参考 audit-examples-springmvcdemo 
 
 第一步：引入相关Jar包
 ```xml
