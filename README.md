@@ -1,6 +1,9 @@
 # audit
-an audit formwork for java appliction
+A common audit framework for java application.
 
+[![maven](https://img.shields.io/badge/maven-v1.0.0-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.audit%20AND%20v:1.0.0)
+
+教程 : https://fangjinuo.gitee.io/docs/index.html
 
 ##  [推广](https://github.com/fangjinuo)
 + langx 系列
