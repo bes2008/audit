@@ -25,6 +25,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -34,6 +35,7 @@ import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
 @Configuration
+@EnableConfigurationProperties(OperationDefinitionProperties.class)
 public class OperationAutoConfiguration {
 
     @Bean(name = "Operation-Timer")
@@ -55,9 +57,9 @@ public class OperationAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(value = {OperationDefinitionLoader.class})
-    public OperationDefinitionLoader yamlOperationDefinitionLoader(@Value("${operation.definition.location}") String location) {
+    public OperationDefinitionLoader yamlOperationDefinitionLoader(OperationDefinitionProperties definitionProperties) {
         YamlOperationDefinitionLoader loader = new YamlOperationDefinitionLoader();
-        loader.setDefinitionFilePath(location);
+        loader.setDefinitionFilePath(definitionProperties.getLocation());
         return loader;
     }
 
@@ -66,6 +68,7 @@ public class OperationAutoConfiguration {
     @ConditionalOnMissingBean(value = {OperationDefinitionRepository.class})
     @ConditionalOnBean(value = {OperationDefinitionLoader.class})
     public OperationDefinitionRepository yamlOperationDefinitionRepository(
+            OperationDefinitionProperties definitionProperties,
             @Autowired @Qualifier("operationDefinitionCache")
                     Cache<String, OperationDefinition> operationDefinitionCache,
             @Autowired
@@ -77,7 +80,7 @@ public class OperationAutoConfiguration {
         repository.setCache(operationDefinitionCache);
         repository.setTimer(timer);
         repository.setConfigurationLoader(yamlLoader);
-        repository.setReloadIntervalInSeconds(60);
+        repository.setReloadIntervalInSeconds(definitionProperties.getReloadIntervalInSeconds());
         return repository;
     }
 

@@ -3,11 +3,9 @@ package com.jn.audit.spring.boot.autoconfigure;
 import com.jn.audit.core.AuditSettings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 @ConfigurationProperties(prefix = "audit")
 @ConditionalOnMissingBean(name = "auditProperties")
 public class AuditProperties extends AuditSettings {

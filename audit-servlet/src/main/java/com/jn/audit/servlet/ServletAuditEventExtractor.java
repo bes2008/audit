@@ -39,7 +39,7 @@ public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<Http
         principal.setClientPort(request.getRemotePort());
         principal.setPrincipalId(request.getRemoteUser());
         principal.setPrincipalName(request.getRemoteUser());
-        principal.setPrincipalType(Strings.isEmpty(request.getAuthType()) ? PrincipalType.anonymous : PrincipalType.authenticated);
+        principal.setPrincipalType((Strings.isEmpty(request.getAuthType()) ? PrincipalType.anonymous : PrincipalType.authenticated).name());
         return principal;
     }
 

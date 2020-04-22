@@ -30,6 +30,7 @@ logging:
 operation:
   definition:
     location: classpath:/operation.yml
+    reload-interval-in-seconds: 60
 audit:
   enabled: true
   async-mode: false

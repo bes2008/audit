@@ -7,7 +7,7 @@ public class Principal implements Serializable {
 
     private String principalId;// {required} the user id
     private String principalName;// {required} the user name
-    private PrincipalType principalType;// {required} the user type
+    private String principalType;// {required} the user type
     private String clientIp;    // {optional} ip
     private String clientHost; // {optional} ip
     private int clientPort;     // {optional} port
@@ -28,11 +28,11 @@ public class Principal implements Serializable {
         this.principalName = principalName;
     }
 
-    public PrincipalType getPrincipalType() {
+    public String getPrincipalType() {
         return principalType;
     }
 
-    public void setPrincipalType(PrincipalType principalType) {
+    public void setPrincipalType(String principalType) {
         this.principalType = principalType;
     }
 
