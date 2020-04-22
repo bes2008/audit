@@ -14,7 +14,7 @@ public class MessageTopicConfiguration {
     private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
 
     @NonNull
-    private int ringBufferSize = 8096; // power(2)
+    private int ringBufferSize = 8192; // power(2)
     @NonNull
     private Executor executor;
     @NonNull
