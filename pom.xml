@@ -7,12 +7,12 @@
     <groupId>com.github.fangjinuo.audit</groupId>
     <artifactId>audit</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
 
     <name>audit</name>
 
     <description>
-        An audit framework for java application
+        A common audit framework for java application
     </description>
     <url>https://github.com/fangjinuo/audit</url>
     <developers>
