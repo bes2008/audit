@@ -30,11 +30,17 @@ public class RequestMappings {
 
     public static List<String> getURLTemplates(Class clazz) {
         RequestMapping mapping = getRequestMapping(clazz);
+        if (mapping == null) {
+            return Collects.newArrayList();
+        }
         return getURLTemplates(mapping);
     }
 
     public static List<String> getURLTemplates(Method method) {
         RequestMapping mapping = getRequestMapping(method);
+        if (mapping == null) {
+            return Collects.newArrayList();
+        }
         return getURLTemplates(mapping);
     }
 
