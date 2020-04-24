@@ -39,11 +39,14 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
+    @ConditionalOnWebApplication
+    @ConditionalOnMissingBean(name = "servletHttpParametersExtractor")
     @Bean("servletHttpParametersExtractor")
     public ServletHttpParametersExtractor servletHttpParametersExtractor() {
         return new ServletHttpParametersExtractor();
     }
 
+    @ConditionalOnWebApplication
     @Bean(name = "operationMethodExtractor")
     @ConditionalOnMissingBean(name = {"operationMethodExtractor"})
     public OperationMethodExtractor<HttpServletRequest> operationMethodExtractor(

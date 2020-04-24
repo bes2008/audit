@@ -24,10 +24,19 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
                 paths = accessor.getValues();
             }
             List<String> controllerPaths = RequestMappings.getURLTemplates(method.getDeclaringClass());
-            if (Objects.isEmpty(httpMethods) || Emptys.isEmpty(paths) || Emptys.isEmpty(controllerPaths)) {
+            if (Objects.isEmpty(httpMethods)) {
                 return null;
             }
-            return httpMethods.get(0).name() + "-" + controllerPaths.get(0) + paths.get(0);
+
+            String urlTemplate = "";
+            if (Emptys.isEmpty(paths) && Emptys.isEmpty(controllerPaths)) {
+                urlTemplate = "/";
+            } else {
+                String urlAtController = Emptys.isEmpty(controllerPaths) ? "" : controllerPaths.get(0);
+                String urlAtMethod = Emptys.isEmpty(paths) ? "" : paths.get(0);
+                urlTemplate = urlAtController + urlAtMethod;
+            }
+            return httpMethods.get(0).name() + "-" + urlTemplate;
         }
         return null;
     }
