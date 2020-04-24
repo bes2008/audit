@@ -41,7 +41,7 @@
     </scm>
     <licenses>
         <license>
-            <name>LGPLv3</name>
+            <name>Apache2.0</name>
             <url>https://github.com/fangjinuo/audit/blob/master/LICENSE</url>
             <distribution>manual</distribution>
         </license>
