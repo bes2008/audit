@@ -15,6 +15,9 @@ public class AuditConfig {
         return dbService;
     }
 
+    /**
+     * 这是一个自定义的写入数据库的 Consumer
+     */
     @Autowired
     public void setDbService(Auditor auditor, MessageTopicDispatcher dispatcher, DbService dbService) {
         this.dbService = dbService;

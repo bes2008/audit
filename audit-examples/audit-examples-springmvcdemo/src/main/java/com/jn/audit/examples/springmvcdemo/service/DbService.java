@@ -4,10 +4,13 @@ import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.mq.Consumer;
 import com.jn.audit.mq.MessageHolder;
 import com.jn.langx.util.struct.Holder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DbService implements Consumer<AuditEvent> {
+    private static final Logger logger = LoggerFactory.getLogger(DbService.class);
     @Override
     public String getName() {
         return "Audit-Database-Consumer";
@@ -15,7 +18,7 @@ public class DbService implements Consumer<AuditEvent> {
 
     @Override
     public void onEvent(MessageHolder<AuditEvent> event, long sequence, boolean endOfBatch) throws Exception {
-        System.out.println("DB service");
+        logger.info("DB service");
     }
 
     @Override
