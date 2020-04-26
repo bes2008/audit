@@ -51,6 +51,35 @@ operation:
 只需上述4步，然后访问应用就会有相应的日志产生。
 如果想把审计日志写入数据库，或者需要自定义审计日志消费者，只需要实现 com.jn.audit.mq.Consumer接口并订阅响应的topic即可。
 可以参考：audit-examples/audit-examples-springmvcdemo 中的AuditConfig.java
+```java
+
+import com.jn.audit.core.Auditor;
+import com.jn.audit.examples.springmvcdemo.service.DbService;
+import com.jn.audit.mq.MessageTopicDispatcher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AuditConfig {
+
+    private DbService dbService;
+
+    public DbService getDbService() {
+        return dbService;
+    }
+
+    /**
+     * 这是一个自定义的写入数据库的 Consumer
+     */
+    @Autowired
+    public void setDbService(Auditor auditor, MessageTopicDispatcher dispatcher, DbService dbService) {
+        this.dbService = dbService;
+        auditor.getMessageTopicDispatcher().subscribe("DEFAULT", dbService);
+    }
+
+}
+
+```
 
 
 
