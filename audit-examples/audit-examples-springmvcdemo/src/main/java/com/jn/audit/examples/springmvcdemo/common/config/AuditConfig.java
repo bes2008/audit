@@ -1,5 +1,7 @@
 package com.jn.audit.examples.springmvcdemo.common.config;
 
+import com.jn.audit.core.Auditor;
+import com.jn.audit.examples.springmvcdemo.service.DbService;
 import com.jn.audit.mq.MessageTopicDispatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +11,7 @@ public class AuditConfig {
 
     private MessageTopicDispatcher dispatcher;
 
-
+    private DbService dbService;
 
 
     public MessageTopicDispatcher getDispatcher() {
@@ -20,4 +22,15 @@ public class AuditConfig {
     public void setDispatcher(MessageTopicDispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
+
+    public DbService getDbService() {
+        return dbService;
+    }
+
+    @Autowired
+    public void setDbService(Auditor auditor, MessageTopicDispatcher dispatcher, DbService dbService) {
+        this.dbService = dbService;
+        auditor.getMessageTopicDispatcher().subscribe("DEFAULT", dbService);
+    }
+
 }
