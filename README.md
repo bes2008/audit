@@ -1,7 +1,7 @@
 # audit
 一个通用的 Audit （审计）框架。如果要接入4A审计时，特别方便哟，同时也高度定制化。
 
-[![maven](https://img.shields.io/badge/maven-v1.0.0-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.audit%20AND%20v:1.0.0)
+[![maven](https://img.shields.io/badge/maven-v1.0.1-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.audit%20AND%20v:1.0.1)
 
 教程 : https://fangjinuo.gitee.io/docs/index.html
 
