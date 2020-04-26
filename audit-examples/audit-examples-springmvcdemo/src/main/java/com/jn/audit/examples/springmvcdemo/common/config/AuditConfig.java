@@ -19,9 +19,10 @@ public class AuditConfig {
      * 这是一个自定义的写入数据库的 Consumer
      */
     @Autowired
-    public void setDbService(Auditor auditor, MessageTopicDispatcher dispatcher, DbService dbService) {
+    public void setDbService(Auditor auditor, DbService dbService) {
         this.dbService = dbService;
-        auditor.getMessageTopicDispatcher().subscribe("DEFAULT", dbService);
+        MessageTopicDispatcher dispatcher = auditor.getMessageTopicDispatcher();
+        dispatcher.subscribe("DEFAULT", dbService);
     }
 
 }
