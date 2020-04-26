@@ -48,7 +48,10 @@ operation:
     reload-interval-in-seconds: 60      # 如果值 >0 则会定时的重新加载，在开发环境下有很有用
 ```
 
-只需上述4步，然后访问应用就会有相应的日志产生。如果想把审计日志写入数据库，只需要实现 com.jn.audit.mq.Consumer接口并配置上即可。
+只需上述4步，然后访问应用就会有相应的日志产生。
+如果想把审计日志写入数据库，或者需要自定义审计日志消费者，只需要实现 com.jn.audit.mq.Consumer接口并订阅响应的topic即可。
+可以参考：audit-examples/audit-examples-springmvcdemo 中的AuditConfig.java
+
 
 
 
