@@ -9,19 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AuditConfig {
 
-    private MessageTopicDispatcher dispatcher;
-
     private DbService dbService;
-
-
-    public MessageTopicDispatcher getDispatcher() {
-        return dispatcher;
-    }
-
-    @Autowired
-    public void setDispatcher(MessageTopicDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
 
     public DbService getDbService() {
         return dbService;
