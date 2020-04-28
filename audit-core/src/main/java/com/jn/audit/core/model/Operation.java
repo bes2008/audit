@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Operation implements Serializable {
     private OperationDefinition definition;
-    private Map<String, List<? extends Serializable>> parameters; // {optional}
+    private Map<String, ?> parameters; // {optional}
     private OperationResult result;
 
     public OperationDefinition getDefinition() {
@@ -19,11 +19,11 @@ public class Operation implements Serializable {
         this.definition = definition;
     }
 
-    public Map<String, List<? extends Serializable>> getParameters() {
+    public Map<String, ?> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map<String, List<? extends Serializable>> parameters) {
+    public void setParameters(Map<String, ?> parameters) {
         this.parameters = parameters;
     }
 

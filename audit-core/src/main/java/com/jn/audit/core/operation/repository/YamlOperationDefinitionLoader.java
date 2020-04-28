@@ -35,13 +35,13 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
 
     @NonNull
     @Override
-    public List<OperationDefinition> reload(Map<String,OperationImportance> importances) {
+    public List<OperationDefinition> reload(Map<String, OperationImportance> importances) {
         return Collects.newArrayList(reloadAll(importances).values());
     }
 
-    private Map<String, OperationDefinition> reloadAll(Map<String,OperationImportance> importances) {
+    private Map<String, OperationDefinition> reloadAll(Map<String, OperationImportance> importances) {
         final Map<String, OperationImportance> importanceMap = new HashMap<String, OperationImportance>();
-        if(importances!=null) {
+        if (importances != null) {
             importanceMap.putAll(importances);
         }
         Map<String, OperationDefinition> definitionMap = Collects.<String, OperationDefinition>emptyHashMap();
@@ -67,7 +67,7 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
             // load importanceMap
             if (segments.containsKey("operationImportance")) {
                 doLoadImportanceMap(importanceMap, (Map) segments.get("operationImportance"));
-                if(importances!=null) {
+                if (importances != null) {
                     importances.putAll(importanceMap);
                 }
             } else {
@@ -129,8 +129,10 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 }
                 // description
                 Object description = propertyPairMap.get("description");
-                if (type != null) {
-                    definition.setDescription(type.toString());
+                if (description != null) {
+                    definition.setDescription(description.toString());
+                } else {
+                    definition.setDescription("");
                 }
                 // importance
                 Object importanceKey = propertyPairMap.get("importance");
