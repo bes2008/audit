@@ -17,7 +17,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Map;
 
-public class SpringControllerMethodInterceptor implements MethodInterceptor {
+/**
+ * AOP expression:
+ *  execution(public * your.controller.package..*Controller.*(..))
+ */
+public class ControllerMethodInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         AuditRequest request = Auditor.auditRequestHolder.get();
