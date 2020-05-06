@@ -10,6 +10,8 @@ import com.jn.langx.util.function.Predicate2;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +21,7 @@ import java.util.Map;
 
 /**
  * AOP expression:
- *  execution(public * your.controller.package..*Controller.*(..))
+ * execution(public * your.controller.package..*Controller.*(..))
  */
 public class ControllerMethodInterceptor implements MethodInterceptor {
     @Override
@@ -38,11 +40,15 @@ public class ControllerMethodInterceptor implements MethodInterceptor {
                         if (arg == null) {
                             return false;
                         }
-                        if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse || arg instanceof WebDataBinder) {
+                        if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse || arg instanceof WebDataBinder || arg instanceof View || arg instanceof ModelAndView) {
                             return false;
                         }
 
-                        String packageName = parameters[index].getType().getPackage().getName();
+                        Parameter parameter = parameters[index];
+                        if (parameter == null || parameter.getType() == null || parameter.getType().getPackage() == null) {
+                            return false;
+                        }
+                        String packageName = parameter.getType().getPackage().getName();
                         if (packageName.startsWith("java.lang.reflect.") || packageName.startsWith("org.springframework.")) {
                             return false;
                         }
