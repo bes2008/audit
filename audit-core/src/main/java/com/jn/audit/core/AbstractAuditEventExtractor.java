@@ -2,6 +2,7 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.operation.OperationExtractor;
+import com.jn.audit.core.resource.ResourceExtractor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequestContext> implements AuditEventExtractor<AuditedRequest, AuditedRequestContext> {
 
     protected OperationExtractor<AuditedRequest, AuditedRequestContext> operationExtractor;
+    protected ResourceExtractor<AuditedRequest, AuditedRequestContext> resourceExtractor;
 
     @Override
     public AuditEvent get(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
@@ -33,6 +35,9 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
 
     @Override
     public List<Resource> extractResources(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
+        if (resourceExtractor != null) {
+            return resourceExtractor.get(wrappedRequest);
+        }
         return new ArrayList<>();
     }
 
@@ -47,5 +52,13 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
 
     public void setOperationExtractor(OperationExtractor<AuditedRequest, AuditedRequestContext> operationExtractor) {
         this.operationExtractor = operationExtractor;
+    }
+
+    public ResourceExtractor<AuditedRequest, AuditedRequestContext> getResourceExtractor() {
+        return resourceExtractor;
+    }
+
+    public void setResourceExtractor(ResourceExtractor<AuditedRequest, AuditedRequestContext> resourceExtractor) {
+        this.resourceExtractor = resourceExtractor;
     }
 }
