@@ -3,8 +3,10 @@ package com.jn.audit.core.model;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.collection.Collects;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class AuditEvent implements Serializable {
     public static final long serialVersionUID = 1L;
@@ -29,7 +31,7 @@ public class AuditEvent implements Serializable {
      * maybe extract from Operation parameters
      */
     @Nullable
-    private Resource resource; // {optional}
+    private List<Resource> resources = Collects.emptyArrayList(); // {optional}
 
     /**
      * do what
@@ -55,12 +57,12 @@ public class AuditEvent implements Serializable {
         this.service = service;
     }
 
-    public Resource getResource() {
-        return resource;
+    public List<Resource> getResources() {
+        return resources;
     }
 
-    public void setResource(Resource resource) {
-        this.resource = resource;
+    public void setResources(List<Resource> resources) {
+        this.resources = resources;
     }
 
     public Operation getOperation() {
@@ -93,6 +95,10 @@ public class AuditEvent implements Serializable {
 
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    public void addResource(Resource resource) {
+        resources.add(resource);
     }
 
     @Override

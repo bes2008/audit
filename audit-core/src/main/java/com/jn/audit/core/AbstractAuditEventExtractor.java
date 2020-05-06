@@ -3,6 +3,9 @@ package com.jn.audit.core;
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.operation.OperationExtractor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequestContext> implements AuditEventExtractor<AuditedRequest, AuditedRequestContext> {
 
     protected OperationExtractor<AuditedRequest, AuditedRequestContext> operationExtractor;
@@ -14,7 +17,7 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
         event.setService(extractService(wrappedRequest));
         event.setPrincipal(extractPrincipal(wrappedRequest));
         event.setOperation(extractOperation(wrappedRequest));
-        event.setResource(extractResource(wrappedRequest));
+        event.setResources(extractResources(wrappedRequest));
         return event;
     }
 
@@ -29,8 +32,8 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
     }
 
     @Override
-    public Resource extractResource(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
-        return new Resource();
+    public List<Resource> extractResources(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
+        return new ArrayList<>();
     }
 
     @Override
