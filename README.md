@@ -13,7 +13,7 @@
     <dependency>
         <groupId>com.github.fangjinuo.audit</groupId>
         <artifactId>audit-spring-boot-starter</artifactId>
-        <version>1.0.0</version>
+        <version>${audit.version}</version>
     </dependency>
 ```
 第二步：在application.yml中配置审计功能
