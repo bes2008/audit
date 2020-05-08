@@ -7,7 +7,7 @@
     <groupId>com.github.fangjinuo.audit</groupId>
     <artifactId>audit</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <name>audit</name>
 
@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.2.7</langx-java.version>
+        <langx-java.version>2.2.8</langx-java.version>
         <easyjson.version>2.2.0</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
     </properties>
@@ -59,7 +59,9 @@
         <module>audit-spring</module>
         <module>audit-servlet</module>
         <module>audit-spring-boot</module>
+        <!--
         <module>audit-examples</module>
+        -->
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -71,7 +73,7 @@
 
             <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
-                <artifactId>langx-java</artifactId>
+                <artifactId>langx-java8</artifactId>
                 <version>${langx-java.version}</version>
             </dependency>
             <dependency>
@@ -117,7 +119,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.fangjinuo.langx</groupId>
-            <artifactId>langx-java</artifactId>
+            <artifactId>langx-java8</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

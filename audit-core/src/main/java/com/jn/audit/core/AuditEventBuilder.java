@@ -2,6 +2,8 @@ package com.jn.audit.core;
 
 import com.jn.audit.core.model.*;
 import com.jn.langx.Builder;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer;
 
 public class AuditEventBuilder implements Builder<AuditEvent> {
     private AuditEvent event = new AuditEvent();
@@ -16,8 +18,18 @@ public class AuditEventBuilder implements Builder<AuditEvent> {
         return this;
     }
 
-    public AuditEventBuilder resource(Resource resource) {
-        event.setResource(resource);
+    public AuditEventBuilder addResource(Resource resource) {
+        event.addResource(resource);
+        return this;
+    }
+
+    public AuditEventBuilder addResource(Resource... resources) {
+        Collects.forEach(resources, new Consumer<Resource>() {
+            @Override
+            public void accept(Resource resource) {
+                addResource(resource);
+            }
+        });
         return this;
     }
 
