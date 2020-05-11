@@ -9,6 +9,7 @@ import com.jn.audit.core.resource.valuegetter.StreamValueGetter;
 import com.jn.audit.core.resource.valuegetter.ValueGetter;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.proxy.aop.MethodInvocation;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objects;
 import com.jn.langx.util.collection.Collects;
@@ -16,6 +17,7 @@ import com.jn.langx.util.collection.ConcurrentReferenceHashMap;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.reference.ReferenceType;
 import com.jn.langx.util.reflect.type.Primitives;
@@ -23,6 +25,7 @@ import com.jn.langx.util.reflect.type.Types;
 import com.jn.langx.util.struct.Entry;
 import com.jn.langx.util.struct.Holder;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Collection;
@@ -35,7 +38,7 @@ import java.util.Map;
  * @param <AuditedRequest>
  * @since audit 1.0.3+, jdk 1.8+
  */
-public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtractor<AuditedRequest, Method> {
+public class ResourceMethodInvocationExtractor<AuditedRequest> implements ResourceExtractor<AuditedRequest, MethodInvocation> {
     /**
      * 根据注解解析后的进行缓存
      */
@@ -45,9 +48,21 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
      */
     private ConcurrentReferenceHashMap<Method, Entry<ResourceDefinition, ValueGetter>> configuredResourceCache = new ConcurrentReferenceHashMap<Method, Entry<ResourceDefinition, ValueGetter>>(1000, 0.9f, Runtime.getRuntime().availableProcessors(), ReferenceType.SOFT, ReferenceType.SOFT);
 
+    private AbstractIdResourceExtractor idResourceExtractor;
+
+    public AbstractIdResourceExtractor getIdResourceExtractor() {
+        return idResourceExtractor;
+    }
+
+    public void setIdResourceExtractor(AbstractIdResourceExtractor idResourceExtractor) {
+        this.idResourceExtractor = idResourceExtractor;
+    }
+
     @Override
-    public List<Resource> get(AuditRequest<AuditedRequest, Method> wrappedRequest) {
-        final Method method = wrappedRequest.getRequestContext();
+    public List<Resource> get(AuditRequest<AuditedRequest, MethodInvocation> wrappedRequest) {
+        final MethodInvocation methodInvocation = wrappedRequest.getRequestContext();
+        Method method = methodInvocation.getJoinPoint();
+
         AuditEvent auditEvent = wrappedRequest.getAuditEvent();
 
         Operation operation = auditEvent.getOperation();
@@ -85,7 +100,52 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
         if (resourceGetter == null) {
             return null;
         }
-        return null;
+        Object resourcesObj = resourceGetter.get(methodInvocation.getArguments());
+        List<Object> resourcesCollection = null;
+        if (resourcesObj instanceof Resource) {
+            resourcesCollection = Collects.newArrayList(resourcesObj);
+        } else if (resourcesObj instanceof List) {
+            resourcesCollection = (List) resourcesObj;
+        }
+        List<Resource> resources = Pipeline.<Object>of(resourcesCollection)
+                .clearNulls()
+                .filter(new Predicate<Object>() {
+                    @Override
+                    public boolean test(Object resource) {
+                        return resource instanceof Resource;
+                    }
+                }).map(new Function<Object, Resource>() {
+                    @Override
+                    public Resource apply(Object input) {
+                        return (Resource) input;
+                    }
+                })
+                .asList();
+
+        if (idResourceExtractor != null) {
+            if (Collects.allMatch(resources, new Predicate<Resource>() {
+                @Override
+                public boolean test(Resource value) {
+                    return ResourceUtils.isOnlyResourceId(value);
+                }
+            })) {
+                List<Serializable> ids = Pipeline.of(resources).map(new Function<Resource, Serializable>() {
+                    @Override
+                    public Serializable apply(Resource resource) {
+                        return resource.getResourceId();
+                    }
+                }).asList();
+                List<Resource> resourceList = idResourceExtractor.findResources(wrappedRequest.getRequest(), ids);
+                resourceList = Pipeline.of(resourceList).filter(new Predicate<Resource>() {
+                    @Override
+                    public boolean test(Resource resource) {
+                        return ResourceUtils.isValid(resource);
+                    }
+                }).asList();
+                return resourceList;
+            }
+        }
+        return resources;
     }
 
     private ValueGetter getValueGetterFromCache(@NonNull Method method, @Nullable ResourceDefinition resourceDefinition) {
