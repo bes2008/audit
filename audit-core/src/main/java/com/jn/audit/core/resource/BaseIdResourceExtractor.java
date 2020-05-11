@@ -8,6 +8,7 @@ import com.jn.langx.util.function.Function;
 import java.io.Serializable;
 import java.util.List;
 
+@Deprecated
 public abstract class BaseIdResourceExtractor<E, AuditedRequest, AuditedRequestContext> implements ResourceExtractor<AuditedRequest, AuditedRequestContext> {
 
     public abstract List<Serializable> findIds(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest);

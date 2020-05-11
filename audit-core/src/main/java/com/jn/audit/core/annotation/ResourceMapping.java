@@ -12,9 +12,18 @@ import static java.lang.annotation.ElementType.TYPE;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({TYPE})
 public @interface ResourceMapping {
+    /**
+     * @see com.jn.audit.core.model.Resource resourceName
+     */
     String name();
 
+    /**
+     * @see com.jn.audit.core.model.Resource resourceId
+     */
     String id();
 
+    /**
+     * @see com.jn.audit.core.model.Resource resourceType
+     */
     String type() default "";
 }

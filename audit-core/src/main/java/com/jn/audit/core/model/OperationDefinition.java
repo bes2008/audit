@@ -18,6 +18,7 @@ public class OperationDefinition implements Configuration, Serializable {
     private String type; // {optional}  the operate type
     private String description;// {optional} the operate description
     private OperationImportance importance;  // {optional} the importance
+    private ResourceDefinition resource;
 
     public String getCode() {
         return Strings.isEmpty(code) ? this.id : this.code;
@@ -68,6 +69,15 @@ public class OperationDefinition implements Configuration, Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    public ResourceDefinition getResource() {
+        return resource;
+    }
+
+    public void setResource(ResourceDefinition resource) {
+        this.resource = resource;
     }
 
     @Override

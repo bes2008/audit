@@ -3,8 +3,9 @@ package com.jn.audit.core;
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.operation.OperationExtractor;
 import com.jn.audit.core.resource.ResourceExtractor;
+import com.jn.langx.util.Emptys;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequestContext> implements AuditEventExtractor<AuditedRequest, AuditedRequestContext> {
@@ -35,10 +36,14 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
 
     @Override
     public List<Resource> extractResources(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
+        List<Resource> resources = Collections.emptyList();
         if (resourceExtractor != null) {
-            return resourceExtractor.get(wrappedRequest);
+            List<Resource> tmp = resourceExtractor.get(wrappedRequest);
+            if (Emptys.isNotEmpty(tmp)) {
+                return tmp;
+            }
         }
-        return new ArrayList<>();
+        return resources;
     }
 
     @Override

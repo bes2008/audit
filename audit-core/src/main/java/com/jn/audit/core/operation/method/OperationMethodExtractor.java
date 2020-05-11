@@ -19,7 +19,6 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Holder;
 
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -28,14 +27,17 @@ import java.util.Map;
 /**
  * 根据 method 来获取 Operation
  * <p>
+ * <pre>
  * 重点是根据 method 来获取 OperationDefinition
  * 根据method查找operation definition的步骤：
- * 1. get operation definition from cache
- * 2. parse method
- * 2.1) parse annotations based on parser registry
- * 2.2) parse from configuration file
- * 2.2.1) using custom operation id generator
- * 2.2.2) using method full name (exclude parameters)
+ *  1. get operation definition from cache
+ *  2. parse method
+ *      2.1) parse annotations based on parser registry
+ *      2.2) parse from configuration file
+ *          2.2.1) using custom operation id generator
+ *          2.2.2) using method full name (exclude parameters)
+ * </pre>
+ * </p>
  *
  * @param <AuditedRequest>
  */

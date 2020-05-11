@@ -1,10 +1,13 @@
 package com.jn.audit.core.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
-public class Resource implements Serializable {
+public class Resource extends HashMap<String, Object> implements Serializable {
     public static final long serialVersionUID = 1L;
-
+    public static final String RESOURCE_ID = "resourceId";
+    public static final String RESOURCE_TYPE = "resourceType";
+    public static final String RESOURCE_NAME = "resourceName";
     private String resourceId;
     private String resourceType;
     private String resourceName;
