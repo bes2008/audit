@@ -1,5 +1,6 @@
 package com.jn.audit.core.resource.parser;
 
+import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
 import com.jn.audit.core.resource.valuegetter.MapValueGetter;
 import com.jn.langx.util.Emptys;
@@ -12,6 +13,11 @@ import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @see ResourceDefinition#getResource()
+ *
+ * @see ResourceAnnotatedMapParameterResourceSupplierParser
+ */
 public class CustomNamedMapParameterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
 
     /**

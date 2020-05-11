@@ -1,5 +1,6 @@
 package com.jn.audit.core.resource.parser;
 
+import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
 import com.jn.audit.core.resource.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;
@@ -12,6 +13,13 @@ import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @see ResourceDefinition#getResourceId()
+ * @see ResourceDefinition#getResourceName()
+ * @see ResourceDefinition#getResourceType()
+ *
+ * @see ResourcePropertyAnnotatedResourceSupplierParser
+ */
 public class CustomResourcePropertyParameterResourceSupplierParser implements ResourceSupplierParser<Parameter[], IterableResourceSupplier> {
     /**
      * resource property to parameter name mapping

@@ -1,6 +1,7 @@
 package com.jn.audit.core.resource.parser;
 
 import com.jn.audit.core.model.Resource;
+import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.valuegetter.MemberValueGetter;
 import com.jn.langx.util.collection.StringMap;
 import com.jn.langx.util.collection.StringMapAccessor;
@@ -13,6 +14,11 @@ import java.util.Map;
  * 需要每一次解析创建一个
  *
  * 针对 实体类的解析
+ *
+ * @see ResourceDefinition#getResource()
+ *
+ * @see ResourceAnnotatedEntityParameterResourceSupplierParser
+ *
  * @param <T>
  */
 public class CustomNamedEntityResourceSupplierParser<T> extends FieldNameEntityResourceSupplierParser<T> {

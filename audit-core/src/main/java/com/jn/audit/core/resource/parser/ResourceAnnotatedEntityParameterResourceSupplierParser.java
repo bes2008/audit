@@ -13,6 +13,9 @@ import java.lang.reflect.Parameter;
 
 /**
  * 如果在一个方法的某个参数，是一个Entity时，并且具有 @Resource 注解时，将解析成实体的资源
+ *
+ * @see Resource
+ * @see CustomNamedEntityResourceSupplierParser
  */
 public class ResourceAnnotatedEntityParameterResourceSupplierParser<T> implements ResourceSupplierParser<Parameter, EntityResourceSupplier<T>> {
 

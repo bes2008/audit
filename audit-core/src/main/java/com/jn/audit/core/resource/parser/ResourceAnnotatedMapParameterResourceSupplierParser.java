@@ -14,6 +14,8 @@ import java.util.Map;
 
 /**
  * 一个方法的参数是 Map，且有 @Resource 注解时，可以用它来处理
+ * @see Resource
+ * @see CustomNamedMapParameterResourceSupplierParser
  */
 public class ResourceAnnotatedMapParameterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
     @Override
