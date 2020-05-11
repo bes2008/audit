@@ -5,7 +5,7 @@
     <parent>
         <artifactId>audit-examples</artifactId>
         <groupId>com.github.fangjinuo.audit</groupId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -84,6 +84,7 @@
                         <groupId>com.github.fangjinuo.langx</groupId>
                         <artifactId>langx-java</artifactId>
                     </exclusion>
+
                 </exclusions>
             </dependency>
 
@@ -189,16 +190,33 @@
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-springjdbc-spring-boot-starter</artifactId>
-
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.easyjson</groupId>
+                    <artifactId>easyjson-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-springjdbc-spring-boot-autoconfigure</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.easyjson</groupId>
+                    <artifactId>easyjson-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-dbutils</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.easyjson</groupId>
+                    <artifactId>easyjson-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -219,10 +237,22 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.easyjson</groupId>
+                    <artifactId>easyjson-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-mybatis-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.easyjson</groupId>
+                    <artifactId>easyjson-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- startup mybatis-plus -->
@@ -232,7 +262,17 @@
             <artifactId>sqlhelper-mybatisplus-spring-boot-starter</artifactId>
         </dependency>
         -->
-
+        <dependency>
+            <groupId>com.github.fangjinuo.easyjson</groupId>
+            <artifactId>easyjson-core</artifactId>
+            <version>${easyjson.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.langx</groupId>
+                    <artifactId>langx-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.easyjson</groupId>
             <artifactId>easyjson-jackson</artifactId>
@@ -242,16 +282,32 @@
                     <groupId>com.github.fangjinuo.langx</groupId>
                     <artifactId>langx-java</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.easyjson</groupId>
+                    <artifactId>easyjson-core</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.easyjson</groupId>
+                    <artifactId>easyjson-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-springjdbc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.easyjson</groupId>
+                    <artifactId>easyjson-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.audit</groupId>
