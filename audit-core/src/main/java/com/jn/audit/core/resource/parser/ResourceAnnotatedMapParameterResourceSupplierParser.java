@@ -3,7 +3,7 @@ package com.jn.audit.core.resource.parser;
 import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.annotation.ResourceMapping;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.MapValueGetter;
+import com.jn.audit.core.resource.valuegetter.MapedValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * 一个方法的参数是 Map，且有 @Resource 注解时，可以用它来处理
+ *
  * @see Resource
  * @see CustomNamedMapParameterResourceSupplierParser
  */
@@ -35,16 +36,16 @@ public class ResourceAnnotatedMapParameterResourceSupplierParser implements Reso
                     return Emptys.isNotEmpty(mapping.name());
                 }
             });
-            if(mapping==null){
+            if (mapping == null) {
                 return null;
             }
             MapResourceSupplier supplier = new MapResourceSupplier();
             if (Emptys.isNotEmpty(mapping.id())) {
-                supplier.register(com.jn.audit.core.model.Resource.RESOURCE_ID, new MapValueGetter(mapping.id()));
+                supplier.register(com.jn.audit.core.model.Resource.RESOURCE_ID, new MapedValueGetter(mapping.id()));
             }
-            supplier.register(com.jn.audit.core.model.Resource.RESOURCE_NAME, new MapValueGetter(mapping.name()));
+            supplier.register(com.jn.audit.core.model.Resource.RESOURCE_NAME, new MapedValueGetter(mapping.name()));
             if (Emptys.isNotEmpty(mapping.type())) {
-                supplier.register(com.jn.audit.core.model.Resource.RESOURCE_TYPE, new MapValueGetter(mapping.type()));
+                supplier.register(com.jn.audit.core.model.Resource.RESOURCE_TYPE, new MapedValueGetter(mapping.type()));
             }
 
             return supplier;

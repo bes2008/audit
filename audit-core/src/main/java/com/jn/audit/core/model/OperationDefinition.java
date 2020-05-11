@@ -105,6 +105,9 @@ public class OperationDefinition implements Configuration, Serializable {
         if(!Objects.equals(description, that.description)){
             return false;
         }
+        if(!Objects.equals(resource, that.resource)){
+            return false;
+        }
         return true;
     }
 

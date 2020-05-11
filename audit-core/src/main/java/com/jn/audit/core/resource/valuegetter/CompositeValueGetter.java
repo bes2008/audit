@@ -1,7 +1,5 @@
 package com.jn.audit.core.resource.valuegetter;
 
-import com.jn.audit.core.resource.valuegetter.ValueGetter;
-
 public class CompositeValueGetter implements ValueGetter {
     private ValueGetter valueGetter;
 

@@ -1,22 +1,31 @@
 package com.jn.audit.core.model;
 
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Objects;
+import com.jn.langx.util.collection.StringMap;
+import com.jn.langx.util.hash.HashCodeBuilder;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * 用于在配置文件中定义资源的标识：
+ * 如果一个方法的参数实际就是一个或多个资源，那么可以使用它来标注该参数名称。
+ * <p>
+ * 也可以这么理解：一个方法的参数名称，如果与 resource的值一样，那么该参数就会被认为是 resource
+ * 此时会根据该参数的类型进行区别处理：
+ * <pre>
+ *     1. 如果是 Map,那么 resourceId, resourceName, resourceType 的值对应的是 map中的key
+ *     2. 如果是 Entity，那么  resourceId, resourceName, resourceType 的值对应的是 Entity的字段名称
+ *     3. 如果是 List或者数组等，那么resourceId, resourceName, resourceType 的值对应的是 集合的索引
+ * </pre>
+ * <p>
+ * 该值指定的数据的类，需要有 @ResourceMapping注解，或者需要 resourceId, resourceName, resourceType 配置
  */
-public class ResourceDefinition implements Serializable {
+public class ResourceDefinition extends HashMap<String,String> {
     public static final long serialVersionUID = 1L;
 
-    /**
-     * 如果一个方法的参数实际就是一个或多个资源，那么可以使用它来标注该参数名称。
-     * <p>
-     * 也可以这么理解：一个方法的参数名称，如果与 resourceId的值一样，那么该参数就会被认为是 resource的ID
-     * <p>
-     * 该值指定的数据的类，需要有 @ResourceMapping注解，或者需要 resourceId, resourceName, resourceType 配置
-     */
+
     @Nullable
     String resource;
 
@@ -80,5 +89,47 @@ public class ResourceDefinition implements Serializable {
 
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ResourceDefinition that = (ResourceDefinition) o;
+
+        if (!Objects.equals(this.resource, that.resource)) {
+            return false;
+        }
+        if (!Objects.equals(this.resourceId, that.resourceId)) {
+            return false;
+        }
+        if (!Objects.equals(this.resourceName, that.resourceName)) {
+            return false;
+        }
+        if (!Objects.equals(this.resourceType, that.resourceType)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+       return new HashCodeBuilder()
+               .with(resource)
+               .with(resourceId)
+               .with(resourceName)
+               .with(resourceType)
+               .build();
+    }
+
+    @Override
+    public String toString() {
+        return "ResourceDefinition{" +
+                "resource='" + resource + '\'' +
+                ", resourceId='" + resourceId + '\'' +
+                ", resourceName='" + resourceName + '\'' +
+                ", resourceType='" + resourceType + '\'' +
+                '}';
     }
 }
