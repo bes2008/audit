@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 一个方法的参数是 Map，且有 @Resource 注解时，可以用它来处理
  */
-public class ResourceAnnotatedMapParamterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
+public class ResourceAnnotatedMapParameterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
     @Override
     public MapResourceSupplier parse(Parameter parameter) {
         if (!Reflects.isSubClassOrEquals(Map.class, parameter.getType())) {
@@ -33,6 +33,9 @@ public class ResourceAnnotatedMapParamterResourceSupplierParser implements Resou
                     return Emptys.isNotEmpty(mapping.name());
                 }
             });
+            if(mapping==null){
+                return null;
+            }
             MapResourceSupplier supplier = new MapResourceSupplier();
             if (Emptys.isNotEmpty(mapping.id())) {
                 supplier.register(com.jn.audit.core.model.Resource.RESOURCE_ID, new MapValueGetter(mapping.id()));
