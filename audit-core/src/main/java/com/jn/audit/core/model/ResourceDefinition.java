@@ -21,7 +21,7 @@ public class ResourceDefinition implements Serializable {
     String resource;
 
     /**
-     * 如果一个方法的参数，实际上可以去代表一个或多个被操作的资源的ID， 可以使用它来标注该参数名称。
+     * 如果一个方法的参数实际上可以去代表一个或多个被操作的资源的ID， 可以使用它来标注该参数名称。
      * <p>
      * 也可以这么理解：一个方法的参数名称，如果与 resourceId的值一样，那么该参数就会被认为是 resource的ID
      * <p>
@@ -31,7 +31,7 @@ public class ResourceDefinition implements Serializable {
     String resourceId;
 
     /**
-     * 如果一个方法的参数，实际上可以去代表一个或多个被操作的资源的ID， 可以使用它来标注该参数名称。
+     * 如果一个方法的参数实际上可以去代表一个或多个被操作的资源的name， 可以使用它来标注该参数名称。
      * <p>
      * 也可以这么理解：一个方法的参数名称，如果与 resourceName的值一样，那么该参数就会被认为是 resource的Name
      * <p>
@@ -41,7 +41,7 @@ public class ResourceDefinition implements Serializable {
     String resourceName;
 
     /**
-     * 如果一个方法的参数，实际上可以去代表一个或多个被操作的资源的ID， 可以使用它来标注该参数名称。
+     * 如果一个方法的参数实际上可以去代表一个或多个被操作的资源的type， 可以使用它来标注该参数名称。
      * <p>
      * 也可以这么理解：一个方法的参数名称，如果与 resourceType的值一样，那么该参数就会被认为是 resource的Type
      * <p>
