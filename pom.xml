@@ -59,9 +59,7 @@
         <module>audit-spring</module>
         <module>audit-servlet</module>
         <module>audit-spring-boot</module>
-        <!--
         <module>audit-examples</module>
-        -->
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -69,8 +67,18 @@
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-core</artifactId>
                 <version>${easyjson.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
-
+            <dependency>
+                <groupId>com.github.fangjinuo.langx</groupId>
+                <artifactId>langx-java</artifactId>
+                <version>${langx-java.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java8</artifactId>
@@ -112,7 +120,6 @@
                 <artifactId>audit-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

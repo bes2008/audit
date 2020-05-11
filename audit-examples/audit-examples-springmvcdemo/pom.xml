@@ -27,10 +27,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.github.fangjinuo.langx</groupId>
-                <artifactId>langx-java8</artifactId>
-            </dependency>
-            <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
@@ -241,6 +237,12 @@
             <groupId>com.github.fangjinuo.easyjson</groupId>
             <artifactId>easyjson-jackson</artifactId>
             <version>${easyjson.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.fangjinuo.langx</groupId>
+                    <artifactId>langx-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
