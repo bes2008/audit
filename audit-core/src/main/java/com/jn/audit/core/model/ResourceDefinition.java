@@ -2,10 +2,8 @@ package com.jn.audit.core.model;
 
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objects;
-import com.jn.langx.util.collection.StringMap;
 import com.jn.langx.util.hash.HashCodeBuilder;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -22,7 +20,7 @@ import java.util.HashMap;
  * <p>
  * 该值指定的数据的类，需要有 @ResourceMapping注解，或者需要 resourceId, resourceName, resourceType 配置
  */
-public class ResourceDefinition extends HashMap<String,String> {
+public class ResourceDefinition extends HashMap<String, String> {
     public static final long serialVersionUID = 1L;
 
 
@@ -58,6 +56,17 @@ public class ResourceDefinition extends HashMap<String,String> {
      */
     @Nullable
     String resourceType;
+
+    public static final ResourceDefinition DEFAULT_DEFINITION = getDefaultResourceDefinition();
+
+    private static final ResourceDefinition getDefaultResourceDefinition() {
+        ResourceDefinition definition = new ResourceDefinition();
+        definition.setResourceId("resourceId");
+        definition.setResourceName("resourceName");
+        definition.setResourceType("resourceType");
+        definition.setResource("resource");
+        return definition;
+    }
 
     public String getResource() {
         return resource;
@@ -115,12 +124,12 @@ public class ResourceDefinition extends HashMap<String,String> {
 
     @Override
     public int hashCode() {
-       return new HashCodeBuilder()
-               .with(resource)
-               .with(resourceId)
-               .with(resourceName)
-               .with(resourceType)
-               .build();
+        return new HashCodeBuilder()
+                .with(resource)
+                .with(resourceId)
+                .with(resourceName)
+                .with(resourceType)
+                .build();
     }
 
     @Override

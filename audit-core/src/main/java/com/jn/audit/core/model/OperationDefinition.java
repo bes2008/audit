@@ -73,6 +73,9 @@ public class OperationDefinition implements Configuration, Serializable {
 
 
     public ResourceDefinition getResource() {
+        if (resource == null) {
+            return ResourceDefinition.DEFAULT_DEFINITION;
+        }
         return resource;
     }
 
@@ -87,25 +90,25 @@ public class OperationDefinition implements Configuration, Serializable {
 
         OperationDefinition that = (OperationDefinition) o;
 
-        if(!Objects.equals(id, that.id)){
+        if (!Objects.equals(id, that.id)) {
             return false;
         }
-        if(!Objects.equals(name, that.name)){
+        if (!Objects.equals(name, that.name)) {
             return false;
         }
-        if(!Objects.equals(code, that.code)){
+        if (!Objects.equals(code, that.code)) {
             return false;
         }
-        if(!Objects.equals(type, that.type)){
+        if (!Objects.equals(type, that.type)) {
             return false;
         }
-        if(!Objects.equals(importance, that.importance)){
+        if (!Objects.equals(importance, that.importance)) {
             return false;
         }
-        if(!Objects.equals(description, that.description)){
+        if (!Objects.equals(description, that.description)) {
             return false;
         }
-        if(!Objects.equals(resource, that.resource)){
+        if (!Objects.equals(resource, that.resource)) {
             return false;
         }
         return true;

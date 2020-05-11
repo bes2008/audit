@@ -7,14 +7,20 @@ import com.jn.audit.core.resource.valuegetter.ArrayValueGetter;
 import com.jn.audit.core.resource.valuegetter.PipelineValueGetter;
 import com.jn.audit.core.resource.valuegetter.StreamValueGetter;
 import com.jn.audit.core.resource.valuegetter.ValueGetter;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objects;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.ConcurrentReferenceHashMap;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.reference.ReferenceType;
 import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.reflect.type.Types;
+import com.jn.langx.util.struct.Entry;
 import com.jn.langx.util.struct.Holder;
 
 import java.lang.reflect.Method;
@@ -30,6 +36,14 @@ import java.util.Map;
  * @since audit 1.0.3+, jdk 1.8+
  */
 public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtractor<AuditedRequest, Method> {
+    /**
+     * 根据注解解析后的进行缓存
+     */
+    private ConcurrentReferenceHashMap<Method, ValueGetter> annotatedCache = new ConcurrentReferenceHashMap<Method, ValueGetter>(1000, 0.9f, Runtime.getRuntime().availableProcessors(), ReferenceType.SOFT, ReferenceType.SOFT);
+    /**
+     * 根据配置文件定义解析之后的缓存
+     */
+    private ConcurrentReferenceHashMap<Method, Entry<ResourceDefinition, ValueGetter>> configuredResourceCache = new ConcurrentReferenceHashMap<Method, Entry<ResourceDefinition, ValueGetter>>(1000, 0.9f, Runtime.getRuntime().availableProcessors(), ReferenceType.SOFT, ReferenceType.SOFT);
 
     @Override
     public List<Resource> get(AuditRequest<AuditedRequest, Method> wrappedRequest) {
@@ -50,18 +64,40 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
         }
 
         // step find supplier and extract resource
-        ValueGetter resourceGetter = null;
+
         // step 1：根据 method 从 cache 里找到对应的 supplier
-        // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
-        Parameter[] parameters = method.getParameters();
-        resourceGetter = parseResourceGetterByConfiguration(parameters, operationDefinition.getResource());
-        // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
-        resourceGetter = parseResourceGetterByAnnotation(parameters);
-
+        ResourceDefinition resourceDefinition = operationDefinition.getResource();
+        ValueGetter resourceGetter = getValueGetterFromCache(method, resourceDefinition);
+        if (resourceGetter == null) {
+            // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
+            Parameter[] parameters = method.getParameters();
+            resourceGetter = parseResourceGetterByConfiguration(parameters, resourceDefinition);
+            if (resourceGetter != null) {
+                configuredResourceCache.put(method, new Entry<ResourceDefinition, ValueGetter>(resourceDefinition, resourceGetter));
+            }
+            // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
+            if (resourceGetter == null && !annotatedCache.containsKey(method)) {
+                resourceGetter = parseResourceGetterByAnnotation(parameters);
+                annotatedCache.putIfAbsent(method, resourceGetter);
+            }
+        }
         // step 4: 如果 step 3 没找到， null
+        if (resourceGetter == null) {
+            return null;
+        }
+        return null;
+    }
 
-        // 如果抽取出 resource对象，但每一个 resource 对象只有 id, 没有name，则会调用 BaseIdResourceExtractor
-
+    private ValueGetter getValueGetterFromCache(@NonNull Method method, @Nullable ResourceDefinition resourceDefinition) {
+        Entry<ResourceDefinition, ValueGetter> entry = configuredResourceCache.get(method);
+        if (entry != null) {
+            if (Objects.equals(entry.getKey(), resourceDefinition)) {
+                return entry.getValue();
+            }
+        }
+        if (resourceDefinition == ResourceDefinition.DEFAULT_DEFINITION) {
+            return annotatedCache.get(method);
+        }
         return null;
     }
 
@@ -134,10 +170,11 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
 
     private ValueGetter parseResourceGetterByAnnotation(final Parameter[] parameters) {
         Holder<ValueGetter> resourceGetter = new Holder<ValueGetter>();
+        // step 1: 解析 @Resource 注解
         Collects.forEach(parameters, new Consumer2<Integer, Parameter>() {
             @Override
             public void accept(Integer index, Parameter parameter) {
-                ResourceSupplier supplierHolder = null;
+                ResourceSupplier supplier = null;
                 Class parameterType = parameter.getType();
                 Class parameterType0 = parameterType;
                 if (Types.isArray(parameterType)) {
@@ -151,24 +188,29 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
                     }
                 }
                 if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
-                    supplierHolder = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
+                    supplier = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
                 }
                 if (!isLiteralType(parameterType)) {
-                    supplierHolder = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
+                    supplier = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
                 }
 
-                if (supplierHolder != null) {
+                if (supplier != null) {
                     PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
                     pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
                     if (parameterType0 == parameterType) {
-                        pipelineValueGetter.addValueGetter(supplierHolder);
+                        pipelineValueGetter.addValueGetter(supplier);
                     } else {
-                        pipelineValueGetter.addValueGetter(new StreamValueGetter(supplierHolder));
+                        pipelineValueGetter.addValueGetter(new StreamValueGetter(supplier));
                     }
                     resourceGetter.set(pipelineValueGetter);
                 }
             }
         });
+
+        // step 2: 解析 @ResourceId, @ResourceName, @ResourceType 注解
+        if (resourceGetter.isNull()) {
+            resourceGetter.set(new ResourcePropertyAnnotatedResourceSupplierParser().parse(parameters));
+        }
 
         return resourceGetter.get();
     }
