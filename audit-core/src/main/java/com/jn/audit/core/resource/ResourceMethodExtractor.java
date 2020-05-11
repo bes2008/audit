@@ -4,6 +4,7 @@ import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.CustomNamedEntityResourceSupplierParser;
 import com.jn.audit.core.resource.parser.CustomNamedMapParameterResourceSupplierParser;
+import com.jn.audit.core.resource.parser.CustomResourcePropertyParameterResourceSupplierParser;
 import com.jn.audit.core.resource.valuegetter.ArrayValueGetter;
 import com.jn.audit.core.resource.valuegetter.PipelineValueGetter;
 import com.jn.audit.core.resource.valuegetter.StreamValueGetter;
@@ -69,14 +70,14 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
 
         // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
         ResourceDefinition resourceDefinition = operationDefinition.getResource();
-
+        ValueGetter resourceGetter = null;
         if (resourceDefinition != null) {
             Map<String, String> mapping = resourceDefinition;
             // step 2.1 : parse key: resource
             String resourceKey = resourceDefinition.getResource();
             if (Emptys.isNotEmpty(resourceKey)) {
                 Parameter parameter = parameterMap.get(resourceKey);
-                PipelineValueGetter resourceGetter  = null;
+
                 ResourceSupplier supplier = null;
                 if (parameter != null) {
                     Class parameterType = parameter.getType();
@@ -100,18 +101,20 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
 
                     if (supplier != null) {
                         int index = Collects.firstOccurrence(Collects.asList(parameters), parameter);
-                        resourceGetter = new PipelineValueGetter();
-                        resourceGetter.addValueGetter(new ArrayValueGetter(index));
-                        if(parameterType0==parameterType) {
-                            resourceGetter.addValueGetter(supplier);
-                        }else{
-                            resourceGetter.addValueGetter(new StreamValueGetter(supplier));
+                        PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                        pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
+                        if (parameterType0 == parameterType) {
+                            pipelineValueGetter.addValueGetter(supplier);
+                        } else {
+                            pipelineValueGetter.addValueGetter(new StreamValueGetter(supplier));
                         }
+                        resourceGetter = pipelineValueGetter;
                     }
-                }else{
-
                 }
-
+                if (supplier == null) {
+                    supplier = new CustomResourcePropertyParameterResourceSupplierParser(mapping).parse(parameters);
+                }
+                resourceGetter = supplier;
             }
         }
         // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
