@@ -108,6 +108,8 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
                             resourceGetter.addValueGetter(new StreamValueGetter(supplier));
                         }
                     }
+                }else{
+
                 }
 
             }

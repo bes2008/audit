@@ -2,7 +2,7 @@ package com.jn.audit.core.resource.parser;
 
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.MapedValueGetter;
+import com.jn.audit.core.resource.valuegetter.MapValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.StringMap;
@@ -46,11 +46,11 @@ public class CustomNamedMapParameterResourceSupplierParser implements ResourceSu
         if(Emptys.isEmpty(nameMapping)){
             return null;
         }
-        final Map<String, MapedValueGetter> getterMap = new HashMap<String, MapedValueGetter>();
+        final Map<String, MapValueGetter> getterMap = new HashMap<String, MapValueGetter>();
         Collects.forEach(nameMapping, new Consumer2<String, String>() {
             @Override
             public void accept(String resourceProperty, String key) {
-                getterMap.put(resourceProperty, new MapedValueGetter(key));
+                getterMap.put(resourceProperty, new MapValueGetter(key));
             }
         });
         if(Emptys.isEmpty(getterMap)){

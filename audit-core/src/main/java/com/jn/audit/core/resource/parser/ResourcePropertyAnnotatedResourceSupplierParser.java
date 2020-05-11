@@ -5,7 +5,7 @@ import com.jn.audit.core.annotation.ResourceName;
 import com.jn.audit.core.annotation.ResourceType;
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.IterableIndexValueGetter;
+import com.jn.audit.core.resource.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
@@ -29,16 +29,16 @@ public class ResourcePropertyAnnotatedResourceSupplierParser implements Resource
     public IterableResourceSupplier parse(Parameter[] parameters) {
 
         // key: resourceProperty
-        Map<String, IterableIndexValueGetter> getterMap = new HashMap<>();
+        Map<String, IterableValueGetter> getterMap = new HashMap<>();
         Pipeline.of(parameters).forEach(new Consumer2<Integer, Parameter>() {
             @Override
             public void accept(Integer index, Parameter parameter) {
                 if (Reflects.hasAnnotation(parameter, ResourceId.class)) {
-                    getterMap.put(Resource.RESOURCE_ID, new IterableIndexValueGetter(index));
+                    getterMap.put(Resource.RESOURCE_ID, new IterableValueGetter(index));
                 } else if (Reflects.hasAnnotation(parameter, ResourceName.class)) {
-                    getterMap.put(Resource.RESOURCE_NAME, new IterableIndexValueGetter(index));
+                    getterMap.put(Resource.RESOURCE_NAME, new IterableValueGetter(index));
                 } else if (Reflects.hasAnnotation(parameter, ResourceType.class)) {
-                    getterMap.put(Resource.RESOURCE_TYPE, new IterableIndexValueGetter(index));
+                    getterMap.put(Resource.RESOURCE_TYPE, new IterableValueGetter(index));
                 }
             }
         });

@@ -3,7 +3,7 @@ package com.jn.audit.core.resource.parser;
 import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.annotation.ResourceMapping;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.MapedValueGetter;
+import com.jn.audit.core.resource.valuegetter.MapValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
@@ -41,11 +41,11 @@ public class ResourceAnnotatedMapParameterResourceSupplierParser implements Reso
             }
             MapResourceSupplier supplier = new MapResourceSupplier();
             if (Emptys.isNotEmpty(mapping.id())) {
-                supplier.register(com.jn.audit.core.model.Resource.RESOURCE_ID, new MapedValueGetter(mapping.id()));
+                supplier.register(com.jn.audit.core.model.Resource.RESOURCE_ID, new MapValueGetter(mapping.id()));
             }
-            supplier.register(com.jn.audit.core.model.Resource.RESOURCE_NAME, new MapedValueGetter(mapping.name()));
+            supplier.register(com.jn.audit.core.model.Resource.RESOURCE_NAME, new MapValueGetter(mapping.name()));
             if (Emptys.isNotEmpty(mapping.type())) {
-                supplier.register(com.jn.audit.core.model.Resource.RESOURCE_TYPE, new MapedValueGetter(mapping.type()));
+                supplier.register(com.jn.audit.core.model.Resource.RESOURCE_TYPE, new MapValueGetter(mapping.type()));
             }
 
             return supplier;

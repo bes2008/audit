@@ -2,7 +2,7 @@ package com.jn.audit.core.resource.parser;
 
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.IterableIndexValueGetter;
+import com.jn.audit.core.resource.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
@@ -36,7 +36,7 @@ public class CustomResourcePropertyParameterResourceSupplierParser implements Re
 
     @Override
     public IterableResourceSupplier parse(final Parameter[] parameters) {
-        Map<String, IterableIndexValueGetter> getterMap = new HashMap<>();
+        Map<String, IterableValueGetter> getterMap = new HashMap<>();
         Pipeline.of(parameters).forEach(new Consumer2<Integer, Parameter>() {
             @Override
             public void accept(final Integer index, Parameter parameter) {
@@ -45,7 +45,7 @@ public class CustomResourcePropertyParameterResourceSupplierParser implements Re
                     @Override
                     public void accept(String resourceProperty, String parameterName0) {
                         if (parameterName.equals(parameterName0)) {
-                            getterMap.put(resourceProperty, new IterableIndexValueGetter(index));
+                            getterMap.put(resourceProperty, new IterableValueGetter(index));
                         }
                     }
                 });
