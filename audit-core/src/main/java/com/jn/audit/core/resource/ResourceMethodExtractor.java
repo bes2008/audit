@@ -2,9 +2,7 @@ package com.jn.audit.core.resource;
 
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.*;
-import com.jn.audit.core.resource.parser.CustomNamedEntityResourceSupplierParser;
-import com.jn.audit.core.resource.parser.CustomNamedMapParameterResourceSupplierParser;
-import com.jn.audit.core.resource.parser.CustomResourcePropertyParameterResourceSupplierParser;
+import com.jn.audit.core.resource.parser.*;
 import com.jn.audit.core.resource.valuegetter.ArrayValueGetter;
 import com.jn.audit.core.resource.valuegetter.PipelineValueGetter;
 import com.jn.audit.core.resource.valuegetter.StreamValueGetter;
@@ -12,10 +10,12 @@ import com.jn.audit.core.resource.valuegetter.ValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.reflect.type.Types;
+import com.jn.langx.util.struct.Holder;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -50,28 +50,39 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
         }
 
         // step find supplier and extract resource
-
-        // step 1：根据 method 从 cache 里找到对应的 supplier
-
-        Parameter[] parameters = method.getParameters();
-        Map<String, Parameter> parameterMap = Pipeline.of(parameters)
-                .collect(Collects.toHashMap(
-                        new Function<Parameter, String>() {
-                            @Override
-                            public String apply(Parameter parameter) {
-                                return parameter.getName();
-                            }
-                        }, new Function<Parameter, Parameter>() {
-                            @Override
-                            public Parameter apply(Parameter parameter) {
-                                return parameter;
-                            }
-                        }, true));
-
-        // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
-        ResourceDefinition resourceDefinition = operationDefinition.getResource();
         ValueGetter resourceGetter = null;
+        // step 1：根据 method 从 cache 里找到对应的 supplier
+        // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
+        Parameter[] parameters = method.getParameters();
+        resourceGetter = parseResourceGetterByConfiguration(parameters, operationDefinition.getResource());
+        // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
+        resourceGetter = parseResourceGetterByAnnotation(parameters);
+
+        // step 4: 如果 step 3 没找到， null
+
+        // 如果抽取出 resource对象，但每一个 resource 对象只有 id, 没有name，则会调用 BaseIdResourceExtractor
+
+        return null;
+    }
+
+    private ValueGetter parseResourceGetterByConfiguration(Parameter[] parameters, ResourceDefinition resourceDefinition) {
+        ValueGetter resourceGetter = null;
+
         if (resourceDefinition != null) {
+            Map<String, Parameter> parameterMap = Pipeline.of(parameters)
+                    .collect(Collects.toHashMap(
+                            new Function<Parameter, String>() {
+                                @Override
+                                public String apply(Parameter parameter) {
+                                    return parameter.getName();
+                                }
+                            }, new Function<Parameter, Parameter>() {
+                                @Override
+                                public Parameter apply(Parameter parameter) {
+                                    return parameter;
+                                }
+                            }, true));
+
             Map<String, String> mapping = resourceDefinition;
             // step 2.1 : parse key: resource
             String resourceKey = resourceDefinition.getResource();
@@ -111,18 +122,55 @@ public class ResourceMethodExtractor<AuditedRequest> implements ResourceExtracto
                         resourceGetter = pipelineValueGetter;
                     }
                 }
+                // step 2.2 parse by resourceId, resourceName, resourceValue
                 if (supplier == null) {
                     supplier = new CustomResourcePropertyParameterResourceSupplierParser(mapping).parse(parameters);
                 }
                 resourceGetter = supplier;
             }
         }
-        // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
+        return resourceGetter;
+    }
 
-        // step 4: 如果 step 3 没找到， null
+    private ValueGetter parseResourceGetterByAnnotation(final Parameter[] parameters) {
+        Holder<ValueGetter> resourceGetter = new Holder<ValueGetter>();
+        Collects.forEach(parameters, new Consumer2<Integer, Parameter>() {
+            @Override
+            public void accept(Integer index, Parameter parameter) {
+                ResourceSupplier supplierHolder = null;
+                Class parameterType = parameter.getType();
+                Class parameterType0 = parameterType;
+                if (Types.isArray(parameterType)) {
+                    parameterType0 = parameterType.getComponentType();
+                }
+                if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
+                    try {
+                        parameterType0 = Types.getRawType(parameterType);
+                    } catch (Throwable ex) {
+                        parameterType0 = parameterType;
+                    }
+                }
+                if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
+                    supplierHolder = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
+                }
+                if (!isLiteralType(parameterType)) {
+                    supplierHolder = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
+                }
 
-        // 如果抽取出 resource对象，但每一个 resource 对象只有 id, 没有name，则会调用 BaseIdResourceExtractor
-        return null;
+                if (supplierHolder != null) {
+                    PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                    pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
+                    if (parameterType0 == parameterType) {
+                        pipelineValueGetter.addValueGetter(supplierHolder);
+                    } else {
+                        pipelineValueGetter.addValueGetter(new StreamValueGetter(supplierHolder));
+                    }
+                    resourceGetter.set(pipelineValueGetter);
+                }
+            }
+        });
+
+        return resourceGetter.get();
     }
 
     private static final boolean isLiteralType(Class clazz) {
