@@ -1,16 +1,26 @@
 package com.jn.audit.core.resource.parser;
 
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
+import com.jn.audit.core.resource.valuegetter.MapValueGetter;
+import com.jn.langx.util.Emptys;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.StringMap;
+import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.reflect.Reflects;
 
 import java.lang.reflect.Parameter;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CustomNamedMapParameterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
 
     /**
-     * resourceXxx to custom file name
+     * key: resource property, e.g.
+     * @see com.jn.audit.core.model.Resource#RESOURCE_ID
+     * @see com.jn.audit.core.model.Resource#RESOURCE_NAME
+     * @see com.jn.audit.core.model.Resource#RESOURCE_TYPE
+     *
+     * value: key alias
      */
     private StringMap nameMapping;
 
@@ -27,6 +37,21 @@ public class CustomNamedMapParameterResourceSupplierParser implements ResourceSu
         if (!Reflects.isSubClassOrEquals(Map.class, parameter.getType())) {
             return null;
         }
-        return null;
+        if(Emptys.isEmpty(nameMapping)){
+            return null;
+        }
+        final Map<String, MapValueGetter> getterMap = new HashMap<String, MapValueGetter>();
+        Collects.forEach(nameMapping, new Consumer2<String, String>() {
+            @Override
+            public void accept(String resourceProperty, String key) {
+                getterMap.put(resourceProperty, new MapValueGetter(key));
+            }
+        });
+        if(Emptys.isEmpty(getterMap)){
+            return null;
+        }
+        MapResourceSupplier supplier = new MapResourceSupplier();
+        supplier.register(getterMap);
+        return supplier;
     }
 }

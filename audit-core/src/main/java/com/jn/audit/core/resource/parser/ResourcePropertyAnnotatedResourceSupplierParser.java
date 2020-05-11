@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 如果一个方法的多个参数中，具有 @ResourceId, @ResourceName, @ResourceType 中的任意一个，都可以用它来解析
  */
-public class ResourcePropertyAnnotationResourceSupplierParser implements ResourceSupplierParser<Parameter[], IterableResourceSupplier> {
+public class ResourcePropertyAnnotatedResourceSupplierParser implements ResourceSupplierParser<Parameter[], IterableResourceSupplier> {
     @Override
     public IterableResourceSupplier parse(Parameter[] parameters) {
 

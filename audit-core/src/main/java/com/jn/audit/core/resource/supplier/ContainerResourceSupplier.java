@@ -26,7 +26,7 @@ import java.util.Map;
  * @param <Container> Entity, Map, Iterable, Array 都被视为容器。
  * @param <VG>        ValueGetter
  */
-public class ContainerResourceSupplier<Container, VG extends ValueGetter> implements ResourceSupplier<Container> {
+public abstract class ContainerResourceSupplier<Container, VG extends ValueGetter> implements ResourceSupplier<Container> {
     /**
      * container 中的 key 到 Resource 的映射
      * <p>
