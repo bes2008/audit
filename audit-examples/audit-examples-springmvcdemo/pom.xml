@@ -27,6 +27,10 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.github.fangjinuo.langx</groupId>
+                <artifactId>langx-java8</artifactId>
+            </dependency>
+            <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
@@ -67,12 +71,24 @@
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-mybatis-spring-boot-starter</artifactId>
                 <version>${sqlhelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-dbutils</artifactId>
                 <version>${sqlhelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -89,26 +105,56 @@
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-mybatis-over-pagehelper</artifactId>
                 <version>${sqlhelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-common</artifactId>
                 <version>${sqlhelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-springjdbc</artifactId>
                 <version>${sqlhelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-springjdbc-spring-boot-starter</artifactId>
                 <version>${sqlhelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-springjdbc-spring-boot-autoconfigure</artifactId>
                 <version>${sqlhelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
         </dependencies>
@@ -147,6 +193,7 @@
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-springjdbc-spring-boot-starter</artifactId>
+
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
@@ -223,7 +270,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.jn.sqlhelper.examples.test.mybatis.springboot.MyBatisWithSpringBootTest</mainClass>
+                    <mainClass>com.jn.audit.examples.springmvcdemo.test.mybatis.springboot.MyBatisWithSpringBootTest</mainClass>
                     <layout>ZIP</layout>
                 </configuration>
             </plugin>
