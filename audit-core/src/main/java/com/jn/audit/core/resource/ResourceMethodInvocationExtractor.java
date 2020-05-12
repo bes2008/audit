@@ -4,7 +4,7 @@ import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.*;
 import com.jn.audit.core.resource.valuegetter.ArrayValueGetter;
-import com.jn.audit.core.resource.valuegetter.PipelineValueGetter;
+import com.jn.audit.core.resource.valuegetter.PipeValueGetter;
 import com.jn.audit.core.resource.valuegetter.StreamValueGetter;
 import com.jn.audit.core.resource.valuegetter.ValueGetter;
 import com.jn.langx.annotation.NonNull;
@@ -208,7 +208,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
 
                     if (supplier != null) {
                         int index = Collects.firstOccurrence(Collects.asList(parameters), parameter);
-                        PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                        PipeValueGetter pipelineValueGetter = new PipeValueGetter();
                         pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
                         if (parameterType0 == parameterType) {
                             pipelineValueGetter.addValueGetter(supplier);
@@ -255,7 +255,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                 }
 
                 if (supplier != null) {
-                    PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                    PipeValueGetter pipelineValueGetter = new PipeValueGetter();
                     pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
                     if (parameterType0 == parameterType) {
                         pipelineValueGetter.addValueGetter(supplier);
