@@ -50,13 +50,6 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
 
     private AbstractIdResourceExtractor idResourceExtractor;
 
-    public AbstractIdResourceExtractor getIdResourceExtractor() {
-        return idResourceExtractor;
-    }
-
-    public void setIdResourceExtractor(AbstractIdResourceExtractor idResourceExtractor) {
-        this.idResourceExtractor = idResourceExtractor;
-    }
 
     @Override
     public List<Resource> get(AuditRequest<AuditedRequest, MethodInvocation> wrappedRequest) {
@@ -286,5 +279,13 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
             return true;
         }
         return false;
+    }
+
+    public AbstractIdResourceExtractor getIdResourceExtractor() {
+        return idResourceExtractor;
+    }
+
+    public void setIdResourceExtractor(AbstractIdResourceExtractor idResourceExtractor) {
+        this.idResourceExtractor = idResourceExtractor;
     }
 }
