@@ -17,8 +17,14 @@ package com.jn.audit.examples.springmvcdemo.test.mybatis.springboot;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ImportResource;
 
-@SpringBootApplication(scanBasePackages = {"com.jn.audit.examples.springmvcdemo.common","com.jn.audit.examples.springmvcdemo.service","com.jn.audit.spring"})
+@SpringBootApplication(scanBasePackages = {
+        "com.jn.audit.examples.springmvcdemo.common",
+        "com.jn.audit.examples.springmvcdemo.service",
+        "com.jn.audit.spring"
+})
+@ImportResource(locations = {"classpath:./applicationContext.xml"})
 @MapperScan("com.jn.audit.examples.springmvcdemo.common.dao")
 public class MyBatisWithSpringBootTest {
     public static void main(String[] args) {

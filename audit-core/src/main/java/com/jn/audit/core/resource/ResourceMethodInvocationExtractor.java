@@ -3,10 +3,6 @@ package com.jn.audit.core.resource;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.*;
-import com.jn.langx.util.valuegetter.ArrayValueGetter;
-import com.jn.langx.util.valuegetter.PipelineValueGetter;
-import com.jn.langx.util.valuegetter.StreamValueGetter;
-import com.jn.langx.util.valuegetter.ValueGetter;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.proxy.aop.MethodInvocation;
@@ -24,6 +20,10 @@ import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.reflect.type.Types;
 import com.jn.langx.util.struct.Entry;
 import com.jn.langx.util.struct.Holder;
+import com.jn.langx.util.valuegetter.ArrayValueGetter;
+import com.jn.langx.util.valuegetter.PipelineValueGetter;
+import com.jn.langx.util.valuegetter.StreamValueGetter;
+import com.jn.langx.util.valuegetter.ValueGetter;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -42,7 +42,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
     /**
      * 根据注解解析后的进行缓存
      */
-    private ConcurrentReferenceHashMap<Method, ValueGetter> annotatedCache = new ConcurrentReferenceHashMap<Method, ValueGetter>(1000, 0.9f, Runtime.getRuntime().availableProcessors(), ReferenceType.SOFT, ReferenceType.SOFT);
+    private ConcurrentReferenceHashMap<Method, Holder<ValueGetter>> annotatedCache = new ConcurrentReferenceHashMap<Method, Holder<ValueGetter>>(1000, 0.9f, Runtime.getRuntime().availableProcessors(), ReferenceType.SOFT, ReferenceType.SOFT);
     /**
      * 根据配置文件定义解析之后的缓存
      */
@@ -86,7 +86,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
             // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
             if (resourceGetter == null && !annotatedCache.containsKey(method)) {
                 resourceGetter = parseResourceGetterByAnnotation(parameters);
-                annotatedCache.putIfAbsent(method, resourceGetter);
+                annotatedCache.putIfAbsent(method, new Holder<>(resourceGetter));
             }
         }
         // step 4: 如果 step 3 没找到， null
@@ -149,7 +149,11 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
             }
         }
         if (resourceDefinition == ResourceDefinition.DEFAULT_DEFINITION) {
-            return annotatedCache.get(method);
+            Holder<ValueGetter> holder = annotatedCache.get(method);
+            if (holder == null) {
+                return null;
+            }
+            return holder.get();
         }
         return null;
     }
