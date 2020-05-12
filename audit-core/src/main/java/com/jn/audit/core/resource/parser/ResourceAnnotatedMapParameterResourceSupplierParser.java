@@ -3,7 +3,7 @@ package com.jn.audit.core.resource.parser;
 import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.annotation.ResourceMapping;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.MapValueGetter;
+import com.jn.langx.util.valuegetter.MapValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;

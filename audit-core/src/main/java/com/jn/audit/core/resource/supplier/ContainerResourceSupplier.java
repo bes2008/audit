@@ -2,7 +2,7 @@ package com.jn.audit.core.resource.supplier;
 
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.ResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.ValueGetter;
+import com.jn.langx.util.valuegetter.ValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;

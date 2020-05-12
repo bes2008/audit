@@ -2,7 +2,7 @@ package com.jn.audit.core.resource.parser;
 
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.IterableValueGetter;
+import com.jn.langx.util.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;

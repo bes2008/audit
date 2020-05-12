@@ -1,6 +1,6 @@
 package com.jn.audit.core.resource.supplier;
 
-import com.jn.audit.core.resource.valuegetter.IterableValueGetter;
+import com.jn.langx.util.valuegetter.IterableValueGetter;
 
 public class IterableResourceSupplier extends ContainerResourceSupplier<Iterable, IterableValueGetter> {
 }

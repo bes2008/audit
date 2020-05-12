@@ -5,7 +5,7 @@ import com.jn.audit.core.annotation.ResourceName;
 import com.jn.audit.core.annotation.ResourceType;
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.IterableValueGetter;
+import com.jn.langx.util.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;

@@ -4,7 +4,7 @@ import com.jn.audit.core.annotation.ResourceId;
 import com.jn.audit.core.annotation.ResourceMapping;
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
-import com.jn.audit.core.resource.valuegetter.MemberValueGetter;
+import com.jn.langx.util.valuegetter.MemberValueGetter;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;

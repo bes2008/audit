@@ -1,7 +1,7 @@
 package com.jn.audit.core.resource;
 
 import com.jn.audit.core.model.Resource;
-import com.jn.audit.core.resource.valuegetter.ValueGetter;
+import com.jn.langx.util.valuegetter.ValueGetter;
 
 /**
  *

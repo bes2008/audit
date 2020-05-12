@@ -1,6 +1,6 @@
 package com.jn.audit.core.resource.supplier;
 
-import com.jn.audit.core.resource.valuegetter.MapValueGetter;
+import com.jn.langx.util.valuegetter.MapValueGetter;
 
 import java.util.Map;
 

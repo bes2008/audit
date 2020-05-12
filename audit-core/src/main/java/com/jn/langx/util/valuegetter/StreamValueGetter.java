@@ -1,4 +1,4 @@
-package com.jn.audit.core.resource.valuegetter;
+package com.jn.langx.util.valuegetter;
 
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;

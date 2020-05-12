@@ -1,4 +1,4 @@
-package com.jn.audit.core.resource.valuegetter;
+package com.jn.langx.util.valuegetter;
 
 public class CompositeValueGetter implements ValueGetter {
     private ValueGetter valueGetter;

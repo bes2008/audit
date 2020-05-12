@@ -1,4 +1,4 @@
-package com.jn.audit.core.resource.valuegetter;
+package com.jn.langx.util.valuegetter;
 
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;

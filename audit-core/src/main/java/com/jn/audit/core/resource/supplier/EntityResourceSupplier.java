@@ -1,6 +1,6 @@
 package com.jn.audit.core.resource.supplier;
 
-import com.jn.audit.core.resource.valuegetter.MemberValueGetter;
+import com.jn.langx.util.valuegetter.MemberValueGetter;
 
 public class EntityResourceSupplier<T> extends ContainerResourceSupplier<T, MemberValueGetter> {
     /**
