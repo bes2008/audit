@@ -14,6 +14,7 @@
 
 package com.jn.audit.examples.springmvcdemo.common.controller;
 
+import com.jn.audit.core.annotation.ResourceId;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.collection.Collects;
 import com.jn.sqlhelper.apachedbutils.QueryRunner;
@@ -68,7 +69,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public void update(String id, User user) {
+    public void update(@ResourceId String id, User user) {
         user.setId(id);
         User u = userDao.selectById(id);
         if (u == null) {

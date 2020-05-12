@@ -14,4 +14,5 @@ import static java.lang.annotation.ElementType.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({PARAMETER, FIELD, METHOD})
 public @interface ResourceId {
+    Class resourceClass();
 }

@@ -93,7 +93,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         if (resourceGetter == null) {
             return null;
         }
-        Object resourcesObj = resourceGetter.get(methodInvocation.getArguments());
+        Object resourcesObj = resourceGetter.get(Collects.asIterable(methodInvocation.getArguments()));
         List<Object> resourcesCollection = null;
         if (resourcesObj instanceof Resource) {
             resourcesCollection = Collects.newArrayList(resourcesObj);
@@ -101,7 +101,6 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
             resourcesCollection = (List) resourcesObj;
         }
         List<Resource> resources = Pipeline.<Object>of(resourcesCollection)
-                .clearNulls()
                 .filter(new Predicate<Object>() {
                     @Override
                     public boolean test(Object resource) {
@@ -115,6 +114,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                 })
                 .asList();
 
+        // 通常应该在 数据访问层执行下面的代码，例如mybatis 通用的 service 层
         if (idResourceExtractor != null) {
             if (Collects.allMatch(resources, new Predicate<Resource>() {
                 @Override
@@ -128,6 +128,8 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         return resource.getResourceId();
                     }
                 }).asList();
+
+                // 通常应该在 数据访问层执行下面的代码，例如mybatis 通用的 service 层
                 List<Resource> resourceList = idResourceExtractor.findResources(wrappedRequest.getRequest(), ids);
                 resourceList = Pipeline.of(resourceList).filter(new Predicate<Resource>() {
                     @Override

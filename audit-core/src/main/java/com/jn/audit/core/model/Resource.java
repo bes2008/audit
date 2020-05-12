@@ -8,31 +8,40 @@ public class Resource extends HashMap<String, Object> implements Serializable {
     public static final String RESOURCE_ID = "resourceId";
     public static final String RESOURCE_TYPE = "resourceType";
     public static final String RESOURCE_NAME = "resourceName";
-    private String resourceId;
-    private String resourceType;
-    private String resourceName;
 
     public String getResourceId() {
-        return resourceId;
+        Object resourceId = get(RESOURCE_ID);
+        if (resourceId != null) {
+            return resourceId.toString();
+        }
+        return null;
     }
 
     public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+        this.put(RESOURCE_ID, resourceId);
     }
 
     public String getResourceType() {
-        return resourceType;
+        Object resourceType = get(RESOURCE_TYPE);
+        if (resourceType != null) {
+            return resourceType.toString();
+        }
+        return null;
     }
 
     public void setResourceType(String resourceType) {
-        this.resourceType = resourceType;
+        this.put(RESOURCE_TYPE, resourceType);
     }
 
     public String getResourceName() {
-        return resourceName;
+        Object resourceName = get(RESOURCE_NAME);
+        if (resourceName != null) {
+            return resourceName.toString();
+        }
+        return null;
     }
 
     public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
+        this.put(RESOURCE_NAME, resourceName);
     }
 }
