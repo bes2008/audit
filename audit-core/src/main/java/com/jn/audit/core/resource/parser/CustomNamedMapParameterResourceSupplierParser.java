@@ -5,7 +5,6 @@ import com.jn.audit.core.resource.supplier.MapResourceSupplier;
 import com.jn.audit.core.resource.valuegetter.MapValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.collection.StringMap;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.reflect.Reflects;
 
@@ -15,27 +14,28 @@ import java.util.Map;
 
 /**
  * @see ResourceDefinition#getResource()
- *
  * @see ResourceAnnotatedMapParameterResourceSupplierParser
  */
 public class CustomNamedMapParameterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
 
     /**
      * key: resource property, e.g.
+     *
      * @see com.jn.audit.core.model.Resource#RESOURCE_ID
      * @see com.jn.audit.core.model.Resource#RESOURCE_NAME
      * @see com.jn.audit.core.model.Resource#RESOURCE_TYPE
-     *
+     * <p>
      * value: key alias
      */
-    private StringMap nameMapping;
+    private Map<String, String> nameMapping = new HashMap<String, String>();
 
-    public CustomNamedMapParameterResourceSupplierParser(StringMap map) {
-        this.nameMapping = map;
-    }
-
-    public CustomNamedMapParameterResourceSupplierParser(Map<String, String> map) {
-        this.nameMapping = new StringMap(map);
+    public CustomNamedMapParameterResourceSupplierParser(Map<String, Object> map) {
+        Collects.forEach(map, new Consumer2<String, Object>() {
+            @Override
+            public void accept(String key, Object value) {
+                nameMapping.put(key, value.toString());
+            }
+        });
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CustomNamedMapParameterResourceSupplierParser implements ResourceSu
         if (!Reflects.isSubClassOrEquals(Map.class, parameter.getType())) {
             return null;
         }
-        if(Emptys.isEmpty(nameMapping)){
+        if (Emptys.isEmpty(nameMapping)) {
             return null;
         }
         final Map<String, MapValueGetter> getterMap = new HashMap<String, MapValueGetter>();
@@ -53,7 +53,7 @@ public class CustomNamedMapParameterResourceSupplierParser implements ResourceSu
                 getterMap.put(resourceProperty, new MapValueGetter(key));
             }
         });
-        if(Emptys.isEmpty(getterMap)){
+        if (Emptys.isEmpty(getterMap)) {
             return null;
         }
         MapResourceSupplier supplier = new MapResourceSupplier();

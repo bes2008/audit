@@ -6,7 +6,6 @@ import com.jn.audit.core.resource.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.collection.StringMap;
 import com.jn.langx.util.function.Consumer2;
 
 import java.lang.reflect.Parameter;
@@ -17,21 +16,21 @@ import java.util.Map;
  * @see ResourceDefinition#getResourceId()
  * @see ResourceDefinition#getResourceName()
  * @see ResourceDefinition#getResourceType()
- *
  * @see ResourcePropertyAnnotatedResourceSupplierParser
  */
 public class CustomResourcePropertyParameterResourceSupplierParser implements ResourceSupplierParser<Parameter[], IterableResourceSupplier> {
     /**
      * resource property to parameter name mapping
      */
-    private StringMap parameterResourceMapping;
+    private Map<String, String> parameterResourceMapping = new HashMap<String, String>();
 
-    public CustomResourcePropertyParameterResourceSupplierParser(StringMap mapping) {
-        this.parameterResourceMapping = mapping;
-    }
-
-    public CustomResourcePropertyParameterResourceSupplierParser(Map<String, String> mapping) {
-        this(new StringMap(mapping));
+    public CustomResourcePropertyParameterResourceSupplierParser(Map<String, Object> mapping) {
+        Collects.forEach(mapping, new Consumer2<String, Object>() {
+            @Override
+            public void accept(String key, Object value) {
+                parameterResourceMapping.put(key, value.toString());
+            }
+        });
     }
 
     @Override
