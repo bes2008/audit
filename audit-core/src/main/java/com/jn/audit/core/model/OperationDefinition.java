@@ -18,7 +18,7 @@ public class OperationDefinition implements Configuration, Serializable {
     private String type; // {optional}  the operate type
     private String description;// {optional} the operate description
     private OperationImportance importance;  // {optional} the importance
-    private ResourceDefinition resource;
+    private ResourceDefinition resourceDefinition;
 
     public String getCode() {
         return Strings.isEmpty(code) ? this.id : this.code;
@@ -72,15 +72,15 @@ public class OperationDefinition implements Configuration, Serializable {
     }
 
 
-    public ResourceDefinition getResource() {
-        if (resource == null) {
+    public ResourceDefinition getResourceDefinition() {
+        if (resourceDefinition == null) {
             return ResourceDefinition.DEFAULT_DEFINITION;
         }
-        return resource;
+        return resourceDefinition;
     }
 
-    public void setResource(ResourceDefinition resource) {
-        this.resource = resource;
+    public void setResourceDefinition(ResourceDefinition resourceDefinition) {
+        this.resourceDefinition = resourceDefinition;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class OperationDefinition implements Configuration, Serializable {
         if (!Objects.equals(description, that.description)) {
             return false;
         }
-        if (!Objects.equals(resource, that.resource)) {
+        if (!Objects.equals(resourceDefinition, that.resourceDefinition)) {
             return false;
         }
         return true;

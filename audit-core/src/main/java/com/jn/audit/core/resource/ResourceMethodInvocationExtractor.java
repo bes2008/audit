@@ -81,7 +81,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         // step find supplier and extract resource
 
         // step 1：根据 method 从 cache 里找到对应的 supplier
-        ResourceDefinition resourceDefinition = operationDefinition.getResource();
+        ResourceDefinition resourceDefinition = operationDefinition.getResourceDefinition();
         ValueGetter resourceGetter = getValueGetterFromCache(method, resourceDefinition);
         if (resourceGetter == null) {
             // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
