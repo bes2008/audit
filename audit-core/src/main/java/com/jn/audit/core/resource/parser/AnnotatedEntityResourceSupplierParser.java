@@ -2,6 +2,8 @@ package com.jn.audit.core.resource.parser;
 
 import com.jn.audit.core.annotation.ResourceId;
 import com.jn.audit.core.annotation.ResourceMapping;
+import com.jn.audit.core.annotation.ResourceName;
+import com.jn.audit.core.annotation.ResourceType;
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
 import com.jn.langx.util.valuegetter.MemberValueGetter;
@@ -75,9 +77,9 @@ public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassReso
 
         parsePropertyByAnnotation(entityClass, ResourceId.class, map, Resource.RESOURCE_ID);
 
-        parsePropertyByAnnotation(entityClass, ResourceId.class, map, Resource.RESOURCE_NAME);
+        parsePropertyByAnnotation(entityClass, ResourceName.class, map, Resource.RESOURCE_NAME);
 
-        parsePropertyByAnnotation(entityClass, ResourceId.class, map, Resource.RESOURCE_TYPE);
+        parsePropertyByAnnotation(entityClass, ResourceType.class, map, Resource.RESOURCE_TYPE);
 
         return map;
     }
