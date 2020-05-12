@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 提供了基于正在执行的方法的ResourceExtractor
  * 必须在 operation extractor 之后执行才有意义
  *
  * @param <AuditedRequest>
@@ -42,10 +43,15 @@ import java.util.Map;
 public class ResourceMethodInvocationExtractor<AuditedRequest> implements ResourceExtractor<AuditedRequest, MethodInvocation> {
     /**
      * 根据注解解析后的进行缓存
+     * key: 在执行的方法
+     * value: 基于方法参数的 ValueGetter
      */
     private ConcurrentReferenceHashMap<Method, Holder<ValueGetter>> annotatedCache = new ConcurrentReferenceHashMap<Method, Holder<ValueGetter>>(1000, 0.9f, Runtime.getRuntime().availableProcessors(), ReferenceType.SOFT, ReferenceType.SOFT);
     /**
      * 根据配置文件定义解析之后的缓存
+     * <p>
+     * key: 在执行的方法
+     * value: 基于方法参数的 ValueGetter
      */
     private ConcurrentReferenceHashMap<Method, Entry<ResourceDefinition, ValueGetter>> configuredResourceCache = new ConcurrentReferenceHashMap<Method, Entry<ResourceDefinition, ValueGetter>>(1000, 0.9f, Runtime.getRuntime().availableProcessors(), ReferenceType.SOFT, ReferenceType.SOFT);
 
