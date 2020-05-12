@@ -2,6 +2,7 @@ package com.jn.audit.core.operation.repository;
 
 import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.model.OperationImportance;
+import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.configuration.InvalidConfigurationFileException;
@@ -145,6 +146,12 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 }
                 OperationImportance importance = importanceMap.get(importanceKey.toString());
                 definition.setImportance(importance);
+
+                // resource definition
+                Object resourceDefinitionMap = propertyPairMap.get("resourceDefinition");
+                if (Objects.isNotEmpty(resourceDefinitionMap) && resourceDefinitionMap instanceof Map) {
+                    definition.setResourceDefinition(new ResourceDefinition((Map<String, Object>) resourceDefinitionMap));
+                }
                 definitionMap.put(id, definition);
             }
         });

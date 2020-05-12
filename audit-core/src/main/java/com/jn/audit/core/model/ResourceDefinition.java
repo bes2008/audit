@@ -5,6 +5,7 @@ import com.jn.langx.util.Objects;
 import com.jn.langx.util.hash.HashCodeBuilder;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用于在配置文件中定义资源的标识：
@@ -20,7 +21,7 @@ import java.util.HashMap;
  * <p>
  * 该值指定的数据的类，需要有 @ResourceMapping注解，或者需要 resourceId, resourceName, resourceType 配置
  */
-public class ResourceDefinition extends HashMap<String, String> {
+public class ResourceDefinition extends HashMap<String, Object> {
     public static final long serialVersionUID = 1L;
 
 
@@ -61,11 +62,23 @@ public class ResourceDefinition extends HashMap<String, String> {
 
     private static final ResourceDefinition getDefaultResourceDefinition() {
         ResourceDefinition definition = new ResourceDefinition();
-        definition.setResourceId("resourceId");
-        definition.setResourceName("resourceName");
-        definition.setResourceType("resourceType");
+        definition.setResourceId(Resource.RESOURCE_ID);
+        definition.setResourceName(Resource.RESOURCE_NAME);
+        definition.setResourceType(Resource.RESOURCE_TYPE);
         definition.setResource("resource");
         return definition;
+    }
+
+    public ResourceDefinition() {
+
+    }
+
+    public ResourceDefinition(Map<String, Object> map) {
+        this.putAll(map);
+        setResourceId((String) map.getOrDefault(Resource.RESOURCE_ID, Resource.RESOURCE_ID));
+        setResourceName((String) map.getOrDefault(Resource.RESOURCE_NAME, Resource.RESOURCE_NAME));
+        setResourceType((String) map.getOrDefault(Resource.RESOURCE_TYPE, Resource.RESOURCE_TYPE));
+        setResource((String) map.get("resource"));
     }
 
     public String getResource() {
