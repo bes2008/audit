@@ -1,7 +1,9 @@
-package com.jn.audit.core.resource.parser;
+package com.jn.audit.core.resource.parser.parameter;
 
 import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.annotation.ResourceMapping;
+import com.jn.audit.core.resource.parser.ResourceSupplierParser;
+import com.jn.audit.core.resource.parser.parameter.CustomNamedMapParameterResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
 import com.jn.langx.util.valuegetter.MapValueGetter;
 import com.jn.langx.util.Emptys;

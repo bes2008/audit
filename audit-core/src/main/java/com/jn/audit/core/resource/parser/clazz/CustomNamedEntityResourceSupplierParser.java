@@ -1,7 +1,8 @@
-package com.jn.audit.core.resource.parser;
+package com.jn.audit.core.resource.parser.clazz;
 
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.model.ResourceDefinition;
+import com.jn.audit.core.resource.parser.parameter.ResourceAnnotatedEntityParameterResourceSupplierParser;
 import com.jn.langx.util.valuegetter.MemberValueGetter;
 import com.jn.langx.util.collection.StringMap;
 import com.jn.langx.util.collection.StringMapAccessor;

@@ -2,7 +2,8 @@ package com.jn.audit.core.resource;
 
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.*;
-import com.jn.audit.core.resource.parser.*;
+import com.jn.audit.core.resource.parser.clazz.CustomNamedEntityResourceSupplierParser;
+import com.jn.audit.core.resource.parser.parameter.*;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.proxy.aop.MethodInvocation;

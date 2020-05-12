@@ -1,4 +1,4 @@
-package com.jn.audit.core.resource.parser;
+package com.jn.audit.core.resource.parser.clazz;
 
 import com.jn.audit.core.annotation.ResourceId;
 import com.jn.audit.core.annotation.ResourceMapping;

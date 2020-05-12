@@ -1,9 +1,11 @@
-package com.jn.audit.core.resource.parser;
+package com.jn.audit.core.resource.parser.parameter;
 
 import com.jn.audit.core.annotation.ResourceId;
 import com.jn.audit.core.annotation.ResourceName;
 import com.jn.audit.core.annotation.ResourceType;
 import com.jn.audit.core.model.Resource;
+import com.jn.audit.core.resource.parser.ResourceSupplierParser;
+import com.jn.audit.core.resource.parser.parameter.CustomResourcePropertyParameterResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
 import com.jn.langx.util.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;

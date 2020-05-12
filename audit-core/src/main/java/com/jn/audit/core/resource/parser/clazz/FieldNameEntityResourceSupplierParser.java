@@ -1,4 +1,4 @@
-package com.jn.audit.core.resource.parser;
+package com.jn.audit.core.resource.parser.clazz;
 
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
