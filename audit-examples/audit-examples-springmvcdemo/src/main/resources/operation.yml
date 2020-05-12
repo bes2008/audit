@@ -18,6 +18,8 @@ operationDefinitions:
     type: user_update
     importance: major
     description: 使用MyBatis来更新用户
+    resource-definition:
+      statment-id: id
   DELETE-/users/{id}:
     code: Audit_springmvc_USER_DELETE
     name: 删除用户

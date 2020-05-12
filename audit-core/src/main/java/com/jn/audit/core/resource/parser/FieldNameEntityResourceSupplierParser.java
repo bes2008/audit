@@ -26,7 +26,7 @@ public class FieldNameEntityResourceSupplierParser<T> implements EntityClassReso
     public static final FieldNameEntityResourceSupplierParser DEFAULT_INSTANCE = new FieldNameEntityResourceSupplierParser();
     @Override
     public EntityResourceSupplier<T> parse(Class<T> entityClass) {
-        Map<String, MemberValueGetter> map = parseByFileName(entityClass);
+        Map<String, MemberValueGetter> map = parseByFieldName(entityClass);
         if (Emptys.isEmpty(map)) {
             return null;
         }
@@ -37,7 +37,7 @@ public class FieldNameEntityResourceSupplierParser<T> implements EntityClassReso
         return supplier;
     }
 
-    private Map<String, MemberValueGetter> parseByFileName(Class<T> entityClass) {
+    protected Map<String, MemberValueGetter> parseByFieldName(Class<T> entityClass) {
         Map<String, MemberValueGetter> map = new HashMap<String, MemberValueGetter>();
 
         parsePropertyByFieldName(entityClass, Resource.RESOURCE_ID, map, Resource.RESOURCE_ID);

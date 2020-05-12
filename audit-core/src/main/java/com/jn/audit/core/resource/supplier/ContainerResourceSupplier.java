@@ -20,7 +20,6 @@ import java.util.Map;
  *     · Entity 容器： 会将字段、方法视为ValueGetter，即VG为 MemberGetter
  *     · Array 容器：VG为： ArrayValueGetter
  *     · Iterable 容器： VG为 IterableValueGetter
- *     ·
  * </pre>
  *
  * @param <Container> Entity, Map, Iterable, Array 都被视为容器。

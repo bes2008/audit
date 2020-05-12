@@ -36,7 +36,7 @@ public class CustomNamedEntityResourceSupplierParser<T> extends FieldNameEntityR
         this.nameMapping = new StringMap(map);
     }
 
-    private Map<String, MemberValueGetter> parseByFileName(Class<T> entityClass) {
+    protected Map<String, MemberValueGetter> parseByFieldName(Class<T> entityClass) {
         Map<String, MemberValueGetter> map = new HashMap<String, MemberValueGetter>();
 
         StringMapAccessor accessor = new StringMapAccessor(nameMapping);
