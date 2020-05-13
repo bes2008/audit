@@ -20,6 +20,7 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.reflect.Reflects;
 import com.lmax.disruptor.WaitStrategy;
+import com.lmax.disruptor.dsl.BasicExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -153,6 +154,9 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
 
         // executor
         final Executor defaultExecutor = getDefaultExecutor(settings);
+
+        final Executor consumerExecutor = new BasicExecutor(new CommonThreadFactory("Consumer", false));
+
         // dispatcher
         final MessageTopicDispatcher dispatcher = getMessageTopicDispatcher(settings);
         dispatcher.setTopicEventPublisher(eventPublisher);
@@ -169,7 +173,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
                     topicConfig.setRingBufferSize(8096);
                 }
                 if (topicConfig.getExecutor() == null) {
-                    topicConfig.setExecutor(defaultExecutor);
+                    topicConfig.setExecutor(consumerExecutor);
                 }
                 if (topicConfig.getWaitStrategy() == null) {
                     topicConfig.setWaitStrategy(defaultWaitStrategy);
