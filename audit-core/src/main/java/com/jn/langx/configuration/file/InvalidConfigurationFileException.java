@@ -1,4 +1,4 @@
-package com.jn.langx.configuration;
+package com.jn.langx.configuration.file;
 
 
 public class InvalidConfigurationFileException extends RuntimeException {

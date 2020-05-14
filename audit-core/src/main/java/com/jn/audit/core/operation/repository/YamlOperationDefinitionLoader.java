@@ -5,7 +5,7 @@ import com.jn.audit.core.model.OperationImportance;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.configuration.InvalidConfigurationFileException;
+import com.jn.langx.configuration.file.InvalidConfigurationFileException;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.util.Objects;
