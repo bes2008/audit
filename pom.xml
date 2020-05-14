@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.2.9</langx-java.version>
+        <langx-java.version>2.3.0</langx-java.version>
         <easyjson.version>2.2.1</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
     </properties>
