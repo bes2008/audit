@@ -1,10 +1,10 @@
 package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
-import com.jn.audit.mq.*;
-import com.jn.audit.mq.allocator.AbstractMultipleCandidateTopicAllocator;
-import com.jn.audit.mq.allocator.DefaultTopicAllocator;
-import com.jn.audit.mq.event.TopicEvent;
+import com.jn.dmmq.core.*;
+import com.jn.dmmq.core.allocator.AbstractMultipleCandidateTopicAllocator;
+import com.jn.dmmq.core.allocator.DefaultTopicAllocator;
+import com.jn.dmmq.core.event.TopicEvent;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.event.local.SimpleEventPublisher;
 import com.jn.langx.text.StringTemplates;

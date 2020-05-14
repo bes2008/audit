@@ -1,8 +1,8 @@
 package com.jn.audit.examples.springmvcdemo.service;
 
 import com.jn.audit.core.model.AuditEvent;
-import com.jn.audit.mq.Consumer;
-import com.jn.audit.mq.MessageHolder;
+import com.jn.dmmq.core.Consumer;
+import com.jn.dmmq.core.MessageHolder;
 import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

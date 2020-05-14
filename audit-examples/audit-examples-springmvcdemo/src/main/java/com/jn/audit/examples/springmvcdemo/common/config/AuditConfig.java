@@ -2,7 +2,7 @@ package com.jn.audit.examples.springmvcdemo.common.config;
 
 import com.jn.audit.core.Auditor;
 import com.jn.audit.examples.springmvcdemo.service.DbService;
-import com.jn.audit.mq.MessageTopicDispatcher;
+import com.jn.dmmq.core.MessageTopicDispatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 

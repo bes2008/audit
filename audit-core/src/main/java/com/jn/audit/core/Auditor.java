@@ -1,9 +1,9 @@
 package com.jn.audit.core;
 
 import com.jn.audit.core.model.AuditEvent;
-import com.jn.audit.mq.MessageTopicDispatcher;
-import com.jn.audit.mq.MessageTopicDispatcherAware;
-import com.jn.audit.mq.Producer;
+import com.jn.dmmq.core.MessageTopicDispatcher;
+import com.jn.dmmq.core.MessageTopicDispatcherAware;
+import com.jn.dmmq.core.Producer;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.Destroyable;

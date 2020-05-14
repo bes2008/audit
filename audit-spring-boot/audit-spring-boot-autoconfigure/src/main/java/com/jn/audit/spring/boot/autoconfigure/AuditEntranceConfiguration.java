@@ -1,7 +1,7 @@
 package com.jn.audit.spring.boot.autoconfigure;
 
 
-import com.jn.audit.mq.MessageTopicDispatcher;
+import com.jn.dmmq.core.MessageTopicDispatcher;
 import com.jn.audit.spring.webmvc.AuditHttpHandlerInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
