@@ -51,6 +51,7 @@
         <langx-java.version>2.3.0</langx-java.version>
         <easyjson.version>2.2.1</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
+        <dmmq.version>1.0.0</dmmq.version>
     </properties>
 
     <modules>
@@ -90,9 +91,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.github.fangjinuo.audit</groupId>
-                <artifactId>audit-mq</artifactId>
-                <version>${project.version}</version>
+                <groupId>com.github.fangjinuo.dmmq</groupId>
+                <artifactId>dmmq-core</artifactId>
+                <version>${dmmq.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.audit</groupId>
