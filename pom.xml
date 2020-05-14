@@ -48,13 +48,12 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.2.8</langx-java.version>
+        <langx-java.version>2.2.9</langx-java.version>
         <easyjson.version>2.2.1</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
     </properties>
 
     <modules>
-        <module>audit-mq</module>
         <module>audit-core</module>
         <module>audit-spring</module>
         <module>audit-servlet</module>
