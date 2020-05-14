@@ -6,6 +6,7 @@ import com.jn.langx.util.hash.HashCodeBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 用于在配置文件中定义资源的标识：
@@ -24,39 +25,6 @@ import java.util.Map;
 public class ResourceDefinition extends HashMap<String, Object> {
     public static final long serialVersionUID = 1L;
 
-
-    @Nullable
-    String resource;
-
-    /**
-     * 如果一个方法的参数实际上可以去代表一个或多个被操作的资源的ID， 可以使用它来标注该参数名称。
-     * <p>
-     * 也可以这么理解：一个方法的参数名称，如果与 resourceId的值一样，那么该参数就会被认为是 resource的ID
-     * <p>
-     * 也就是说，它等同于 @ResourceId 注解
-     */
-    @Nullable
-    String resourceId;
-
-    /**
-     * 如果一个方法的参数实际上可以去代表一个或多个被操作的资源的name， 可以使用它来标注该参数名称。
-     * <p>
-     * 也可以这么理解：一个方法的参数名称，如果与 resourceName的值一样，那么该参数就会被认为是 resource的Name
-     * <p>
-     * 也就是说，它等同于 @ResourceName 注解
-     */
-    @Nullable
-    String resourceName;
-
-    /**
-     * 如果一个方法的参数实际上可以去代表一个或多个被操作的资源的type， 可以使用它来标注该参数名称。
-     * <p>
-     * 也可以这么理解：一个方法的参数名称，如果与 resourceType的值一样，那么该参数就会被认为是 resource的Type
-     * <p>
-     * 也就是说，它等同于 @ResourceType 注解
-     */
-    @Nullable
-    String resourceType;
 
     public static final ResourceDefinition DEFAULT_DEFINITION = getDefaultResourceDefinition();
 
@@ -82,76 +50,35 @@ public class ResourceDefinition extends HashMap<String, Object> {
     }
 
     public String getResource() {
-        return resource;
+        return (String) this.get("resource");
     }
 
     public void setResource(String resource) {
-        this.resource = resource;
+        this.put("resource",resource);
     }
 
     public String getResourceId() {
-        return resourceId;
+        return (String) this.get(Resource.RESOURCE_ID);
     }
 
     public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+        this.put(Resource.RESOURCE_ID,resourceId);
     }
 
     public String getResourceName() {
-        return resourceName;
+        return (String) this.get(Resource.RESOURCE_NAME);
     }
 
     public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
+        this.put(Resource.RESOURCE_NAME,resourceName);
     }
 
     public String getResourceType() {
-        return resourceType;
+        return (String) this.get(Resource.RESOURCE_TYPE);
     }
 
     public void setResourceType(String resourceType) {
-        this.resourceType = resourceType;
+        this.put(Resource.RESOURCE_TYPE,resourceType);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ResourceDefinition that = (ResourceDefinition) o;
-
-        if (!Objects.equals(this.resource, that.resource)) {
-            return false;
-        }
-        if (!Objects.equals(this.resourceId, that.resourceId)) {
-            return false;
-        }
-        if (!Objects.equals(this.resourceName, that.resourceName)) {
-            return false;
-        }
-        if (!Objects.equals(this.resourceType, that.resourceType)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .with(resource)
-                .with(resourceId)
-                .with(resourceName)
-                .with(resourceType)
-                .build();
-    }
-
-    @Override
-    public String toString() {
-        return "ResourceDefinition{" +
-                "resource='" + resource + '\'' +
-                ", resourceId='" + resourceId + '\'' +
-                ", resourceName='" + resourceName + '\'' +
-                ", resourceType='" + resourceType + '\'' +
-                '}';
-    }
 }

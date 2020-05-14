@@ -14,6 +14,7 @@
 
 package com.jn.audit.examples.springmvcdemo.common.controller;
 
+import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.annotation.ResourceId;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.collection.Collects;
@@ -69,9 +70,19 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public void update(@ResourceId String id, User user) {
+    public void update(@ResourceId String id, @Resource @RequestBody User user) {
         user.setId(id);
         User u = userDao.selectById(id);
+        if (u == null) {
+            add(user);
+        } else {
+            userDao.updateById(user);
+        }
+    }
+    @PutMapping()
+    public void update(@Resource @RequestBody User user) {
+        user.setId(user.getId());
+        User u = userDao.selectById(user.getId());
         if (u == null) {
             add(user);
         } else {
@@ -82,6 +93,12 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteById(@RequestParam("id") String id) {
         userDao.deleteById(id);
+    }
+    @DeleteMapping()
+    public void deleteByIds(@ResourceId @RequestBody List<String> ids) {
+        for(String id:ids){
+            userDao.deleteById(id);
+        }
     }
 
 

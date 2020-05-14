@@ -100,7 +100,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         if (resourceGetter == null) {
             return null;
         }
-        Object resourcesObj = resourceGetter.get(Collects.asIterable(methodInvocation.getArguments()));
+        Object resourcesObj = Collects.asList(resourceGetter.get(methodInvocation.getArguments()));
         List<Object> resourcesCollection = null;
         if (resourcesObj instanceof Resource) {
             resourcesCollection = Collects.newArrayList(resourcesObj);
