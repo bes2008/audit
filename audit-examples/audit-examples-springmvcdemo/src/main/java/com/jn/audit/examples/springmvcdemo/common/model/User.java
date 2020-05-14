@@ -14,7 +14,13 @@
 
 package com.jn.audit.examples.springmvcdemo.common.model;
 
-public class User {
+import com.jn.audit.core.annotation.ResourceMapping;
+
+import java.io.Serializable;
+
+@ResourceMapping(name="name",id="id",type = "entity")
+public class User implements Serializable {
+
     private String id;
     private String name;
     private int age;

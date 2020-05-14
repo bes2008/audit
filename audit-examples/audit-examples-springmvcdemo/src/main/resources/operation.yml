@@ -18,12 +18,30 @@ operationDefinitions:
     type: user_update
     importance: major
     description: 使用MyBatis来更新用户
-    resource-definition:
-      statment-id: id
+    resourceDefinition:
+      statmentId: select
+      statementIdFQN: com.jn.sqlhelper.examples.common.dao.UserDao.selectById
+      entity: com.jn.sqlhelper.examples.common.model.User
+  PUT-/users:  # the http URL
+    code: Audit_springmvc_USER_UPDATE_2
+    name: 更新用户
+    type: user_update
+    importance: major
+    description: 使用MyBatis来更新用户2
+    resourceDefinition:
+      statmentId: select
+      statementIdFQN: com.jn.sqlhelper.examples.common.dao.UserDao.selectById
+      entity: com.jn.sqlhelper.examples.common.model.User
   DELETE-/users/{id}:
     code: Audit_springmvc_USER_DELETE
     name: 删除用户
     type: user_delete
+    importance: major
+    description: 使用MyBatis来删除用户
+  DELETE-/users:
+    code: Audit_springmvc_USER_DELETE1
+    name: 删除用户1
+    type: user_delete1
     importance: major
     description: 使用MyBatis来删除用户
   GET-/users/_useMyBatis:
