@@ -14,13 +14,13 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
+import com.jn.langx.util.concurrent.ExclusiveExecutor;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.reflect.Reflects;
 import com.lmax.disruptor.WaitStrategy;
-import com.lmax.disruptor.dsl.BasicExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,7 +155,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
         // executor
         final Executor defaultExecutor = getDefaultExecutor(settings);
 
-        final Executor consumerExecutor = new BasicExecutor(new CommonThreadFactory("Consumer", false));
+        final Executor consumerExecutor = new ExclusiveExecutor(new CommonThreadFactory("Consumer", false));
 
         // dispatcher
         final MessageTopicDispatcher dispatcher = getMessageTopicDispatcher(settings);
