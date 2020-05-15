@@ -209,7 +209,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                     if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                         supplier = new CustomNamedMapParameterResourceSupplierParser(mapping).parse(parameter);
                     }
-                    if (!isLiteralType(parameterType)) {
+                    if (!Types.isLiteralType(parameterType)) {
                         supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
                     }
 
@@ -257,7 +257,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                 if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                     supplier = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
                 }
-                if (!isLiteralType(parameterType)) {
+                if (!Types.isLiteralType(parameterType)) {
                     supplier = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
                 }
 
@@ -282,18 +282,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         return resourceGetter.get();
     }
 
-    private static final boolean isLiteralType(Class clazz) {
-        if (Types.isPrimitive(clazz)) {
-            return true;
-        }
-        if (Primitives.isWrapperType(clazz)) {
-            return true;
-        }
-        if (clazz == String.class) {
-            return true;
-        }
-        return false;
-    }
+
 
     public AbstractIdResourceExtractor getIdResourceExtractor() {
         return idResourceExtractor;
