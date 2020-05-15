@@ -22,10 +22,7 @@ import com.jn.langx.util.reflect.reference.ReferenceType;
 import com.jn.langx.util.reflect.type.Types;
 import com.jn.langx.util.struct.Entry;
 import com.jn.langx.util.struct.Holder;
-import com.jn.langx.util.valuegetter.ArrayValueGetter;
-import com.jn.langx.util.valuegetter.PipelineValueGetter;
-import com.jn.langx.util.valuegetter.StreamValueGetter;
-import com.jn.langx.util.valuegetter.ValueGetter;
+import com.jn.langx.util.valuegetter.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -197,18 +194,15 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                     Class parameterType0 = parameterType;
                     if (Types.isArray(parameterType)) {
                         parameterType0 = parameterType.getComponentType();
-                    }
-                    if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
+                    } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                         try {
                             parameterType0 = Types.getRawType(parameterType);
                         } catch (Throwable ex) {
                             parameterType0 = parameterType;
                         }
-                    }
-                    if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
+                    } else if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                         supplier = new CustomNamedMapParameterResourceSupplierParser(mapping).parse(parameter);
-                    }
-                    if (!Types.isLiteralType(parameterType)) {
+                    } else if (!Types.isLiteralType(parameterType)) {
                         supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
                     }
 
@@ -224,7 +218,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         resourceGetter = pipelineValueGetter;
                     }
                 }
-                // step 2.2 parse by resourceId, resourceName, resourceValue
+                // step 2.2 parse by resourceId, resourceName, resourceType
                 if (supplier == null) {
                     supplier = new CustomResourcePropertyParameterResourceSupplierParser(mapping).parse(parameters);
                 }
@@ -245,18 +239,15 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                 Class parameterType0 = parameterType;
                 if (Types.isArray(parameterType)) {
                     parameterType0 = parameterType.getComponentType();
-                }
-                if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
+                } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                     try {
                         parameterType0 = Types.getRawType(parameterType);
                     } catch (Throwable ex) {
                         parameterType0 = parameterType;
                     }
-                }
-                if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
+                } else if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                     supplier = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
-                }
-                if (!Types.isLiteralType(parameterType)) {
+                } else if (!Types.isLiteralType(parameterType)) {
                     supplier = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
                 }
 
