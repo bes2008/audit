@@ -100,26 +100,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         if (resourceGetter == null) {
             return null;
         }
-        Object resourcesObj = Collects.asList(resourceGetter.get(methodInvocation.getArguments()));
-        List<Object> resourcesCollection = null;
-        if (resourcesObj instanceof Resource) {
-            resourcesCollection = Collects.newArrayList(resourcesObj);
-        } else if (resourcesObj instanceof List) {
-            resourcesCollection = (List) resourcesObj;
-        }
-        List<Resource> resources = Pipeline.<Object>of(resourcesCollection)
-                .filter(new Predicate<Object>() {
-                    @Override
-                    public boolean test(Object resource) {
-                        return resource instanceof Resource;
-                    }
-                }).map(new Function<Object, Resource>() {
-                    @Override
-                    public Resource apply(Object input) {
-                        return (Resource) input;
-                    }
-                })
-                .asList();
+        List<Resource> resources = Collects.asList( Collects.asIterable(resourceGetter.get(methodInvocation.getArguments())));
 
         // 通常应该在 数据访问层执行下面的代码，例如mybatis 通用的 service 层
         if (idResourceExtractor != null) {
