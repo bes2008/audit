@@ -5,14 +5,16 @@ import com.jn.audit.core.annotation.ResourceName;
 import com.jn.audit.core.annotation.ResourceType;
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.parser.ResourceSupplierParser;
+import com.jn.audit.core.resource.supplier.EnumerationValueGetter;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
-import com.jn.langx.util.valuegetter.IterableValueGetter;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,19 +31,27 @@ public class ResourcePropertyAnnotatedResourceSupplierParser implements Resource
     public IterableResourceSupplier parse(Parameter[] parameters) {
 
         // key: resourceProperty
-        final Map<String, IterableValueGetter> getterMap = new HashMap<String, IterableValueGetter>();
-        Pipeline.of(parameters).forEach(new Consumer2<Integer, Parameter>() {
-            @Override
-            public void accept(Integer index, Parameter parameter) {
-                if (Reflects.hasAnnotation(parameter, ResourceId.class)) {
-                    getterMap.put(Resource.RESOURCE_ID, new IterableValueGetter(index));
-                } else if (Reflects.hasAnnotation(parameter, ResourceName.class)) {
-                    getterMap.put(Resource.RESOURCE_NAME, new IterableValueGetter(index));
-                } else if (Reflects.hasAnnotation(parameter, ResourceType.class)) {
-                    getterMap.put(Resource.RESOURCE_TYPE, new IterableValueGetter(index));
-                }
-            }
-        });
+        final Map<String, EnumerationValueGetter> getterMap = new HashMap<String, EnumerationValueGetter>();
+        Pipeline.of(parameters).forEach(
+                new Predicate2<Integer, Parameter>() {
+                    @Override
+                    public boolean test(Integer index, Parameter parameter) {
+                        Class type = parameter.getType();
+                        return type == String.class || Reflects.isSubClassOrEquals(Number.class, type);
+                    }
+                },
+                new Consumer2<Integer, Parameter>() {
+                    @Override
+                    public void accept(Integer index, Parameter parameter) {
+                        if (Reflects.hasAnnotation(parameter, ResourceId.class)) {
+                            getterMap.put(Resource.RESOURCE_ID, new EnumerationValueGetter(index));
+                        } else if (Reflects.hasAnnotation(parameter, ResourceName.class)) {
+                            getterMap.put(Resource.RESOURCE_NAME, new EnumerationValueGetter(index));
+                        } else if (Reflects.hasAnnotation(parameter, ResourceType.class)) {
+                            getterMap.put(Resource.RESOURCE_TYPE, new EnumerationValueGetter(index));
+                        }
+                    }
+                });
         if (Emptys.isEmpty(getterMap)) {
             return null;
         }

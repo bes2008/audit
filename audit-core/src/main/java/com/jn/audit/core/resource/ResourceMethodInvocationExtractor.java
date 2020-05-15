@@ -1,6 +1,7 @@
 package com.jn.audit.core.resource;
 
 import com.jn.audit.core.AuditRequest;
+import com.jn.audit.core.annotation.ResourceId;
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.clazz.CustomNamedEntityResourceSupplierParser;
 import com.jn.audit.core.resource.parser.parameter.*;
@@ -16,6 +17,7 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.parameter.MethodParameter;
@@ -234,56 +236,130 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
     private ValueGetter parseResourceGetterByAnnotation(final Parameter[] parameters) {
         final Holder<ValueGetter> resourceGetter = new Holder<ValueGetter>();
         // step 1: 解析 @Resource 注解
-        Collects.forEach(parameters, new Consumer2<Integer, Parameter>() {
-            @Override
-            public void accept(Integer index, Parameter parameter) {
-                ValueGetter supplier = null;
-                Class parameterType = parameter.getType();
-                Class parameterType0 = parameterType;
-                boolean isArray = false;
-                boolean isCollection = false;
-                if (Types.isArray(parameterType)) {
-                    parameterType0 = parameterType.getComponentType();
-                    isArray = true;
-                } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
-                    try {
-                        parameterType0 = Types.getRawType(parameterType);
-                        isCollection = true;
-                    } catch (Throwable ex) {
-                        parameterType0 = parameterType;
+        Collects.forEach(parameters,
+                new Predicate2<Integer, Parameter>() {
+                    @Override
+                    public boolean test(Integer key, Parameter parameter) {
+                        return Reflects.hasAnnotation(parameter, com.jn.audit.core.annotation.Resource.class);
+                    }
+                },
+                new Consumer2<Integer, Parameter>() {
+                    @Override
+                    public void accept(Integer index, Parameter parameter) {
+                        ValueGetter supplier = null;
+                        Class parameterType = parameter.getType();
+                        Class parameterType0 = parameterType;
+                        boolean isArray = false;
+                        boolean isCollection = false;
+                        if (Types.isArray(parameterType)) {
+                            parameterType0 = parameterType.getComponentType();
+                            isArray = true;
+                        } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
+                            try {
+                                parameterType0 = Types.getRawType(parameterType);
+                                isCollection = true;
+                            } catch (Throwable ex) {
+                                parameterType0 = parameterType;
+                            }
+                        }
+
+                        // 对泛型 raw type进行处理
+                        // 也就是这里是支持： Collection<Map>, Collection<Entity>, Map, Entity的方式，不对 Collection<Collection>的方式做支持
+                        if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
+                            supplier = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
+                        } else if (!Types.isLiteralType(parameterType0)) {
+                            supplier = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
+                        }
+
+                        if (supplier != null) {
+                            PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                            // 相当于调用 parameters[index]
+                            pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
+
+                            if (!isArray && !isCollection) {
+                                // 此时为 Map 或者 Entity
+                                pipelineValueGetter.addValueGetter(supplier);
+                            } else {
+                                // 此时 为 array, collection
+                                pipelineValueGetter.addValueGetter(new StreamValueGetter(supplier));
+                            }
+                            resourceGetter.set(pipelineValueGetter);
+                        }
+                    }
+                },
+                new Predicate2<Integer, Parameter>() {
+                    @Override
+                    public boolean test(Integer key, Parameter value) {
+                        return !resourceGetter.isNull();
                     }
                 }
-
-                // 对泛型 raw type进行处理
-                // 也就是这里是支持： Collection<Map>, Collection<Entity>, Map, Entity的方式，不对 Collection<Collection>的方式做支持
-                if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
-                    supplier = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
-                } else if (!Types.isLiteralType(parameterType0)) {
-                    supplier = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
-                }
-
-                if (supplier != null) {
-                    PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
-                    // 相当于调用 parameters[index]
-                    pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
-
-                    if (!isArray && !isCollection) {
-                        // 此时为 Map 或者 Entity
-                        pipelineValueGetter.addValueGetter(supplier);
-                    } else {
-                        // 此时 为 array, collection
-                        pipelineValueGetter.addValueGetter(new StreamValueGetter(supplier));
-                    }
-                    resourceGetter.set(pipelineValueGetter);
-                }
-            }
-        });
+        );
 
         // step 2: 解析 @ResourceId, @ResourceName, @ResourceType 注解
+        // 这一步只针对字面量类型的解析
         if (resourceGetter.isNull()) {
             resourceGetter.set(new ResourcePropertyAnnotatedResourceSupplierParser().parse(parameters));
         }
+        // step 3: 解析 Collection ids
+        // 这一步只针对 id 是Collection或者Array， 并且有 @ResourceId 标注的情况
+        if (resourceGetter.isNull()) {
 
+            Collects.forEach(parameters,
+                    new Predicate2<Integer, Parameter>() {
+                        @Override
+                        public boolean test(Integer key, Parameter parameter) {
+                            return Reflects.hasAnnotation(parameter, ResourceId.class);
+                        }
+                    },
+                    new Consumer2<Integer, Parameter>() {
+                        @Override
+                        public void accept(Integer index, Parameter parameter) {
+                            ValueGetter supplier = null;
+                            Class parameterType = parameter.getType();
+                            Class parameterType0 = parameterType;
+                            boolean isArray = false;
+                            boolean isCollection = false;
+                            if (Types.isArray(parameterType)) {
+                                parameterType0 = parameterType.getComponentType();
+                                isArray = true;
+                            } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
+                                try {
+                                    parameterType0 = Types.getRawType(parameterType);
+                                    isCollection = true;
+                                } catch (Throwable ex) {
+                                    parameterType0 = parameterType;
+                                }
+                            }
+                            if (isArray || isCollection) {
+                                PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                                // 相当于调用 parameters[index]
+                                pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
+
+                                pipelineValueGetter.addValueGetter(new StreamValueGetter(new Function() {
+                                            @Override
+                                            public Object apply(Object id) {
+                                                Resource resource = new Resource();
+                                                if (id == null) {
+                                                    return null;
+                                                }
+                                                resource.setResourceId(id.toString());
+                                                return resource;
+                                            }
+                                        })
+                                );
+
+                                resourceGetter.set(pipelineValueGetter);
+                            }
+                        }
+                    },
+                    new Predicate2<Integer, Parameter>() {
+                        @Override
+                        public boolean test(Integer key, Parameter value) {
+                            return !resourceGetter.isNull();
+                        }
+                    }
+            );
+        }
         return resourceGetter.get();
     }
 
