@@ -1,12 +1,9 @@
 package com.jn.audit.core.model;
 
-import com.jn.langx.annotation.Nullable;
-import com.jn.langx.util.Objects;
-import com.jn.langx.util.hash.HashCodeBuilder;
+import com.jn.langx.util.collection.MapAccessor;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 用于在配置文件中定义资源的标识：
@@ -43,10 +40,11 @@ public class ResourceDefinition extends HashMap<String, Object> {
 
     public ResourceDefinition(Map<String, Object> map) {
         this.putAll(map);
-        setResourceId((String) map.getOrDefault(Resource.RESOURCE_ID, Resource.RESOURCE_ID));
-        setResourceName((String) map.getOrDefault(Resource.RESOURCE_NAME, Resource.RESOURCE_NAME));
-        setResourceType((String) map.getOrDefault(Resource.RESOURCE_TYPE, Resource.RESOURCE_TYPE));
-        setResource((String) map.get("resource"));
+        MapAccessor accessor = new MapAccessor(map);
+        setResourceId(accessor.getString(Resource.RESOURCE_ID, Resource.RESOURCE_ID));
+        setResourceName(accessor.getString(Resource.RESOURCE_NAME, Resource.RESOURCE_NAME));
+        setResourceType(accessor.getString(Resource.RESOURCE_TYPE, Resource.RESOURCE_TYPE));
+        setResource(accessor.getString("resource"));
     }
 
     public String getResource() {
@@ -54,7 +52,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
     }
 
     public void setResource(String resource) {
-        this.put("resource",resource);
+        this.put("resource", resource);
     }
 
     public String getResourceId() {
@@ -62,7 +60,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
     }
 
     public void setResourceId(String resourceId) {
-        this.put(Resource.RESOURCE_ID,resourceId);
+        this.put(Resource.RESOURCE_ID, resourceId);
     }
 
     public String getResourceName() {
@@ -70,7 +68,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
     }
 
     public void setResourceName(String resourceName) {
-        this.put(Resource.RESOURCE_NAME,resourceName);
+        this.put(Resource.RESOURCE_NAME, resourceName);
     }
 
     public String getResourceType() {
@@ -78,7 +76,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
     }
 
     public void setResourceType(String resourceType) {
-        this.put(Resource.RESOURCE_TYPE,resourceType);
+        this.put(Resource.RESOURCE_TYPE, resourceType);
     }
 
 }
