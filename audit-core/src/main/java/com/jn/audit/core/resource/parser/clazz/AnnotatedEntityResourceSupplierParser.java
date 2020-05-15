@@ -6,13 +6,13 @@ import com.jn.audit.core.annotation.ResourceName;
 import com.jn.audit.core.annotation.ResourceType;
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
-import com.jn.langx.util.valuegetter.MemberValueGetter;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Modifiers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.valuegetter.MemberValueGetter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

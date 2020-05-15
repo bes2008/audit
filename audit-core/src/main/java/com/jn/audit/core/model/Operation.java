@@ -3,7 +3,6 @@ package com.jn.audit.core.model;
 import com.jn.langx.annotation.NonNull;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 public class Operation implements Serializable {

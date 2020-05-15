@@ -5,7 +5,6 @@ import com.jn.audit.core.annotation.ResourceId;
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.clazz.CustomNamedEntityResourceSupplierParser;
 import com.jn.audit.core.resource.parser.parameter.*;
-import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.proxy.aop.MethodInvocation;
@@ -25,7 +24,10 @@ import com.jn.langx.util.reflect.reference.ReferenceType;
 import com.jn.langx.util.reflect.type.Types;
 import com.jn.langx.util.struct.Entry;
 import com.jn.langx.util.struct.Holder;
-import com.jn.langx.util.valuegetter.*;
+import com.jn.langx.util.valuegetter.ArrayValueGetter;
+import com.jn.langx.util.valuegetter.PipelineValueGetter;
+import com.jn.langx.util.valuegetter.StreamValueGetter;
+import com.jn.langx.util.valuegetter.ValueGetter;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -100,7 +102,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         if (resourceGetter == null) {
             return null;
         }
-        List<Resource> resources = Collects.asList( Collects.asIterable(resourceGetter.get(methodInvocation.getArguments())));
+        List<Resource> resources = Collects.asList(Collects.asIterable(resourceGetter.get(methodInvocation.getArguments())));
 
         // 通常应该在 数据访问层执行下面的代码，例如mybatis 通用的 service 层
         if (idResourceExtractor != null) {
