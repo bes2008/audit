@@ -4,6 +4,7 @@ import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.clazz.CustomNamedEntityResourceSupplierParser;
 import com.jn.audit.core.resource.parser.parameter.*;
+import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.proxy.aop.MethodInvocation;
@@ -200,9 +201,11 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         } catch (Throwable ex) {
                             parameterType0 = parameterType;
                         }
-                    } else if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
+                    }
+
+                    if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                         supplier = new CustomNamedMapParameterResourceSupplierParser(mapping).parse(parameter);
-                    } else if (!Types.isLiteralType(parameterType)) {
+                    } else if (!Types.isLiteralType(parameterType0)) {
                         supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
                     }
 
@@ -234,29 +237,41 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         Collects.forEach(parameters, new Consumer2<Integer, Parameter>() {
             @Override
             public void accept(Integer index, Parameter parameter) {
-                ResourceSupplier supplier = null;
+                ValueGetter supplier = null;
                 Class parameterType = parameter.getType();
                 Class parameterType0 = parameterType;
+                boolean isArray = false;
+                boolean isCollection = false;
                 if (Types.isArray(parameterType)) {
                     parameterType0 = parameterType.getComponentType();
+                    isArray = true;
                 } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                     try {
                         parameterType0 = Types.getRawType(parameterType);
+                        isCollection = true;
                     } catch (Throwable ex) {
                         parameterType0 = parameterType;
                     }
-                } else if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
+                }
+
+                // 对泛型 raw type进行处理
+                // 也就是这里是支持： Collection<Map>, Collection<Entity>, Map, Entity的方式，不对 Collection<Collection>的方式做支持
+                if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                     supplier = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
-                } else if (!Types.isLiteralType(parameterType)) {
+                } else if (!Types.isLiteralType(parameterType0)) {
                     supplier = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
                 }
 
                 if (supplier != null) {
                     PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                    // 相当于调用 parameters[index]
                     pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
-                    if (parameterType0 == parameterType) {
+
+                    if (!isArray && !isCollection) {
+                        // 此时为 Map 或者 Entity
                         pipelineValueGetter.addValueGetter(supplier);
                     } else {
+                        // 此时 为 array, collection
                         pipelineValueGetter.addValueGetter(new StreamValueGetter(supplier));
                     }
                     resourceGetter.set(pipelineValueGetter);
