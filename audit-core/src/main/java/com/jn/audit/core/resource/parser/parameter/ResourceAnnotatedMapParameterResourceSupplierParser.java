@@ -3,7 +3,6 @@ package com.jn.audit.core.resource.parser.parameter;
 import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.annotation.ResourceMapping;
 import com.jn.audit.core.resource.parser.ResourceSupplierParser;
-import com.jn.audit.core.resource.parser.parameter.CustomNamedMapParameterResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.valuegetter.MapValueGetter;
@@ -18,7 +17,7 @@ import java.util.Map;
  * 一个方法的参数是 Map，且有 @Resource 注解时，可以用它来处理
  *
  * @see Resource
- * @see CustomNamedMapParameterResourceSupplierParser
+ * @see com.jn.audit.core.resource.parser.parameter.CustomNamedMapParameterResourceSupplierParser
  */
 public class ResourceAnnotatedMapParameterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
     @Override
