@@ -6,8 +6,11 @@ import java.util.HashMap;
 public class Resource extends HashMap<String, Object> implements Serializable {
     public static final long serialVersionUID = 1L;
     public static final String RESOURCE_ID = "resourceId";
+    public static final String RESOURCE_ID_DEFAULT_KEY = "id";
     public static final String RESOURCE_TYPE = "resourceType";
+    public static final String RESOURCE_TYPE_DEFAULT_KEY = "type";
     public static final String RESOURCE_NAME = "resourceName";
+    public static final String RESOURCE_NAME_DEFAULT_KEY = "name";
 
     public String getResourceId() {
         Object resourceId = get(RESOURCE_ID);

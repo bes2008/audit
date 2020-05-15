@@ -16,12 +16,12 @@ public @interface ResourceMapping {
     /**
      * @see com.jn.audit.core.model.Resource resourceName
      */
-    String name();
+    String name() default "name";
 
     /**
      * @see com.jn.audit.core.model.Resource resourceId
      */
-    String id();
+    String id() default "id";
 
     /**
      * @see com.jn.audit.core.model.Resource resourceType

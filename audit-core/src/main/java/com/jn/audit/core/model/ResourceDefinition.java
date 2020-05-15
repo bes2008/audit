@@ -27,9 +27,9 @@ public class ResourceDefinition extends HashMap<String, Object> {
 
     private static final ResourceDefinition getDefaultResourceDefinition() {
         ResourceDefinition definition = new ResourceDefinition();
-        definition.setResourceId(Resource.RESOURCE_ID);
-        definition.setResourceName(Resource.RESOURCE_NAME);
-        definition.setResourceType(Resource.RESOURCE_TYPE);
+        definition.setResourceId("id");
+        definition.setResourceName("name");
+        definition.setResourceType("type");
         definition.setResource("resource");
         return definition;
     }
@@ -41,9 +41,9 @@ public class ResourceDefinition extends HashMap<String, Object> {
     public ResourceDefinition(Map<String, Object> map) {
         this.putAll(map);
         MapAccessor accessor = new MapAccessor(map);
-        setResourceId(accessor.getString(Resource.RESOURCE_ID, Resource.RESOURCE_ID));
-        setResourceName(accessor.getString(Resource.RESOURCE_NAME, Resource.RESOURCE_NAME));
-        setResourceType(accessor.getString(Resource.RESOURCE_TYPE, Resource.RESOURCE_TYPE));
+        setResourceId(accessor.getString(Resource.RESOURCE_ID, Resource.RESOURCE_ID_DEFAULT_KEY));
+        setResourceName(accessor.getString(Resource.RESOURCE_NAME, Resource.RESOURCE_NAME_DEFAULT_KEY));
+        setResourceType(accessor.getString(Resource.RESOURCE_TYPE, Resource.RESOURCE_TYPE_DEFAULT_KEY));
         setResource(accessor.getString("resource"));
     }
 

@@ -42,11 +42,11 @@ public class FieldNameEntityResourceSupplierParser<T> implements EntityClassReso
     protected Map<String, MemberValueGetter> parseByFieldName(Class<T> entityClass) {
         Map<String, MemberValueGetter> map = new HashMap<String, MemberValueGetter>();
 
-        parsePropertyByFieldName(entityClass, Resource.RESOURCE_ID, map, Resource.RESOURCE_ID);
+        parsePropertyByFieldName(entityClass, Resource.RESOURCE_ID_DEFAULT_KEY, map, Resource.RESOURCE_ID);
 
-        parsePropertyByFieldName(entityClass, Resource.RESOURCE_NAME, map, Resource.RESOURCE_NAME);
+        parsePropertyByFieldName(entityClass, Resource.RESOURCE_NAME_DEFAULT_KEY, map, Resource.RESOURCE_NAME);
 
-        parsePropertyByFieldName(entityClass, Resource.RESOURCE_TYPE, map, Resource.RESOURCE_TYPE);
+        parsePropertyByFieldName(entityClass, Resource.RESOURCE_TYPE_DEFAULT_KEY, map, Resource.RESOURCE_TYPE);
         return map;
     }
 
