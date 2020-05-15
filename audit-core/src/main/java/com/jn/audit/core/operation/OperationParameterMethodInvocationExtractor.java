@@ -40,7 +40,7 @@ public class OperationParameterMethodInvocationExtractor<AuditedRequest> impleme
         Object[] args = invocation.getArguments();
         Collects.forEach(args, new Predicate2<Integer, Object>() {
             @Override
-            public boolean test(Integer index,final Object arg) {
+            public boolean test(Integer index, final Object arg) {
                 if (arg == null) {
                     return false;
                 }

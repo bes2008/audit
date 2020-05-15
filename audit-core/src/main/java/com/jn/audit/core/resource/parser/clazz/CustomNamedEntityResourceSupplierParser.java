@@ -13,14 +13,12 @@ import java.util.Map;
 
 /**
  * 需要每一次解析创建一个
- *
+ * <p>
  * 针对 实体类的解析
  *
- * @see ResourceDefinition#getResource()
- *
- * @see ResourceAnnotatedEntityParameterResourceSupplierParser
- *
  * @param <T>
+ * @see ResourceDefinition#getResource()
+ * @see ResourceAnnotatedEntityParameterResourceSupplierParser
  */
 public class CustomNamedEntityResourceSupplierParser<T> extends FieldNameEntityResourceSupplierParser<T> {
 

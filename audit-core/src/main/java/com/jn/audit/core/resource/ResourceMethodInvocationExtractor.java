@@ -19,7 +19,6 @@ import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.parameter.MethodParameter;
 import com.jn.langx.util.reflect.reference.ReferenceType;
-import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.reflect.type.Types;
 import com.jn.langx.util.struct.Entry;
 import com.jn.langx.util.struct.Holder;
@@ -236,7 +235,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
     }
 
     private ValueGetter parseResourceGetterByAnnotation(final Parameter[] parameters) {
-       final Holder<ValueGetter> resourceGetter = new Holder<ValueGetter>();
+        final Holder<ValueGetter> resourceGetter = new Holder<ValueGetter>();
         // step 1: 解析 @Resource 注解
         Collects.forEach(parameters, new Consumer2<Integer, Parameter>() {
             @Override
@@ -281,7 +280,6 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
 
         return resourceGetter.get();
     }
-
 
 
     public AbstractIdResourceExtractor getIdResourceExtractor() {

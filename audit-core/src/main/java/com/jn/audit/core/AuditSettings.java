@@ -39,7 +39,7 @@ public class AuditSettings implements Serializable {
 
     /**
      * the candidate topics
-     * 
+     *
      * @see {@link com.jn.dmmq.core.allocator.AbstractMultipleCandidateTopicAllocator#setCandidateTopics(List)}
      */
     private List<String> topics;
@@ -51,6 +51,7 @@ public class AuditSettings implements Serializable {
     public void setTopics(List<String> topics) {
         this.topics = topics;
     }
+
     /**
      * the class name of your custom message translator.
      */

@@ -25,9 +25,8 @@ import java.util.Map;
  * 只创建一个实例即可
  *
  * @param <T> the
- *
- * @deprecated
  * @see DefaultEntityClassResourceSupplierParser
+ * @deprecated
  */
 @Singleton
 @Deprecated

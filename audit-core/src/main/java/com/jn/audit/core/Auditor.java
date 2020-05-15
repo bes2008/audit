@@ -89,7 +89,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
      * 该方法应用于 非AOP情况下， 即不需要在某个方法前、后执行的情况。
      *
      * @param request the request
-     * @param ctx the request context
+     * @param ctx     the request context
      */
     public void doAudit(AuditedRequest request, AuditedRequestContext ctx) {
         if (isAsyncAudit(request)) {
@@ -202,22 +202,22 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         if (wrappedRequest != null) {
             AuditEvent event = wrappedRequest.getAuditEvent();
             if (wrappedRequest.isAuditIt() && event != null) {
-                if(event.getService()==null){
-                    logger.warn("Can't find an valid service for request: {}",wrappedRequest);
+                if (event.getService() == null) {
+                    logger.warn("Can't find an valid service for request: {}", wrappedRequest);
                     return;
                 }
-                if(event.getPrincipal()==null){
-                    logger.warn("Can't find an valid principal for request: {}",wrappedRequest);
+                if (event.getPrincipal() == null) {
+                    logger.warn("Can't find an valid principal for request: {}", wrappedRequest);
                     return;
                 }
-                if(event.getOperation()==null){
-                    logger.warn("Can't find an valid operation for request: {}",wrappedRequest);
+                if (event.getOperation() == null) {
+                    logger.warn("Can't find an valid operation for request: {}", wrappedRequest);
                     return;
                 }
                 event.setStartTime(wrappedRequest.getStartTime());
                 event.setEndTime(wrappedRequest.getEndTime());
                 event.setDuration(wrappedRequest.getEndTime() - wrappedRequest.getStartTime());
-                if(wrappedRequest.getResult()!=null){
+                if (wrappedRequest.getResult() != null) {
                     event.getOperation().setResult(wrappedRequest.getResult());
                 }
                 producer.publish(wrappedRequest.getTopic(), event);
