@@ -5,15 +5,14 @@ import com.jn.audit.core.annotation.ResourceName;
 import com.jn.audit.core.annotation.ResourceType;
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.parser.ResourceSupplierParser;
-import com.jn.audit.core.resource.parser.parameter.CustomResourcePropertyParameterResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
-import com.jn.langx.util.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.valuegetter.IterableValueGetter;
 
-import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +22,6 @@ import java.util.Map;
  * @see ResourceId
  * @see ResourceName
  * @see ResourceType
- *
  * @see CustomResourcePropertyParameterResourceSupplierParser
  */
 public class ResourcePropertyAnnotatedResourceSupplierParser implements ResourceSupplierParser<Parameter[], IterableResourceSupplier> {
@@ -31,7 +29,7 @@ public class ResourcePropertyAnnotatedResourceSupplierParser implements Resource
     public IterableResourceSupplier parse(Parameter[] parameters) {
 
         // key: resourceProperty
-        Map<String, IterableValueGetter> getterMap = new HashMap<>();
+        final Map<String, IterableValueGetter> getterMap = new HashMap<String, IterableValueGetter>();
         Pipeline.of(parameters).forEach(new Consumer2<Integer, Parameter>() {
             @Override
             public void accept(Integer index, Parameter parameter) {

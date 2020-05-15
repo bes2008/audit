@@ -2,11 +2,11 @@ package com.jn.audit.core.resource.supplier;
 
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.ResourceSupplier;
-import com.jn.langx.util.valuegetter.ValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.valuegetter.ValueGetter;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public abstract class ContainerResourceSupplier<Container, VG extends ValueGette
      * key: Resource 中的属性名称
      * value: valueGetter
      */
-    private Map<String, VG> propertyToValueGetterMap = new HashMap<>();
+    private Map<String, VG> propertyToValueGetterMap = new HashMap<String, VG>();
 
     public void register(String resourceProperty, VG mapValueGetter) {
         propertyToValueGetterMap.put(resourceProperty, mapValueGetter);
@@ -43,12 +43,12 @@ public abstract class ContainerResourceSupplier<Container, VG extends ValueGette
     }
 
     @Override
-    public Resource get(Container container) {
+    public Resource get(final Container container) {
         if (Emptys.isEmpty(container)) {
             return null;
         }
 
-        Resource resource = new Resource();
+        final Resource resource = new Resource();
         Collects.forEach(propertyToValueGetterMap, new Consumer2<String, VG>() {
             @Override
             public void accept(String resourceProperty, ValueGetter resourcePropertyGetter) {

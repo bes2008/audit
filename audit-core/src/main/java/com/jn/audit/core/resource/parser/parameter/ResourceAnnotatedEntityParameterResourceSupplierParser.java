@@ -10,9 +10,9 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.StringMap;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
 
-import java.lang.reflect.Parameter;
 
 /**
  * 如果在一个方法的某个参数，是一个Entity时，并且具有 @Resource 注解时，将解析成实体的资源

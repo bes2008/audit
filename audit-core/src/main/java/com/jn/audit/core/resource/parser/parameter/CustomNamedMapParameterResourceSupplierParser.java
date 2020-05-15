@@ -3,13 +3,13 @@ package com.jn.audit.core.resource.parser.parameter;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.parser.ResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
+import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.valuegetter.MapValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.reflect.Reflects;
 
-import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -18,8 +18,8 @@ public class DefaultEntityClassResourceSupplierParser<T> implements EntityClassR
     public static final DefaultEntityClassResourceSupplierParser DEFAULT_INSTANCE = new DefaultEntityClassResourceSupplierParser();
 
     @Override
-    public EntityResourceSupplier<T> parse(Class<T> entityClass) {
-        Holder<EntityResourceSupplier> supplierHolder = new Holder<EntityResourceSupplier>();
+    public EntityResourceSupplier<T> parse(final Class<T> entityClass) {
+        final Holder<EntityResourceSupplier> supplierHolder = new Holder<EntityResourceSupplier>();
         Collects.forEach(delegates, new Consumer2<Integer, EntityClassResourceSupplierParser>() {
             @Override
             public void accept(Integer index, EntityClassResourceSupplierParser delegate) {

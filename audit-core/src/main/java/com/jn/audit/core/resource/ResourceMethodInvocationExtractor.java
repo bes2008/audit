@@ -15,7 +15,9 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.parameter.MethodParameter;
 import com.jn.langx.util.reflect.reference.ReferenceType;
 import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.reflect.type.Types;
@@ -28,7 +30,6 @@ import com.jn.langx.util.valuegetter.ValueGetter;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         ValueGetter resourceGetter = getValueGetterFromCache(method, resourceDefinition);
         if (resourceGetter == null) {
             // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
-            Parameter[] parameters = method.getParameters();
+            Parameter[] parameters = Collects.toArray(Reflects.getMethodParameters(method), MethodParameter[].class);
             resourceGetter = parseResourceGetterByConfiguration(parameters, resourceDefinition);
             if (resourceGetter != null) {
                 configuredResourceCache.put(method, new Entry<ResourceDefinition, ValueGetter>(resourceDefinition, resourceGetter));
@@ -93,7 +94,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
             // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
             if (resourceGetter == null && !annotatedCache.containsKey(method)) {
                 resourceGetter = parseResourceGetterByAnnotation(parameters);
-                annotatedCache.putIfAbsent(method, new Holder<>(resourceGetter));
+                annotatedCache.putIfAbsent(method, new Holder<ValueGetter>(resourceGetter));
             }
         }
         // step 4: 如果 step 3 没找到， null
@@ -235,7 +236,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
     }
 
     private ValueGetter parseResourceGetterByAnnotation(final Parameter[] parameters) {
-        Holder<ValueGetter> resourceGetter = new Holder<ValueGetter>();
+       final Holder<ValueGetter> resourceGetter = new Holder<ValueGetter>();
         // step 1: 解析 @Resource 注解
         Collects.forEach(parameters, new Consumer2<Integer, Parameter>() {
             @Override

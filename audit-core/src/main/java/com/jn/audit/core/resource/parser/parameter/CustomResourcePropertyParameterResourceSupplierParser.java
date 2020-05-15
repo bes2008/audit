@@ -3,13 +3,13 @@ package com.jn.audit.core.resource.parser.parameter;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.parser.ResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
+import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.valuegetter.IterableValueGetter;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 
-import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,11 +36,11 @@ public class CustomResourcePropertyParameterResourceSupplierParser implements Re
 
     @Override
     public IterableResourceSupplier parse(final Parameter[] parameters) {
-        Map<String, IterableValueGetter> getterMap = new HashMap<>();
+        final Map<String, IterableValueGetter> getterMap = new HashMap<String, IterableValueGetter>();
         Pipeline.of(parameters).forEach(new Consumer2<Integer, Parameter>() {
             @Override
             public void accept(final Integer index, Parameter parameter) {
-                String parameterName = parameter.getName();
+                final String parameterName = parameter.getName();
                 Collects.forEach(parameterResourceMapping, new Consumer2<String, String>() {
                     @Override
                     public void accept(String resourceProperty, String parameterName0) {

@@ -2,10 +2,10 @@ package com.jn.audit.core.resource.parser.clazz;
 
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
-import com.jn.langx.util.valuegetter.MemberValueGetter;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.valuegetter.MemberValueGetter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +15,17 @@ import java.util.Map;
 
 /**
  * 只创建一个实例即可
+ *
  * @param <T> the entity class
- * @deprecated
  * @see DefaultEntityClassResourceSupplierParser
+ * @deprecated
  */
 @Singleton
 @Deprecated
 public class FieldNameEntityResourceSupplierParser<T> implements EntityClassResourceSupplierParser<T> {
     private static final Logger logger = LoggerFactory.getLogger(FieldNameEntityResourceSupplierParser.class);
     public static final FieldNameEntityResourceSupplierParser DEFAULT_INSTANCE = new FieldNameEntityResourceSupplierParser();
+
     @Override
     public EntityResourceSupplier<T> parse(Class<T> entityClass) {
         Map<String, MemberValueGetter> map = parseByFieldName(entityClass);
@@ -31,7 +33,7 @@ public class FieldNameEntityResourceSupplierParser<T> implements EntityClassReso
             return null;
         }
 
-        EntityResourceSupplier<T> supplier = new EntityResourceSupplier<>(entityClass);
+        EntityResourceSupplier supplier = new EntityResourceSupplier(entityClass);
         supplier.register(map);
 
         return supplier;

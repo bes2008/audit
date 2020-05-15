@@ -9,9 +9,11 @@ import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
+import com.jn.langx.util.reflect.Parameter;
+import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.parameter.MethodParameter;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Map;
 
@@ -31,14 +33,14 @@ public class OperationParameterMethodInvocationExtractor<AuditedRequest> impleme
         if (event == null) {
             return null;
         }
-        Map<String, Object> map = Collects.emptyHashMap();
+        final Map<String, Object> map = Collects.emptyHashMap();
         MethodInvocation invocation = wrappedRequest.getRequestContext();
         Method method = invocation.getJoinPoint();
-        Parameter[] parameters = method.getParameters();
+        final List<MethodParameter> parameters = Reflects.getMethodParameters(method);
         Object[] args = invocation.getArguments();
         Collects.forEach(args, new Predicate2<Integer, Object>() {
             @Override
-            public boolean test(Integer index, Object arg) {
+            public boolean test(Integer index,final Object arg) {
                 if (arg == null) {
                     return false;
                 }
@@ -51,7 +53,7 @@ public class OperationParameterMethodInvocationExtractor<AuditedRequest> impleme
                     return false;
                 }
 
-                Parameter parameter = parameters[index];
+                Parameter parameter = parameters.get(index);
                 if (parameter == null || parameter.getType() == null || parameter.getType().getPackage() == null) {
                     return false;
                 }
@@ -65,10 +67,10 @@ public class OperationParameterMethodInvocationExtractor<AuditedRequest> impleme
         }, new Consumer2<Integer, Object>() {
             @Override
             public void accept(Integer index, Object arg) {
-                String parameterName = parameters[index].getName();
+                String parameterName = parameters.get(index).getName();
                 map.put(parameterName, arg);
             }
-        }, Functions.falsePredicate2());
+        }, Functions.<Integer, Object>falsePredicate2());
 
         return map;
     }

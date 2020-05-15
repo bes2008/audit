@@ -57,7 +57,7 @@ public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassReso
      * @return
      */
     private Map<String, MemberValueGetter> parseByResourceMappingAnnotation(Class<T> entityClass) {
-        Map<String, MemberValueGetter> map = new HashMap<>();
+        Map<String, MemberValueGetter> map = new HashMap<String, MemberValueGetter>();
         ResourceMapping resourceMapping = Reflects.getAnnotation(entityClass, ResourceMapping.class);
         if (resourceMapping != null) {
             String idField = resourceMapping.id();
@@ -73,7 +73,7 @@ public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassReso
     }
 
     private Map<String, MemberValueGetter> parseByResourceFieldAnnotation(Class<T> entityClass) {
-        Map<String, MemberValueGetter> map = new HashMap<>();
+        Map<String, MemberValueGetter> map = new HashMap<String, MemberValueGetter>();
 
         parsePropertyByAnnotation(entityClass, ResourceId.class, map, Resource.RESOURCE_ID);
 
