@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface OperationDefinitionLoader extends FullLoadConfigurationLoader<OperationDefinition> {
     @NonNull
-    List<OperationDefinition> reload(@Nullable Map<String,OperationImportance> importances);
+    List<OperationDefinition> reload(@Nullable Map<String, OperationImportance> importances);
 
     void setDefinitionFilePath(@NonNull String definitionFilePath);
 }
