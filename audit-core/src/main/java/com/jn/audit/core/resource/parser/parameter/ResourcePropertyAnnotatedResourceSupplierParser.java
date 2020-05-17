@@ -13,13 +13,14 @@ import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.type.Types;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 如果一个方法的多个参数中，具有 @ResourceId, @ResourceName, @ResourceType 中的任意一个，都可以用它来解析
- *
+ * 该方式只针对 参数为 字面量类型时
  * @see ResourceId
  * @see ResourceName
  * @see ResourceType
@@ -36,7 +37,7 @@ public class ResourcePropertyAnnotatedResourceSupplierParser implements Resource
                     @Override
                     public boolean test(Integer index, Parameter parameter) {
                         Class type = parameter.getType();
-                        return type == String.class || Reflects.isSubClassOrEquals(Number.class, type);
+                        return Types.isLiteralType(type);
                     }
                 },
                 new Consumer2<Integer, Parameter>() {

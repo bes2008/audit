@@ -8,12 +8,16 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.reflect.Parameter;
+import com.jn.langx.util.reflect.type.Types;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 该方式只针对 参数为 字面量类型时
+ *
  * @see ResourceDefinition#getResourceId()
  * @see ResourceDefinition#getResourceName()
  * @see ResourceDefinition#getResourceType()
@@ -29,7 +33,9 @@ public class CustomResourcePropertyParameterResourceSupplierParser implements Re
         Collects.forEach(mapping, new Consumer2<String, Object>() {
             @Override
             public void accept(String key, Object value) {
-                parameterResourceMapping.put(key, value.toString());
+                if (value != null) {
+                    parameterResourceMapping.put(key, value.toString());
+                }
             }
         });
     }
@@ -37,20 +43,28 @@ public class CustomResourcePropertyParameterResourceSupplierParser implements Re
     @Override
     public IterableResourceSupplier parse(final Parameter[] parameters) {
         final Map<String, EnumerationValueGetter> getterMap = new HashMap<String, EnumerationValueGetter>();
-        Pipeline.of(parameters).forEach(new Consumer2<Integer, Parameter>() {
-            @Override
-            public void accept(final Integer index, Parameter parameter) {
-                final String parameterName = parameter.getName();
-                Collects.forEach(parameterResourceMapping, new Consumer2<String, String>() {
+        Pipeline.of(parameters).forEach(
+                new Predicate2<Integer, Parameter>() {
                     @Override
-                    public void accept(String resourceProperty, String parameterName0) {
-                        if (parameterName.equals(parameterName0)) {
-                            getterMap.put(resourceProperty, new EnumerationValueGetter(index));
-                        }
+                    public boolean test(Integer key, Parameter parameter) {
+                        Class type = parameter.getType();
+                        return Types.isLiteralType(type);
+                    }
+                },
+                new Consumer2<Integer, Parameter>() {
+                    @Override
+                    public void accept(final Integer index, Parameter parameter) {
+                        final String parameterName = parameter.getName();
+                        Collects.forEach(parameterResourceMapping, new Consumer2<String, String>() {
+                            @Override
+                            public void accept(String resourceProperty, String parameterName0) {
+                                if (parameterName.equals(parameterName0)) {
+                                    getterMap.put(resourceProperty, new EnumerationValueGetter(index));
+                                }
+                            }
+                        });
                     }
                 });
-            }
-        });
         if (Emptys.isEmpty(getterMap)) {
             return null;
         }

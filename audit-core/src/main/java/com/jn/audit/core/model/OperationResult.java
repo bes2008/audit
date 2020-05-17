@@ -24,16 +24,6 @@ public enum OperationResult implements CommonEnum, Delegatable<EnumDelegate>, Se
     }
 
     @Override
-    public void setCode(int code) {
-        delegate.setCode(code);
-    }
-
-    @Override
-    public void setName(String name) {
-        delegate.setName(name);
-    }
-
-    @Override
     public String getName() {
         return delegate.getName();
     }
@@ -41,11 +31,6 @@ public enum OperationResult implements CommonEnum, Delegatable<EnumDelegate>, Se
     @Override
     public String getDisplayText() {
         return delegate.getDisplayText();
-    }
-
-    @Override
-    public void setDisplayText(String displayText) {
-        delegate.setDisplayText(displayText);
     }
 
     @Override
