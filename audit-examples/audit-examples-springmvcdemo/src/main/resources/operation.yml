@@ -38,12 +38,16 @@ operationDefinitions:
     type: user_delete
     importance: major
     description: 使用MyBatis来删除用户
+    resourceDefinition:
+      resourceId: id
   DELETE-/users:
     code: Audit_springmvc_USER_DELETE1
     name: 删除用户1
     type: user_delete1
     importance: major
     description: 使用MyBatis来删除用户
+    resourceDefinition:
+      resourceId: ids
   GET-/users/_useMyBatis:
     code: Audit_springmvc_USER_LIST_MyBatis
     name: 使用mybatis API 测试SQLHelper

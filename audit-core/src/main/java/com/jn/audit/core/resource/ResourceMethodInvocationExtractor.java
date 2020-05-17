@@ -87,7 +87,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         ValueGetter resourceGetter = getValueGetterFromCache(method, resourceDefinition);
         if (resourceGetter == null) {
             // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
-            Parameter[] parameters = Collects.toArray(Reflects.getMethodParameters(method), MethodParameter[].class);
+            Parameter[] parameters = Collects.toArray(Reflects.getMethodParameters("langx_aspectj", method), MethodParameter[].class);
             resourceGetter = parseResourceGetterByConfiguration(parameters, resourceDefinition);
             if (resourceGetter != null) {
                 configuredResourceCache.put(method, new Entry<ResourceDefinition, ValueGetter>(resourceDefinition, resourceGetter));
@@ -169,7 +169,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                             }, true));
 
             Map<String, Object> mapping = resourceDefinition;
-            // step 2.1 : parse key: resource
+            // step 1 : parse key: resource
             String resourceKey = resourceDefinition.getResource();
             if (Emptys.isNotEmpty(resourceKey)) {
                 Parameter parameter = parameterMap.get(resourceKey);
@@ -206,12 +206,59 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         resourceGetter = pipelineValueGetter;
                     }
                 }
-                // step 2.2 parse by resourceId, resourceName, resourceType
-                if (supplier == null) {
-                    supplier = new CustomResourcePropertyParameterResourceSupplierParser(mapping).parse(parameters);
-                }
-                resourceGetter = supplier;
             }
+
+            // step 2: parse by resourceId, resourceName, resourceType
+            // 这一步只针对字面量类型的解析
+            if (resourceGetter == null) {
+                resourceGetter = new CustomResourcePropertyParameterResourceSupplierParser(mapping).parse(parameters);
+            }
+
+            // step 3: 解析 Collection ids
+            // 这一步只针对 id 是Collection或者Array， 并且有 @ResourceId 标注的情况
+            if (resourceGetter == null && Emptys.isNotEmpty(resourceDefinition.getResourceId())) {
+                MethodParameter parameter = (MethodParameter) parameterMap.get(resourceDefinition.getResourceId());
+                if (parameter != null) {
+                    ValueGetter supplier = null;
+                    Class parameterType = parameter.getType();
+                    Class parameterType0 = parameterType;
+                    boolean isArray = false;
+                    boolean isCollection = false;
+                    if (Types.isArray(parameterType)) {
+                        parameterType0 = parameterType.getComponentType();
+                        isArray = true;
+                    } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
+                        try {
+                            parameterType0 = Types.getRawType(parameterType);
+                            isCollection = true;
+                        } catch (Throwable ex) {
+                            parameterType0 = parameterType;
+                        }
+                    }
+                    if (isArray || isCollection) {
+                        PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                        // 相当于调用 parameters[index]
+                        int index = Collects.firstOccurrence(Collects.asList(parameters), parameter);
+                        pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
+
+                        pipelineValueGetter.addValueGetter(new StreamValueGetter(new Function() {
+                                    @Override
+                                    public Object apply(Object id) {
+                                        Resource resource = new Resource();
+                                        if (id == null) {
+                                            return null;
+                                        }
+                                        resource.setResourceId(id.toString());
+                                        return resource;
+                                    }
+                                })
+                        );
+
+                        resourceGetter = pipelineValueGetter;
+                    }
+                }
+            }
+
         }
         return resourceGetter;
     }
