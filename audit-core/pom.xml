@@ -16,7 +16,10 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.github.fangjinuo.langx</groupId>
+            <artifactId>langx-java-reflect-aspectj</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.easyjson</groupId>
             <artifactId>easyjson-core</artifactId>

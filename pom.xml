@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.4.0</langx-java.version>
+        <langx-java.version>2.4.1</langx-java.version>
         <easyjson.version>2.2.1</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
         <dmmq.version>1.0.0</dmmq.version>
@@ -82,6 +82,11 @@
             <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java8</artifactId>
+                <version>${langx-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.langx</groupId>
+                <artifactId>langx-java-reflect-aspectj</artifactId>
                 <version>${langx-java.version}</version>
             </dependency>
             <dependency>
