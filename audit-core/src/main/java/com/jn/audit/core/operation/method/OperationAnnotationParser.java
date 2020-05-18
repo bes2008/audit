@@ -23,6 +23,7 @@ public class OperationAnnotationParser implements OperationMethodAnnotationDefin
             operationDefinition.setName(operation.name());
             operationDefinition.setType(operation.type());
             operationDefinition.setDescription(operation.description());
+            operationDefinition.setResourceDefinition(operationDefinition.getResourceDefinition());
             return operationDefinition;
         }
         return null;
