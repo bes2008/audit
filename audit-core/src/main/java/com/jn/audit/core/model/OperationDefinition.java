@@ -1,5 +1,6 @@
 package com.jn.audit.core.model;
 
+import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.configuration.Configuration;
 import com.jn.langx.util.Objects;
 import com.jn.langx.util.Strings;
@@ -124,5 +125,10 @@ public class OperationDefinition implements Configuration, Serializable {
                 .with(importance)
                 .with(description)
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return JSONBuilderProvider.simplest().toJson(this);
     }
 }

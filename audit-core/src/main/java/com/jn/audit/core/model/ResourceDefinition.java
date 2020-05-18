@@ -1,5 +1,6 @@
 package com.jn.audit.core.model;
 
+import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.collection.MapAccessor;
 
 import java.util.HashMap;
@@ -79,4 +80,8 @@ public class ResourceDefinition extends HashMap<String, Object> {
         this.put(Resource.RESOURCE_TYPE, resourceType);
     }
 
+    @Override
+    public String toString() {
+        return JSONBuilderProvider.simplest().toJson(this);
+    }
 }
