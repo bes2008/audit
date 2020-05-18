@@ -29,17 +29,8 @@ public class ResourceAnnotatedMapParameterResourceSupplierParser implements Reso
             return null;
         }
         Resource resource = Reflects.getAnnotation(parameter, Resource.class);
-        ResourceMapping[] mappings = resource.value();
-        if (Emptys.isNotEmpty(mappings)) {
-            ResourceMapping mapping = Pipeline.of(mappings).findFirst(new Predicate<ResourceMapping>() {
-                @Override
-                public boolean test(ResourceMapping mapping) {
-                    return Emptys.isNotEmpty(mapping.name());
-                }
-            });
-            if (mapping == null) {
-                return null;
-            }
+        ResourceMapping mapping = resource.value();
+        if (Emptys.isNotEmpty(mapping)) {
             MapResourceSupplier supplier = new MapResourceSupplier();
             if (Emptys.isNotEmpty(mapping.id())) {
                 supplier.register(com.jn.audit.core.model.Resource.RESOURCE_ID, new MapValueGetter(mapping.id()));

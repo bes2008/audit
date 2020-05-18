@@ -28,16 +28,10 @@ public class ResourceAnnotatedEntityParameterResourceSupplierParser<T> implement
             return null;
         }
         Resource resource = Reflects.getAnnotation(parameter, Resource.class);
-        ResourceMapping[] mappings = resource.value();
-        if (Emptys.isEmpty(mappings)) {
+        ResourceMapping mapping = resource.value();
+        if (mapping == null) {
             return DefaultEntityClassResourceSupplierParser.DEFAULT_INSTANCE.parse(parameter.getType());
         } else {
-            ResourceMapping mapping = Pipeline.of(mappings).findFirst(new Predicate<ResourceMapping>() {
-                @Override
-                public boolean test(ResourceMapping mapping) {
-                    return Emptys.isNotEmpty(mapping.id()) && Emptys.isNotEmpty(mapping.name());
-                }
-            });
             StringMap map = new StringMap();
             map.put(com.jn.audit.core.model.Resource.RESOURCE_ID, mapping.id());
             map.put(com.jn.audit.core.model.Resource.RESOURCE_NAME, mapping.name());

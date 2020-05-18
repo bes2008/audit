@@ -19,4 +19,6 @@ public @interface Operation {
     String description() default ""; //
 
     String type() default ""; //
+
+    Resource resourceDefinition() default @Resource();
 }
