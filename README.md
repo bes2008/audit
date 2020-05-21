@@ -5,6 +5,21 @@
 
 教程 : https://fangjinuo.gitee.io/docs/index.html
 
+
+## Features
+1. 操作定义支持多种方式
+    + @Operation 注解方式
+    + 在 yaml 配置文件配置方法全名的方式
+    + 在 yaml 配置文件配置 URL template 的方式
+    + 允许自定义
+2. 操作资源获取支持多种方式
+    + 在 yaml 配置方法参数名称的方式
+    + 支持注解方式
+    + 支持List, Map, Entity解析等
+    + 支持自定义
+3. 支持 JDK6+
+4. 支持 Java, Web应用
+
 ## Example
 给一个SpringBoot应用快速加上审计功能，也可以直接去参考 audit-examples-springmvcdemo 
 
