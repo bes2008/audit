@@ -109,7 +109,7 @@ public class OperationDefinition implements Configuration, Serializable {
         if (!Objects.equals(description, that.description)) {
             return false;
         }
-        if (!Objects.equals(resourceDefinition, that.resourceDefinition)) {
+        if (!Objects.equals(getResourceDefinition(), that.getResourceDefinition())) {
             return false;
         }
         return true;
@@ -124,6 +124,7 @@ public class OperationDefinition implements Configuration, Serializable {
                 .with(type)
                 .with(importance)
                 .with(description)
+                .with(getResourceDefinition())
                 .build();
     }
 

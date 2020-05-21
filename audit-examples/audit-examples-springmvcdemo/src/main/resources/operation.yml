@@ -19,6 +19,7 @@ operationDefinitions:
     importance: major
     description: 使用MyBatis来更新用户
     resourceDefinition:
+      annotation_first: true
       statmentId: select
       statementIdFQN: com.jn.sqlhelper.examples.common.dao.UserDao.selectById
       entity: com.jn.sqlhelper.examples.common.model.User
@@ -29,6 +30,7 @@ operationDefinitions:
     importance: major
     description: 使用MyBatis来更新用户2
     resourceDefinition:
+      annotation_first: true
       statmentId: select
       statementIdFQN: com.jn.sqlhelper.examples.common.dao.UserDao.selectById
       entity: com.jn.sqlhelper.examples.common.model.User

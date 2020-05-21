@@ -86,16 +86,33 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         ResourceDefinition resourceDefinition = operationDefinition.getResourceDefinition();
         ValueGetter resourceGetter = getValueGetterFromCache(method, resourceDefinition);
         if (resourceGetter == null) {
-            // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
+
             Parameter[] parameters = Collects.toArray(Reflects.getMethodParameters("langx_aspectj", method), MethodParameter[].class);
-            resourceGetter = parseResourceGetterByConfiguration(parameters, resourceDefinition);
+
+            // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
+            // step 2.1 : 根据注解
+            if(resourceDefinition.isAnnotationEnabled() && resourceDefinition.isAnnotationFirst()){
+                if (!annotatedCache.containsKey(method)) {
+                    resourceGetter = parseResourceGetterByAnnotation(parameters);
+                    annotatedCache.putIfAbsent(method, new Holder<ValueGetter>(resourceGetter));
+                }
+            }
+
+            // step 2.2：如果 step 2.1 没找到，根据 resource definition 去解析 生成 supplier
+            if(resourceGetter==null) {
+                resourceGetter = parseResourceGetterByConfiguration(parameters, resourceDefinition);
+            }
+
             if (resourceGetter != null) {
                 configuredResourceCache.put(method, new Entry<ResourceDefinition, ValueGetter>(resourceDefinition, resourceGetter));
             }
-            // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
-            if (resourceGetter == null && !annotatedCache.containsKey(method)) {
-                resourceGetter = parseResourceGetterByAnnotation(parameters);
-                annotatedCache.putIfAbsent(method, new Holder<ValueGetter>(resourceGetter));
+
+            if(resourceGetter==null && resourceDefinition.isAnnotationEnabled() && !resourceDefinition.isAnnotationFirst()) {
+                // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
+                if (!annotatedCache.containsKey(method)) {
+                    resourceGetter = parseResourceGetterByAnnotation(parameters);
+                    annotatedCache.putIfAbsent(method, new Holder<ValueGetter>(resourceGetter));
+                }
             }
         }
         // step 4: 如果 step 3 没找到， null
