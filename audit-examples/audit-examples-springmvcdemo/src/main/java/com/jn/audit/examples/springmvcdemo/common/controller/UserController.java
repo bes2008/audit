@@ -16,6 +16,8 @@ package com.jn.audit.examples.springmvcdemo.common.controller;
 
 import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.annotation.ResourceId;
+import com.jn.audit.examples.springmvcdemo.common.dao.UserDao;
+import com.jn.audit.examples.springmvcdemo.common.model.User;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.collection.Collects;
 import com.jn.sqlhelper.apachedbutils.QueryRunner;
@@ -24,8 +26,6 @@ import com.jn.sqlhelper.common.resultset.RowMapperResultSetExtractor;
 import com.jn.sqlhelper.dialect.pagination.PagingRequest;
 import com.jn.sqlhelper.dialect.pagination.PagingResult;
 import com.jn.sqlhelper.dialect.pagination.SqlPaginations;
-import com.jn.audit.examples.springmvcdemo.common.dao.UserDao;
-import com.jn.audit.examples.springmvcdemo.common.model.User;
 import com.jn.sqlhelper.springjdbc.JdbcTemplate;
 import com.jn.sqlhelper.springjdbc.NamedParameterJdbcTemplate;
 import com.jn.sqlhelper.springjdbc.resultset.SqlHelperRowMapperResultSetExtractor;
@@ -79,6 +79,7 @@ public class UserController {
             userDao.updateById(user);
         }
     }
+
     @PutMapping()
     public void update(@Resource @RequestBody User user) {
         user.setId(user.getId());
@@ -90,17 +91,27 @@ public class UserController {
         }
     }
 
+
     @DeleteMapping("/{id}")
     public void deleteById(@RequestParam("id") String id) {
         userDao.deleteById(id);
     }
-    @DeleteMapping()
+
+
+    @DeleteMapping("/ids")
     public void deleteByIds(@ResourceId @RequestBody List<String> ids) {
-        for(String id:ids){
+        for (String id : ids) {
             userDao.deleteById(id);
         }
     }
 
+
+    @DeleteMapping()
+    public void deleteByBeans(@Resource @RequestBody List<User> users) {
+        for (User user : users) {
+            userDao.deleteById(user.getId());
+        }
+    }
 
     @GetMapping("/_useMyBatis")
     public PagingResult list_useMyBatis(
@@ -314,7 +325,7 @@ public class UserController {
 
         List<Object> params = Collects.emptyArrayList();
         params.add(10);
-        if(testSubquery){
+        if (testSubquery) {
             params.add("zhangsan");
         }
 
