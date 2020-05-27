@@ -6,7 +6,6 @@ import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.clazz.CustomNamedEntityResourceSupplierParser;
 import com.jn.audit.core.resource.parser.parameter.*;
 import com.jn.langx.annotation.NonNull;
-import com.jn.langx.annotation.Nullable;
 import com.jn.langx.proxy.aop.MethodInvocation;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objects;
@@ -153,23 +152,37 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         return resources;
     }
 
-    private ValueGetter getValueGetterFromCache(@NonNull Method method, @Nullable ResourceDefinition resourceDefinition) {
+    private ValueGetter getValueGetterFromCache(@NonNull Method method, @NonNull ResourceDefinition resourceDefinition) {
+        boolean annotationEnabled = resourceDefinition.isAnnotationEnabled();
+        boolean annotationFirst = resourceDefinition.isAnnotationFirst();
+        ValueGetter valueGetter = null;
+        if (annotationEnabled && annotationFirst) {
+            Holder<ValueGetter> holder = annotatedCache.get(method);
+            if (holder != null) {
+                valueGetter = holder.get();
+            }
+        }
+        if (valueGetter != null) {
+            return valueGetter;
+        }
+
+
         Entry<ResourceDefinition, ValueGetter> entry = configuredResourceCache.get(method);
         if (entry != null) {
             if (Objects.equals(entry.getKey(), resourceDefinition)) {
-                return entry.getValue();
+                valueGetter = entry.getValue();
             }
         }
-        // 如果是 默认的定义，就可以认为 在配置文件中并没有指定 resource definition
-        // 从缓存里获取时，一旦发现了已经 在配置文件中自定义 resource definition，将忽略 annotatedCache 中
-        if (resourceDefinition == ResourceDefinition.DEFAULT_DEFINITION) {
+        if (valueGetter != null) {
+            return valueGetter;
+        }
+        if (annotationEnabled && !annotationFirst) {
             Holder<ValueGetter> holder = annotatedCache.get(method);
-            if (holder == null) {
-                return null;
+            if (holder != null) {
+                valueGetter = holder.get();
             }
-            return holder.get();
         }
-        return null;
+        return valueGetter;
     }
 
     private ValueGetter parseResourceGetterByConfiguration(Parameter[] parameters, ResourceDefinition resourceDefinition) {
