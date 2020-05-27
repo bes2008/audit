@@ -205,14 +205,9 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                     } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                         try {
                             Type parameterTypeXX = parameter.getParameterizedType();
-                            if (parameterTypeXX instanceof ParameterizedType) {
-                                Type[] argumentTypes = ((ParameterizedType) parameterTypeXX).getActualTypeArguments();
-                                if (Objects.isNotEmpty(argumentTypes)) {
-                                    Type firstArgumentType = argumentTypes[0];
-                                    if (Types.isClass(firstArgumentType)) {
-                                        parameterType0 = Types.toClass(firstArgumentType);
-                                    }
-                                }
+                            parameterType0 = getUniqueGenericArgumentType(parameterTypeXX);
+                            if (parameterType0 == null) {
+                                parameterType0 = parameterType;
                             }
                         } catch (Throwable ex) {
                             parameterType0 = parameterType;
@@ -267,14 +262,9 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                     } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                         try {
                             Type parameterTypeXX = parameter.getParameterizedType();
-                            if (parameterTypeXX instanceof ParameterizedType) {
-                                Type[] argumentTypes = ((ParameterizedType) parameterTypeXX).getActualTypeArguments();
-                                if (Objects.isNotEmpty(argumentTypes)) {
-                                    Type firstArgumentType = argumentTypes[0];
-                                    if (Types.isClass(firstArgumentType)) {
-                                        parameterType0 = Types.toClass(firstArgumentType);
-                                    }
-                                }
+                            parameterType0 = getUniqueGenericArgumentType(parameterTypeXX);
+                            if (parameterType0 == null) {
+                                parameterType0 = parameterType;
                             }
                             isCollection = true;
                         } catch (Throwable ex) {
@@ -336,14 +326,9 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                             try {
                                 Type parameterTypeXX = parameter.getParameterizedType();
-                                if (parameterTypeXX instanceof ParameterizedType) {
-                                    Type[] argumentTypes = ((ParameterizedType) parameterTypeXX).getActualTypeArguments();
-                                    if (Objects.isNotEmpty(argumentTypes)) {
-                                        Type firstArgumentType = argumentTypes[0];
-                                        if (Types.isClass(firstArgumentType)) {
-                                            parameterType0 = Types.toClass(firstArgumentType);
-                                        }
-                                    }
+                                parameterType0 = getUniqueGenericArgumentType(parameterTypeXX);
+                                if (parameterType0 == null) {
+                                    parameterType0 = parameterType;
                                 }
                                 isCollection = true;
                             } catch (Throwable ex) {
@@ -417,14 +402,9 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                             } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                                 try {
                                     Type parameterTypeXX = parameter.getParameterizedType();
-                                    if (parameterTypeXX instanceof ParameterizedType) {
-                                        Type[] argumentTypes = ((ParameterizedType) parameterTypeXX).getActualTypeArguments();
-                                        if (Objects.isNotEmpty(argumentTypes)) {
-                                            Type firstArgumentType = argumentTypes[0];
-                                            if (Types.isClass(firstArgumentType)) {
-                                                parameterType0 = Types.toClass(firstArgumentType);
-                                            }
-                                        }
+                                    parameterType0 = getUniqueGenericArgumentType(parameterTypeXX);
+                                    if (parameterType0 == null) {
+                                        parameterType0 = parameterType;
                                     }
                                     isCollection = true;
                                 } catch (Throwable ex) {
@@ -475,5 +455,19 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
 
     public void setIdResourceExtractor(AbstractIdResourceExtractor idResourceExtractor) {
         this.idResourceExtractor = idResourceExtractor;
+    }
+
+    public static Class getUniqueGenericArgumentType(Type type) {
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Type[] argumentTypes = parameterizedType.getActualTypeArguments();
+            if (Objects.isNotEmpty(argumentTypes) && Objects.length(argumentTypes) == 1) {
+                Type argumentType = argumentTypes[0];
+                if (Types.isClass(argumentType)) {
+                    return Types.toClass(argumentType);
+                }
+            }
+        }
+        return null;
     }
 }
