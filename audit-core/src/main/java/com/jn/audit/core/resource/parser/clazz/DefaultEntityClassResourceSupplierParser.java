@@ -2,9 +2,7 @@ package com.jn.audit.core.resource.parser.clazz;
 
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer2;
-import com.jn.langx.util.function.Predicate2;
-import com.jn.langx.util.struct.Holder;
+import com.jn.langx.util.function.Function2;
 
 import java.util.List;
 
@@ -14,24 +12,16 @@ import java.util.List;
  * @param <T>
  */
 public class DefaultEntityClassResourceSupplierParser<T> implements EntityClassResourceSupplierParser<T> {
-    private static List<EntityClassResourceSupplierParser> delegates = Collects.newArrayList(AnnotatedEntityResourceSupplierParser.DEFAULT_INSTANCE, FieldNameEntityResourceSupplierParser.DEFAULT_INSTANCE);
+    private static List<EntityClassResourceSupplierParser> delegates = Collects.newArrayList(AnnotatedEntityResourceSupplierParser.DEFAULT_INSTANCE, MemberNameEntityResourceSupplierParser.DEFAULT_INSTANCE);
     public static final DefaultEntityClassResourceSupplierParser DEFAULT_INSTANCE = new DefaultEntityClassResourceSupplierParser();
 
     @Override
     public EntityResourceSupplier<T> parse(final Class<T> entityClass) {
-        final Holder<EntityResourceSupplier> supplierHolder = new Holder<EntityResourceSupplier>();
-        Collects.forEach(delegates, new Consumer2<Integer, EntityClassResourceSupplierParser>() {
+        return Collects.firstMap(delegates, new Function2<Integer, EntityClassResourceSupplierParser, EntityResourceSupplier<T>>() {
             @Override
-            public void accept(Integer index, EntityClassResourceSupplierParser delegate) {
-                supplierHolder.set((EntityResourceSupplier) delegate.parse(entityClass));
-            }
-        }, new Predicate2<Integer, EntityClassResourceSupplierParser>() {
-            @Override
-            public boolean test(Integer index, EntityClassResourceSupplierParser delegate) {
-                return !supplierHolder.isNull();
+            public EntityResourceSupplier<T> apply(Integer index, EntityClassResourceSupplierParser delegate) {
+                return (EntityResourceSupplier<T>) delegate.parse(entityClass);
             }
         });
-
-        return supplierHolder.get();
     }
 }
