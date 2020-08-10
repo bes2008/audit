@@ -1,5 +1,6 @@
 package com.jn.audit.core.model;
 
+import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.configuration.Configuration;
 import com.jn.langx.util.Objects;
 import com.jn.langx.util.Strings;
@@ -108,7 +109,7 @@ public class OperationDefinition implements Configuration, Serializable {
         if (!Objects.equals(description, that.description)) {
             return false;
         }
-        if (!Objects.equals(resourceDefinition, that.resourceDefinition)) {
+        if (!Objects.equals(getResourceDefinition(), that.getResourceDefinition())) {
             return false;
         }
         return true;
@@ -123,6 +124,12 @@ public class OperationDefinition implements Configuration, Serializable {
                 .with(type)
                 .with(importance)
                 .with(description)
+                .with(getResourceDefinition())
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return JSONBuilderProvider.simplest().toJson(this);
     }
 }

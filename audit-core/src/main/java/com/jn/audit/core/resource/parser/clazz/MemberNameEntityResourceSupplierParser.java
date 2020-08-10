@@ -9,7 +9,7 @@ import com.jn.langx.util.valuegetter.MemberValueGetter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +22,9 @@ import java.util.Map;
  */
 @Singleton
 @Deprecated
-public class FieldNameEntityResourceSupplierParser<T> implements EntityClassResourceSupplierParser<T> {
-    private static final Logger logger = LoggerFactory.getLogger(FieldNameEntityResourceSupplierParser.class);
-    public static final FieldNameEntityResourceSupplierParser DEFAULT_INSTANCE = new FieldNameEntityResourceSupplierParser();
+public class MemberNameEntityResourceSupplierParser<T> implements EntityClassResourceSupplierParser<T> {
+    private static final Logger logger = LoggerFactory.getLogger(MemberNameEntityResourceSupplierParser.class);
+    public static final MemberNameEntityResourceSupplierParser DEFAULT_INSTANCE = new MemberNameEntityResourceSupplierParser();
 
     @Override
     public EntityResourceSupplier<T> parse(Class<T> entityClass) {
@@ -54,11 +54,19 @@ public class FieldNameEntityResourceSupplierParser<T> implements EntityClassReso
      * 从entityClass 类中解析 resourceProperty ，解析时使用的字段名称是 fieldName，解析完之后放入map
      */
     protected void parsePropertyByFieldName(Class<T> entityClass, String fieldName, Map<String, MemberValueGetter> map, String resourceProperty) {
-        Field field = Reflects.getAnyField(entityClass, fieldName);
-        if (field != null) {
-            map.put(resourceProperty, new MemberValueGetter(field));
+        Member member = null;
+        try {
+            member = Reflects.getGetter(entityClass, fieldName);
+            if (member == null) {
+                member = Reflects.getAnyField(entityClass, fieldName);
+            }
+        } catch (Throwable ex) {
+            // ignore it
+        }
+        if (member == null) {
+            logger.info("Can't find the resource {} property or getter in the class: {} when parse it using file name ", resourceProperty, entityClass);
         } else {
-            logger.info("Can't find the resource {} property in the class: {} when parse it using file name ", resourceProperty, entityClass);
+            map.put(resourceProperty, new MemberValueGetter(member));
         }
     }
 }

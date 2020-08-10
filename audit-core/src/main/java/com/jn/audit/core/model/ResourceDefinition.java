@@ -1,5 +1,7 @@
 package com.jn.audit.core.model;
 
+import com.jn.easyjson.core.JSONBuilderProvider;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
 
 import java.util.HashMap;
@@ -21,62 +23,88 @@ import java.util.Map;
  */
 public class ResourceDefinition extends HashMap<String, Object> {
     public static final long serialVersionUID = 1L;
-
+    private transient MapAccessor accessor;
+    /**
+     * 是否启用注解方式，默认是true
+     */
+    private static final String ANNOTATION_ENABLED = "annotation_enabled";
+    /**
+     * 注解方式是否优先，默认是 false
+     */
+    private static final String ANNOTATION_FIRST = "annotation_first";
 
     public static final ResourceDefinition DEFAULT_DEFINITION = getDefaultResourceDefinition();
 
     private static final ResourceDefinition getDefaultResourceDefinition() {
-        ResourceDefinition definition = new ResourceDefinition();
-        definition.setResourceId("id");
-        definition.setResourceName("name");
-        definition.setResourceType("type");
-        definition.setResource("resource");
-        return definition;
+        return new ResourceDefinition(Collects.emptyHashMap());
     }
 
     public ResourceDefinition() {
-
+        accessor = new MapAccessor(this);
     }
 
     public ResourceDefinition(Map<String, Object> map) {
+        this();
         this.putAll(map);
         MapAccessor accessor = new MapAccessor(map);
         setResourceId(accessor.getString(Resource.RESOURCE_ID, Resource.RESOURCE_ID_DEFAULT_KEY));
         setResourceName(accessor.getString(Resource.RESOURCE_NAME, Resource.RESOURCE_NAME_DEFAULT_KEY));
         setResourceType(accessor.getString(Resource.RESOURCE_TYPE, Resource.RESOURCE_TYPE_DEFAULT_KEY));
         setResource(accessor.getString("resource"));
+        setAnnotationEnabled(accessor.getBoolean(ANNOTATION_ENABLED, true));
+        setAnnotationFirst(accessor.getBoolean(ANNOTATION_FIRST, false));
+    }
+
+    public void setAnnotationFirst(boolean enabled) {
+        accessor.setBoolean(ANNOTATION_FIRST, enabled);
+    }
+
+    public boolean isAnnotationFirst() {
+        return accessor.getBoolean(ANNOTATION_FIRST, false);
+    }
+
+    public void setAnnotationEnabled(boolean enabled) {
+        accessor.setBoolean(ANNOTATION_ENABLED, enabled);
+    }
+
+    public boolean isAnnotationEnabled() {
+        return accessor.getBoolean(ANNOTATION_ENABLED, true);
     }
 
     public String getResource() {
-        return (String) this.get("resource");
+        return accessor.getString("resource");
     }
 
     public void setResource(String resource) {
-        this.put("resource", resource);
+        accessor.set("resource", resource);
     }
 
     public String getResourceId() {
-        return (String) this.get(Resource.RESOURCE_ID);
+        return accessor.getString(Resource.RESOURCE_ID);
     }
 
     public void setResourceId(String resourceId) {
-        this.put(Resource.RESOURCE_ID, resourceId);
+        accessor.set(Resource.RESOURCE_ID, resourceId);
     }
 
     public String getResourceName() {
-        return (String) this.get(Resource.RESOURCE_NAME);
+        return accessor.getString(Resource.RESOURCE_NAME);
     }
 
     public void setResourceName(String resourceName) {
-        this.put(Resource.RESOURCE_NAME, resourceName);
+        accessor.set(Resource.RESOURCE_NAME, resourceName);
     }
 
     public String getResourceType() {
-        return (String) this.get(Resource.RESOURCE_TYPE);
+        return accessor.getString(Resource.RESOURCE_TYPE);
     }
 
     public void setResourceType(String resourceType) {
-        this.put(Resource.RESOURCE_TYPE, resourceType);
+        accessor.set(Resource.RESOURCE_TYPE, resourceType);
     }
 
+    @Override
+    public String toString() {
+        return JSONBuilderProvider.simplest().toJson(this);
+    }
 }

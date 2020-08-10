@@ -19,6 +19,7 @@ operationDefinitions:
     importance: major
     description: 使用MyBatis来更新用户
     resourceDefinition:
+      annotation_first: true
       statmentId: select
       statementIdFQN: com.jn.sqlhelper.examples.common.dao.UserDao.selectById
       entity: com.jn.sqlhelper.examples.common.model.User
@@ -29,9 +30,18 @@ operationDefinitions:
     importance: major
     description: 使用MyBatis来更新用户2
     resourceDefinition:
+      annotation_first: true
       statmentId: select
       statementIdFQN: com.jn.sqlhelper.examples.common.dao.UserDao.selectById
       entity: com.jn.sqlhelper.examples.common.model.User
+  DELETE-/users/ids:
+    code: Audit_springmvc_USER_DELETE
+    name: 删除用户
+    type: user_delete
+    importance: major
+    description: 使用MyBatis来删除用户
+    resourceDefinition:
+      resourceId: ids
   DELETE-/users/{id}:
     code: Audit_springmvc_USER_DELETE
     name: 删除用户

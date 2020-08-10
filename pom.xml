@@ -7,7 +7,7 @@
     <groupId>com.github.fangjinuo.audit</groupId>
     <artifactId>audit</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.3</version>
+    <version>1.1.2</version>
 
     <name>audit</name>
 
@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.4.1</langx-java.version>
+        <langx-java.version>2.4.5</langx-java.version>
         <easyjson.version>2.2.1</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
         <dmmq.version>1.0.0</dmmq.version>

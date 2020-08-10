@@ -20,7 +20,7 @@ import java.util.Map;
  * @see ResourceDefinition#getResource()
  * @see ResourceAnnotatedEntityParameterResourceSupplierParser
  */
-public class CustomNamedEntityResourceSupplierParser<T> extends FieldNameEntityResourceSupplierParser<T> {
+public class CustomNamedEntityResourceSupplierParser<T> extends MemberNameEntityResourceSupplierParser<T> {
 
     /**
      * resourceXxx to custom file name

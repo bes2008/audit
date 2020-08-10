@@ -15,10 +15,11 @@
 package com.jn.audit.examples.springmvcdemo.common.model;
 
 import com.jn.audit.core.annotation.ResourceMapping;
+import com.jn.audit.core.annotation.ResourceName;
 
 import java.io.Serializable;
 
-@ResourceMapping(name="name",id="id",type = "entity")
+//@ResourceMapping(name="name",id="id",type = "entity")
 public class User implements Serializable {
 
     private String id;
@@ -32,7 +33,7 @@ public class User implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-
+    @ResourceName
     public String getName() {
         return name;
     }

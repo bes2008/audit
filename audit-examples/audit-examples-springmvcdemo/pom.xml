@@ -5,7 +5,7 @@
     <parent>
         <artifactId>audit-examples</artifactId>
         <groupId>com.github.fangjinuo.audit</groupId>
-        <version>1.0.3</version>
+        <version>1.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,7 +19,7 @@
         <junit.version>4.12</junit.version>
         <spring.boot.version>2.2.1.RELEASE</spring.boot.version>
         <spring.version>5.2.4.RELEASE</spring.version>
-        <sqlhelper.version>3.0.2</sqlhelper.version>
+        <sqlhelper.version>3.0.3</sqlhelper.version>
 
     </properties>
 
@@ -130,6 +130,18 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.sqlhelper</groupId>
+                <artifactId>sqlhelper-jsqlparser</artifactId>
+                <version>${sqlhelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <artifactId>langx-java</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <dependency>
                 <groupId>com.github.fangjinuo.sqlhelper</groupId>
                 <artifactId>sqlhelper-springjdbc</artifactId>
@@ -333,9 +345,8 @@
             <artifactId>audit-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>1.9.5</version>
+            <groupId>com.github.fangjinuo.sqlhelper</groupId>
+            <artifactId>sqlhelper-jsqlparser</artifactId>
         </dependency>
     </dependencies>
     <build>

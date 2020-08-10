@@ -6,7 +6,6 @@ import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.clazz.CustomNamedEntityResourceSupplierParser;
 import com.jn.audit.core.resource.parser.parameter.*;
 import com.jn.langx.annotation.NonNull;
-import com.jn.langx.annotation.Nullable;
 import com.jn.langx.proxy.aop.MethodInvocation;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objects;
@@ -31,6 +30,8 @@ import com.jn.langx.util.valuegetter.ValueGetter;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -86,16 +87,34 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         ResourceDefinition resourceDefinition = operationDefinition.getResourceDefinition();
         ValueGetter resourceGetter = getValueGetterFromCache(method, resourceDefinition);
         if (resourceGetter == null) {
-            // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
+
             Parameter[] parameters = Collects.toArray(Reflects.getMethodParameters("langx_aspectj", method), MethodParameter[].class);
-            resourceGetter = parseResourceGetterByConfiguration(parameters, resourceDefinition);
-            if (resourceGetter != null) {
-                configuredResourceCache.put(method, new Entry<ResourceDefinition, ValueGetter>(resourceDefinition, resourceGetter));
+
+            // step 2：如果 step 1 没找到，根据 resource definition 去解析 生成 supplier
+            // step 2.1 : 根据注解
+            if (resourceDefinition.isAnnotationEnabled() && resourceDefinition.isAnnotationFirst()) {
+                if (!annotatedCache.containsKey(method)) {
+                    resourceGetter = parseResourceGetterByAnnotation(parameters);
+                    annotatedCache.putIfAbsent(method, new Holder<ValueGetter>(resourceGetter));
+                }
             }
-            // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
-            if (resourceGetter == null && !annotatedCache.containsKey(method)) {
-                resourceGetter = parseResourceGetterByAnnotation(parameters);
-                annotatedCache.putIfAbsent(method, new Holder<ValueGetter>(resourceGetter));
+
+            if (resourceGetter == null) {
+                // step 2.2：如果 step 2.1 没找到，根据 resource definition 去解析 生成 supplier
+                resourceGetter = parseResourceGetterByConfiguration(parameters, resourceDefinition);
+                if (resourceGetter != null) {
+                    configuredResourceCache.put(method, new Entry<ResourceDefinition, ValueGetter>(resourceDefinition, resourceGetter));
+                }
+            }
+
+            if (resourceGetter == null) {
+                if (resourceDefinition.isAnnotationEnabled() && !resourceDefinition.isAnnotationFirst()) {
+                    // step 3: 如果 step 2 没找到，根据 注解去解析 生成 supplier
+                    if (!annotatedCache.containsKey(method)) {
+                        resourceGetter = parseResourceGetterByAnnotation(parameters);
+                        annotatedCache.putIfAbsent(method, new Holder<ValueGetter>(resourceGetter));
+                    }
+                }
             }
         }
         // step 4: 如果 step 3 没找到， null
@@ -133,21 +152,37 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         return resources;
     }
 
-    private ValueGetter getValueGetterFromCache(@NonNull Method method, @Nullable ResourceDefinition resourceDefinition) {
+    private ValueGetter getValueGetterFromCache(@NonNull Method method, @NonNull ResourceDefinition resourceDefinition) {
+        boolean annotationEnabled = resourceDefinition.isAnnotationEnabled();
+        boolean annotationFirst = resourceDefinition.isAnnotationFirst();
+        ValueGetter valueGetter = null;
+        if (annotationEnabled && annotationFirst) {
+            Holder<ValueGetter> holder = annotatedCache.get(method);
+            if (holder != null) {
+                valueGetter = holder.get();
+            }
+        }
+        if (valueGetter != null) {
+            return valueGetter;
+        }
+
+
         Entry<ResourceDefinition, ValueGetter> entry = configuredResourceCache.get(method);
         if (entry != null) {
             if (Objects.equals(entry.getKey(), resourceDefinition)) {
-                return entry.getValue();
+                valueGetter = entry.getValue();
             }
         }
-        if (resourceDefinition == ResourceDefinition.DEFAULT_DEFINITION) {
+        if (valueGetter != null) {
+            return valueGetter;
+        }
+        if (annotationEnabled && !annotationFirst) {
             Holder<ValueGetter> holder = annotatedCache.get(method);
-            if (holder == null) {
-                return null;
+            if (holder != null) {
+                valueGetter = holder.get();
             }
-            return holder.get();
         }
-        return null;
+        return valueGetter;
     }
 
     private ValueGetter parseResourceGetterByConfiguration(Parameter[] parameters, ResourceDefinition resourceDefinition) {
@@ -182,7 +217,11 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         parameterType0 = parameterType.getComponentType();
                     } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                         try {
-                            parameterType0 = Types.getRawType(parameterType);
+                            Type parameterTypeXX = parameter.getParameterizedType();
+                            parameterType0 = getUniqueGenericArgumentType(parameterTypeXX);
+                            if (parameterType0 == null) {
+                                parameterType0 = parameterType;
+                            }
                         } catch (Throwable ex) {
                             parameterType0 = parameterType;
                         }
@@ -191,7 +230,11 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                     if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                         supplier = new CustomNamedMapParameterResourceSupplierParser(mapping).parse(parameter);
                     } else if (!Types.isLiteralType(parameterType0)) {
-                        supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
+                        if (parameterType0 != parameterType) {
+                            // @Resource Array, @Resource Collection
+                            // @Resource javaBean
+                            supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
+                        }
                     }
 
                     if (supplier != null) {
@@ -199,8 +242,10 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
                         pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
                         if (parameterType0 == parameterType) {
+                            // java bean
                             pipelineValueGetter.addValueGetter(supplier);
                         } else {
+                            // array, collection
                             pipelineValueGetter.addValueGetter(new StreamValueGetter(supplier));
                         }
                         resourceGetter = pipelineValueGetter;
@@ -229,32 +274,39 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         isArray = true;
                     } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                         try {
-                            parameterType0 = Types.getRawType(parameterType);
+                            Type parameterTypeXX = parameter.getParameterizedType();
+                            parameterType0 = getUniqueGenericArgumentType(parameterTypeXX);
+                            if (parameterType0 == null) {
+                                parameterType0 = parameterType;
+                            }
                             isCollection = true;
                         } catch (Throwable ex) {
                             parameterType0 = parameterType;
                         }
                     }
-                    if (isArray || isCollection) {
-                        PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
-                        // 相当于调用 parameters[index]
-                        int index = Collects.firstOccurrence(Collects.asList(parameters), parameter);
-                        pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
 
-                        pipelineValueGetter.addValueGetter(new StreamValueGetter(new Function() {
-                                    @Override
-                                    public Object apply(Object id) {
-                                        Resource resource = new Resource();
-                                        if (id == null) {
-                                            return null;
+                    if (parameterType0 != null && Types.isLiteralType(parameterType0)) {
+                        if (isArray || isCollection) {
+                            PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                            // 相当于调用 parameters[index]
+                            int index = Collects.firstOccurrence(Collects.asList(parameters), parameter);
+                            pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
+
+                            pipelineValueGetter.addValueGetter(new StreamValueGetter(new Function() {
+                                        @Override
+                                        public Object apply(Object id) {
+                                            Resource resource = new Resource();
+                                            if (id == null) {
+                                                return null;
+                                            }
+                                            resource.setResourceId(id.toString());
+                                            return resource;
                                         }
-                                        resource.setResourceId(id.toString());
-                                        return resource;
-                                    }
-                                })
-                        );
+                                    })
+                            );
 
-                        resourceGetter = pipelineValueGetter;
+                            resourceGetter = pipelineValueGetter;
+                        }
                     }
                 }
             }
@@ -286,19 +338,27 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                             isArray = true;
                         } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                             try {
-                                parameterType0 = Types.getRawType(parameterType);
+                                Type parameterTypeXX = parameter.getParameterizedType();
+                                parameterType0 = getUniqueGenericArgumentType(parameterTypeXX);
+                                if (parameterType0 == null) {
+                                    parameterType0 = parameterType;
+                                }
                                 isCollection = true;
                             } catch (Throwable ex) {
                                 parameterType0 = parameterType;
                             }
                         }
 
-                        // 对泛型 raw type进行处理
+                        // 对泛型 argument type进行处理
                         // 也就是这里是支持： Collection<Map>, Collection<Entity>, Map, Entity的方式，不对 Collection<Collection>的方式做支持
                         if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                             supplier = new ResourceAnnotatedMapParameterResourceSupplierParser().parse(parameter);
                         } else if (!Types.isLiteralType(parameterType0)) {
-                            supplier = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
+                            if (parameterType0 != parameterType) {
+                                supplier = new ResourceAnnotatedCollectionParameterResourcesSupplierParser(parameterType0).parse(parameter);
+                            } else {
+                                supplier = new ResourceAnnotatedEntityParameterResourceSupplierParser().parse(parameter);
+                            }
                         }
 
                         if (supplier != null) {
@@ -354,31 +414,39 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                                 isArray = true;
                             } else if (Reflects.isSubClassOrEquals(Collection.class, parameterType)) {
                                 try {
-                                    parameterType0 = Types.getRawType(parameterType);
+                                    Type parameterTypeXX = parameter.getParameterizedType();
+                                    parameterType0 = getUniqueGenericArgumentType(parameterTypeXX);
+                                    if (parameterType0 == null) {
+                                        parameterType0 = parameterType;
+                                    }
                                     isCollection = true;
                                 } catch (Throwable ex) {
                                     parameterType0 = parameterType;
                                 }
                             }
-                            if (isArray || isCollection) {
-                                PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
-                                // 相当于调用 parameters[index]
-                                pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
 
-                                pipelineValueGetter.addValueGetter(new StreamValueGetter(new Function() {
-                                            @Override
-                                            public Object apply(Object id) {
-                                                Resource resource = new Resource();
-                                                if (id == null) {
-                                                    return null;
+                            if (parameterType0 != null && Types.isLiteralType(parameterType0)) {
+
+                                if (isArray || isCollection) {
+                                    PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
+                                    // 相当于调用 parameters[index]
+                                    pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
+
+                                    pipelineValueGetter.addValueGetter(new StreamValueGetter(new Function() {
+                                                @Override
+                                                public Object apply(Object id) {
+                                                    Resource resource = new Resource();
+                                                    if (id == null) {
+                                                        return null;
+                                                    }
+                                                    resource.setResourceId(id.toString());
+                                                    return resource;
                                                 }
-                                                resource.setResourceId(id.toString());
-                                                return resource;
-                                            }
-                                        })
-                                );
+                                            })
+                                    );
 
-                                resourceGetter.set(pipelineValueGetter);
+                                    resourceGetter.set(pipelineValueGetter);
+                                }
                             }
                         }
                     },
@@ -400,5 +468,19 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
 
     public void setIdResourceExtractor(AbstractIdResourceExtractor idResourceExtractor) {
         this.idResourceExtractor = idResourceExtractor;
+    }
+
+    public static Class getUniqueGenericArgumentType(Type type) {
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Type[] argumentTypes = parameterizedType.getActualTypeArguments();
+            if (Objects.isNotEmpty(argumentTypes) && Objects.length(argumentTypes) == 1) {
+                Type argumentType = argumentTypes[0];
+                if (Types.isClass(argumentType)) {
+                    return Types.toClass(argumentType);
+                }
+            }
+        }
+        return null;
     }
 }

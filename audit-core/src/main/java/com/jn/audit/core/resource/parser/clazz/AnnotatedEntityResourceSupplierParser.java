@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,17 +87,27 @@ public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassReso
 
 
     private void parsePropertyByAnnotation(Class<T> entityClass, final Class<? extends Annotation> annotationClass, Map<String, MemberValueGetter> map, String resourceProperty) {
-        Field field = Pipeline.of(entityClass.getDeclaredFields()).findFirst(new Predicate<Field>() {
+        Member member = null;
+        member = Pipeline.of(entityClass.getDeclaredMethods()).findFirst(new Predicate<Method>() {
             @Override
-            public boolean test(Field f) {
+            public boolean test(Method f) {
                 return !Modifiers.isStatic(f) && Reflects.hasAnnotation(f, annotationClass);
             }
         });
 
-        if (field != null) {
-            map.put(resourceProperty, new MemberValueGetter(field));
+        if (member == null) {
+            member = Pipeline.of(entityClass.getDeclaredFields()).findFirst(new Predicate<Field>() {
+                @Override
+                public boolean test(Field f) {
+                    return !Modifiers.isStatic(f) && Reflects.hasAnnotation(f, annotationClass);
+                }
+            });
+        }
+
+        if (member != null) {
+            map.put(resourceProperty, new MemberValueGetter(member));
         } else {
-            logger.info("Can't find the resource {} property in the class: {} when parse it using {} ", resourceProperty, entityClass, annotationClass);
+            logger.info("Can't find the resource {} property or getter in the class: {} when parse it using {} ", resourceProperty, entityClass, annotationClass);
         }
     }
 
@@ -103,9 +115,17 @@ public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassReso
      * 从entityClass 类中解析 resourceProperty ，解析时使用的字段名称是 fieldName，解析完之后放入map
      */
     private void parsePropertyByFieldName(Class<T> entityClass, String fieldName, Map<String, MemberValueGetter> map, String resourceProperty) {
-        Field field = Reflects.getAnyField(entityClass, fieldName);
-        if (field != null) {
-            map.put(resourceProperty, new MemberValueGetter(field));
+        Member member = null;
+        try {
+            member = Reflects.getGetter(entityClass, fieldName);
+            if (member == null) {
+                member = Reflects.getAnyField(entityClass, fieldName);
+            }
+        } catch (Throwable ex) {
+            // ignore it
+        }
+        if (member != null) {
+            map.put(resourceProperty, new MemberValueGetter(member));
         } else {
             logger.info("Can't find the resource {} property in the class: {} when parse it using @ResourceMapping ", resourceProperty, entityClass);
         }

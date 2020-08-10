@@ -36,7 +36,7 @@ public class OperationParameterMethodInvocationExtractor<AuditedRequest> impleme
         final Map<String, Object> map = Collects.emptyHashMap();
         MethodInvocation invocation = wrappedRequest.getRequestContext();
         Method method = invocation.getJoinPoint();
-        final List<MethodParameter> parameters = Reflects.getMethodParameters(method);
+        final List<MethodParameter> parameters = Reflects.getMethodParameters("langx_aspectj", method);
         Object[] args = invocation.getArguments();
         Collects.forEach(args, new Predicate2<Integer, Object>() {
             @Override

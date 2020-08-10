@@ -47,4 +47,9 @@ public class Resource extends HashMap<String, Object> implements Serializable {
     public void setResourceName(String resourceName) {
         this.put(RESOURCE_NAME, resourceName);
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
