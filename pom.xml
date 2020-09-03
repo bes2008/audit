@@ -7,7 +7,7 @@
     <groupId>com.github.fangjinuo.audit</groupId>
     <artifactId>audit</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
 
     <name>audit</name>
 
@@ -48,8 +48,8 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.4.5</langx-java.version>
-        <easyjson.version>2.2.1</easyjson.version>
+        <langx-java.version>2.8.8</langx-java.version>
+        <easyjson.version>3.0.3</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
         <dmmq.version>1.0.0</dmmq.version>
     </properties>
@@ -63,6 +63,12 @@
     </modules>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.0</version>
+                <optional>true</optional>
+            </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-core</artifactId>
@@ -214,7 +220,7 @@
             <id>envCompany</id>
             <properties>
                 <gpg.executable>D:/Program Files (x86)/GNU/GnuPG/gpg2.exe</gpg.executable>
-                <gpg.homedir>C:/Users/User/AppData/Roaming/gnupg</gpg.homedir>
+                <gpg.homedir>C:/Users/fangjinuo/AppData/Roaming/gnupg</gpg.homedir>
                 <!--
                 <gpg.passphrase>YOUR GPG PASSPHRASE</gpg.passphrase>
                 可以这样配置在pom.xml文件中，也可以在执行mvn 命令时，加上-Dgpg.passphrase=YOUR_GPG_PASSPHRASE
