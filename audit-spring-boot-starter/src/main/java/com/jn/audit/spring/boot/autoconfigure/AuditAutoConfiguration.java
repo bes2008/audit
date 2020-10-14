@@ -1,13 +1,13 @@
 package com.jn.audit.spring.boot.autoconfigure;
 
+import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
+import com.jn.agileway.dmmq.core.consumer.DebugConsumer;
 import com.jn.audit.core.*;
 import com.jn.audit.core.filter.MethodAuditAnnotationFilter;
 import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.OperationParametersExtractor;
 import com.jn.audit.core.operation.method.OperationMethodExtractor;
-import com.jn.dmmq.core.MessageTopicDispatcher;
-import com.jn.dmmq.core.consumer.DebugConsumer;
 import com.jn.audit.servlet.ServletAuditEventExtractor;
 import com.jn.audit.servlet.ServletAuditRequest;
 import com.jn.audit.servlet.ServletHttpParametersExtractor;

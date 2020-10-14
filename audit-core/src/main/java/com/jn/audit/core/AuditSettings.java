@@ -1,9 +1,9 @@
 package com.jn.audit.core;
 
+import com.jn.agileway.dmmq.core.DefaultMessageTranslator;
+import com.jn.agileway.dmmq.core.MessageTopicConfiguration;
+import com.jn.agileway.dmmq.core.allocator.DefaultTopicAllocator;
 import com.jn.audit.core.operation.repository.OperationDefinitionRepository;
-import com.jn.dmmq.core.DefaultMessageTranslator;
-import com.jn.dmmq.core.MessageTopicConfiguration;
-import com.jn.dmmq.core.allocator.DefaultTopicAllocator;
 import com.jn.langx.util.reflect.Reflects;
 
 import java.io.Serializable;
@@ -33,14 +33,14 @@ public class AuditSettings implements Serializable {
      * <p>
      * if a wait strategy in {@link #topicConfigs} is not specified, will using it
      *
-     * @see com.jn.dmmq.core.BuiltinWaitStrategyFactory
+     * @see com.jn.agileway.dmmq.core.BuiltinWaitStrategyFactory
      */
     private String consumerWaitStrategy = "blocking";
 
     /**
      * the candidate topics
      *
-     * @see {@link com.jn.dmmq.core.allocator.AbstractMultipleCandidateTopicAllocator#setCandidateTopics(List)}
+     * @see {@link com.jn.agileway.dmmq.core.allocator.AbstractMultipleCandidateTopicAllocator#setCandidateTopics(List)}
      */
     private List<String> topics;
 

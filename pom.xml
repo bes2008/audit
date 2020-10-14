@@ -51,7 +51,7 @@
         <langx-java.version>2.8.8</langx-java.version>
         <easyjson.version>3.0.3</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
-        <dmmq.version>1.0.0</dmmq.version>
+        <agileway.version>1.2.0</agileway.version>
     </properties>
 
     <modules>
@@ -102,9 +102,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.github.fangjinuo.dmmq</groupId>
-                <artifactId>dmmq-core</artifactId>
-                <version>${dmmq.version}</version>
+                <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-dmmq</artifactId>
+                <version>${agileway.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.audit</groupId>
