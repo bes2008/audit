@@ -58,7 +58,7 @@
         <module>audit-core</module>
         <module>audit-spring</module>
         <module>audit-servlet</module>
-        <module>audit-spring-boot</module>
+        <module>audit-spring-boot-starter</module>
         <module>audit-examples</module>
     </modules>
     <dependencyManagement>
