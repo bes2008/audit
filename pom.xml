@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.8.8</langx-java.version>
+        <langx-java.version>2.10.2</langx-java.version>
         <easyjson.version>3.0.3</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
         <agileway.version>1.2.0</agileway.version>
