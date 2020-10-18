@@ -2,7 +2,7 @@ package com.jn.audit.core.model;
 
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.configuration.Configuration;
-import com.jn.langx.util.Objects;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.hash.HashCodeBuilder;
 
@@ -17,6 +17,7 @@ public class OperationDefinition implements Configuration, Serializable {
     private String code; // {required}  the operate code
     private String name; // {required}  the operate name
     private String type; // {optional}  the operate type
+    private String module; // {optional}  the module
     private String description;// {optional} the operate description
     private OperationImportance importance;  // {optional} the importance
     private ResourceDefinition resourceDefinition;
@@ -84,6 +85,14 @@ public class OperationDefinition implements Configuration, Serializable {
         this.resourceDefinition = resourceDefinition;
     }
 
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,25 +100,28 @@ public class OperationDefinition implements Configuration, Serializable {
 
         OperationDefinition that = (OperationDefinition) o;
 
-        if (!Objects.equals(id, that.id)) {
+        if (!Objs.equals(id, that.id)) {
             return false;
         }
-        if (!Objects.equals(name, that.name)) {
+        if (!Objs.equals(name, that.name)) {
             return false;
         }
-        if (!Objects.equals(code, that.code)) {
+        if (!Objs.equals(code, that.code)) {
             return false;
         }
-        if (!Objects.equals(type, that.type)) {
+        if (!Objs.equals(type, that.type)) {
             return false;
         }
-        if (!Objects.equals(importance, that.importance)) {
+        if (!Objs.equals(module, that.module)) {
             return false;
         }
-        if (!Objects.equals(description, that.description)) {
+        if (!Objs.equals(importance, that.importance)) {
             return false;
         }
-        if (!Objects.equals(getResourceDefinition(), that.getResourceDefinition())) {
+        if (!Objs.equals(description, that.description)) {
+            return false;
+        }
+        if (!Objs.equals(getResourceDefinition(), that.getResourceDefinition())) {
             return false;
         }
         return true;

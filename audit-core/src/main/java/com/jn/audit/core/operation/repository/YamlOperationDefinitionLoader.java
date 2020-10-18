@@ -8,7 +8,7 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.configuration.file.InvalidConfigurationFileException;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
-import com.jn.langx.util.Objects;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
@@ -111,14 +111,14 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 definition.setId(id);
                 // code
                 Object code = propertyPairMap.get("code");
-                if (Objects.isEmpty(code)) {
+                if (Objs.isEmpty(code)) {
                     logger.warn("Found an invalid operation definition: id:{}, code is empty", id);
                     return;
                 }
                 definition.setCode(code.toString());
                 // name
                 Object name = propertyPairMap.get("name");
-                if (Objects.isEmpty(name)) {
+                if (Objs.isEmpty(name)) {
                     logger.warn("Found an invalid operation definition: id:{}, name is empty", id);
                     return;
                 }
@@ -127,6 +127,11 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 Object type = propertyPairMap.get("type");
                 if (type != null) {
                     definition.setType(type.toString());
+                }
+                // type
+                Object module = propertyPairMap.get("module");
+                if (module != null) {
+                    definition.setModule(module.toString());
                 }
                 // description
                 Object description = propertyPairMap.get("description");
@@ -137,10 +142,10 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 }
                 // importance
                 Object importanceKey = propertyPairMap.get("importance");
-                if (Objects.isEmpty(importanceKey)) {
+                if (Objs.isEmpty(importanceKey)) {
                     importanceKey = Collects.findFirst(importanceMap.keySet(), Functions.<String>nonNullPredicate());
                 }
-                if (Objects.isEmpty(importanceKey)) {
+                if (Objs.isEmpty(importanceKey)) {
                     logger.warn("Found an invalid operation definition: id:{}, importance is empty", id);
                     return;
                 }
@@ -149,7 +154,7 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
 
                 // resource definition
                 Object resourceDefinitionMap = propertyPairMap.get("resourceDefinition");
-                if (Objects.isNotEmpty(resourceDefinitionMap) && resourceDefinitionMap instanceof Map) {
+                if (Objs.isNotEmpty(resourceDefinitionMap) && resourceDefinitionMap instanceof Map) {
                     definition.setResourceDefinition(new ResourceDefinition((Map<String, Object>) resourceDefinitionMap));
                 }
                 definitionMap.put(id, definition);
