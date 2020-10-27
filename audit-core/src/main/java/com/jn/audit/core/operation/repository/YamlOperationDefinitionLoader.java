@@ -128,7 +128,7 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 if (type != null) {
                     definition.setType(type.toString());
                 }
-                // type
+                // module
                 Object module = propertyPairMap.get("module");
                 if (module != null) {
                     definition.setModule(module.toString());
