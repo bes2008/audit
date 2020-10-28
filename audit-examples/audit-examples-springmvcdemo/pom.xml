@@ -17,9 +17,9 @@
         <mybatis.springboot.version>2.1.1</mybatis.springboot.version>
         <swagger.version>2.9.2</swagger.version>
         <junit.version>4.12</junit.version>
-        <spring.boot.version>2.2.1.RELEASE</spring.boot.version>
-        <spring.version>5.2.4.RELEASE</spring.version>
-        <sqlhelper.version>3.0.3</sqlhelper.version>
+        <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
+        <spring.version>5.2.9.RELEASE</spring.version>
+        <sqlhelper.version>3.2.3</sqlhelper.version>
 
     </properties>
 
@@ -169,17 +169,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency>
-                <groupId>com.github.fangjinuo.sqlhelper</groupId>
-                <artifactId>sqlhelper-springjdbc-spring-boot-autoconfigure</artifactId>
-                <version>${sqlhelper.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.github.fangjinuo.langx</groupId>
-                        <artifactId>langx-java</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -226,16 +215,6 @@
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-springjdbc-spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.fangjinuo.easyjson</groupId>
-                    <artifactId>easyjson-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.fangjinuo.sqlhelper</groupId>
-            <artifactId>sqlhelper-springjdbc-spring-boot-autoconfigure</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>com.github.fangjinuo.easyjson</groupId>
