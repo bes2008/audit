@@ -48,10 +48,10 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.10.3</langx-java.version>
+        <langx-java.version>2.10.5</langx-java.version>
         <easyjson.version>3.0.3</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
-        <agileway.version>1.4.5</agileway.version>
+        <agileway.version>1.5.2</agileway.version>
     </properties>
 
     <modules>
