@@ -77,7 +77,7 @@ public class WebappInterceptorRegisterConfiguration implements WebMvcConfigurer,
         if (Emptys.isEmpty(pathPatterns)) {
             pathPatterns = Collects.newArrayList("**");
         }
-        registration.addPathPatterns(pathPatterns);
+        registration.addPathPatterns(Collects.asArray(pathPatterns, String.class));
     }
 
     @Override

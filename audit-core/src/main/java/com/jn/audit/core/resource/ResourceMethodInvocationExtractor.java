@@ -8,7 +8,7 @@ import com.jn.audit.core.resource.parser.parameter.*;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.proxy.aop.MethodInvocation;
 import com.jn.langx.util.Emptys;
-import com.jn.langx.util.Objects;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.ConcurrentReferenceHashMap;
 import com.jn.langx.util.collection.Pipeline;
@@ -121,7 +121,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         if (resourceGetter == null) {
             return null;
         }
-        List<Resource> resources = Collects.asList(Collects.asIterable(resourceGetter.get(methodInvocation.getArguments())));
+        List<Resource> resources = Collects.asList(Collects.<Resource>asIterable(resourceGetter.get(methodInvocation.getArguments())));
 
         // 通常应该在 数据访问层执行下面的代码，例如mybatis 通用的 service 层
         if (idResourceExtractor != null) {
@@ -169,7 +169,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
 
         Entry<ResourceDefinition, ValueGetter> entry = configuredResourceCache.get(method);
         if (entry != null) {
-            if (Objects.equals(entry.getKey(), resourceDefinition)) {
+            if (Objs.equals(entry.getKey(), resourceDefinition)) {
                 valueGetter = entry.getValue();
             }
         }
@@ -289,7 +289,8 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                         if (isArray || isCollection) {
                             PipelineValueGetter pipelineValueGetter = new PipelineValueGetter();
                             // 相当于调用 parameters[index]
-                            int index = Collects.firstOccurrence(Collects.asList(parameters), parameter);
+                            List parameterList = Collects.asList(parameters);
+                            int index = Collects.firstOccurrence(parameterList, parameter);
                             pipelineValueGetter.addValueGetter(new ArrayValueGetter(index));
 
                             pipelineValueGetter.addValueGetter(new StreamValueGetter(new Function() {
@@ -474,7 +475,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             Type[] argumentTypes = parameterizedType.getActualTypeArguments();
-            if (Objects.isNotEmpty(argumentTypes) && Objects.length(argumentTypes) == 1) {
+            if (Objs.isNotEmpty(argumentTypes) && Objs.length(argumentTypes) == 1) {
                 Type argumentType = argumentTypes[0];
                 if (Types.isClass(argumentType)) {
                     return Types.toClass(argumentType);

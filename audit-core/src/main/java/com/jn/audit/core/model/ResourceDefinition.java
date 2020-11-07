@@ -36,7 +36,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
     public static final ResourceDefinition DEFAULT_DEFINITION = getDefaultResourceDefinition();
 
     private static final ResourceDefinition getDefaultResourceDefinition() {
-        return new ResourceDefinition(Collects.emptyHashMap());
+        return new ResourceDefinition(Collects.<String,Object>emptyHashMap());
     }
 
     public ResourceDefinition() {

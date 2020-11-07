@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ConditionalOnProperty(value = "auditor.enabled", havingValue = "true", matchIfMissing = true)
@@ -52,7 +53,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     public OperationMethodExtractor<HttpServletRequest> operationMethodExtractor(
             @Autowired @Qualifier("multipleLevelOperationDefinitionRepository")
                     MultipleLevelConfigurationRepository multipleLevelConfigurationRepository,
-            ObjectProvider<OperationIdGenerator<HttpServletRequest, Method>> operationIdGenerators,
+            ObjectProvider<List<OperationIdGenerator<HttpServletRequest, Method>>> operationIdGenerators,
             @Autowired @Qualifier("servletHttpParametersExtractor")
                     OperationParametersExtractor<HttpServletRequest, Method> httpOperationParametersExtractor,
             @Autowired @Qualifier("operationDefinitionParserRegistry")
@@ -60,7 +61,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     ) {
         OperationMethodExtractor<HttpServletRequest> operationExtractor = new OperationMethodExtractor<>();
         operationExtractor.setOperationDefinitionRepository(multipleLevelConfigurationRepository);
-        operationExtractor.setOperationIdGenerators(operationIdGenerators.orderedStream().collect(Collectors.toList()));
+        operationExtractor.setOperationIdGenerators(operationIdGenerators.getObject());
         operationExtractor.setOperationParametersExtractor(httpOperationParametersExtractor);
         operationExtractor.setOperationParserRegistry(definitionParserRegistry);
         return operationExtractor;
