@@ -17,7 +17,7 @@
         <mybatis.springboot.version>2.1.1</mybatis.springboot.version>
         <swagger.version>2.9.2</swagger.version>
         <junit.version>4.13.1</junit.version>
-        <sqlhelper.version>3.2.4</sqlhelper.version>
+        <sqlhelper.version>3.2.5</sqlhelper.version>
     </properties>
 
     <dependencyManagement>

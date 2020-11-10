@@ -24,7 +24,7 @@ public class DebugIdResourceExtractor extends AbstractIdResourceExtractor<User, 
 
     @Override
     public List<User> findEntities(List<Serializable> ids) {
-        List<User> users = new ArrayList<>();
+        final List<User> users = new ArrayList<>();
         Collects.forEach(ids, new Consumer<Serializable>() {
             @Override
             public void accept(Serializable serializable) {
