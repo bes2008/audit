@@ -117,7 +117,7 @@ public class OperationAutoConfiguration {
     @Bean("operationDefinitionParserRegistry")
     public OperationDefinitionParserRegistry operationDefinitionParserRegistry(
             ObjectProvider<List<OperationMethodAnnotationDefinitionParser>> methodAnnotationDefinitionParsersProvider,
-            ObjectProvider<OperationRepositoryParser> repositoryDefinitionParsersProvider
+            ObjectProvider<List<OperationRepositoryParser>> repositoryDefinitionParsersProvider
     ) {
         OperationDefinitionParserRegistry registry = new OperationDefinitionParserRegistry();
         Collects.forEach(methodAnnotationDefinitionParsersProvider.getObject(), new Consumer<OperationMethodAnnotationDefinitionParser>() {
