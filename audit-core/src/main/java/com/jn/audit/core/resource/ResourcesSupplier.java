@@ -12,7 +12,7 @@ public class ResourcesSupplier<T> implements ValueGetter<List<T>, List<Resource>
     private List<ResourceSupplier<T>> resourceSuppliers;
 
     @Override
-    public List<Resource> get(List<T> args) {
+    public List<Resource> get(final List<T> args) {
         final List<Resource> resources = new ArrayList<Resource>();
         Collects.forEach(resourceSuppliers, new Consumer2<Integer, ResourceSupplier<T>>() {
             @Override

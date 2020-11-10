@@ -48,12 +48,10 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.10.6</langx-java.version>
+        <langx-java.version>2.10.5</langx-java.version>
         <easyjson.version>3.0.3</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
-        <agileway.version>2.0.0</agileway.version>
-        <spring.version>4.3.25.RELEASE</spring.version>
-        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
+        <agileway.version>1.5.2</agileway.version>
     </properties>
 
     <modules>
@@ -61,9 +59,7 @@
         <module>audit-spring</module>
         <module>audit-servlet</module>
         <module>audit-spring-boot-starter</module>
-        <!--
         <module>audit-examples</module>
-        -->
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -186,8 +182,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                     <encoding>UTF-8</encoding>
                     <debug>true</debug>
                 </configuration>

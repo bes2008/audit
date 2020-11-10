@@ -14,7 +14,9 @@ import com.jn.audit.spring.webmvc.RequestMappingOperationDefinitionIdGenerator;
 import com.jn.langx.cache.Cache;
 import com.jn.langx.cache.CacheBuilder;
 import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.timing.timer.Timer;
 import com.jn.langx.util.timing.timer.WheelTimers;
 import org.springframework.beans.factory.ObjectProvider;
@@ -30,7 +32,7 @@ import org.springframework.core.annotation.Order;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.function.Consumer;
+import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties(OperationDefinitionProperties.class)
@@ -114,17 +116,17 @@ public class OperationAutoConfiguration {
     @ConditionalOnMissingBean(value = {OperationDefinitionParserRegistry.class})
     @Bean("operationDefinitionParserRegistry")
     public OperationDefinitionParserRegistry operationDefinitionParserRegistry(
-            ObjectProvider<OperationMethodAnnotationDefinitionParser> methodAnnotationDefinitionParsers,
-            ObjectProvider<OperationRepositoryParser> repositoryDefinitionParsers
+            ObjectProvider<List<OperationMethodAnnotationDefinitionParser>> methodAnnotationDefinitionParsersProvider,
+            ObjectProvider<OperationRepositoryParser> repositoryDefinitionParsersProvider
     ) {
         OperationDefinitionParserRegistry registry = new OperationDefinitionParserRegistry();
-        methodAnnotationDefinitionParsers.orderedStream().forEach(new Consumer<OperationMethodAnnotationDefinitionParser>() {
+        Collects.forEach(methodAnnotationDefinitionParsersProvider.getObject(), new Consumer<OperationMethodAnnotationDefinitionParser>() {
             @Override
             public void accept(OperationMethodAnnotationDefinitionParser operationMethodAnnotationDefinitionParser) {
                 registry.registry(operationMethodAnnotationDefinitionParser);
             }
         });
-        repositoryDefinitionParsers.orderedStream().forEach(new Consumer<OperationRepositoryParser>() {
+        Collects.forEach(repositoryDefinitionParsersProvider.getObject(), new Consumer<OperationRepositoryParser>() {
             @Override
             public void accept(OperationRepositoryParser operationRepositoryParser) {
                 registry.registry(operationRepositoryParser);
