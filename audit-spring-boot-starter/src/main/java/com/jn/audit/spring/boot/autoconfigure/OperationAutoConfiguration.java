@@ -5,10 +5,7 @@ import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.method.OperationAnnotationParser;
 import com.jn.audit.core.operation.method.OperationMethodAnnotationDefinitionParser;
-import com.jn.audit.core.operation.repository.OperationDefinitionLoader;
-import com.jn.audit.core.operation.repository.OperationDefinitionRepository;
-import com.jn.audit.core.operation.repository.OperationRepositoryParser;
-import com.jn.audit.core.operation.repository.YamlOperationDefinitionLoader;
+import com.jn.audit.core.operation.repository.*;
 import com.jn.audit.servlet.ServletUrlOperationIdGenerator;
 import com.jn.audit.spring.webmvc.RequestMappingOperationDefinitionIdGenerator;
 import com.jn.langx.cache.Cache;
@@ -112,12 +109,18 @@ public class OperationAutoConfiguration {
         return new OperationAnnotationParser();
     }
 
+    @Bean
+    @ConditionalOnMissingBean(value = {NoopOperationRepositoryParser.class})
+    public NoopOperationRepositoryParser noopOperationRepositoryParser(){
+        return new NoopOperationRepositoryParser();
+    }
+
     @Autowired
     @ConditionalOnMissingBean(value = {OperationDefinitionParserRegistry.class})
     @Bean("operationDefinitionParserRegistry")
     public OperationDefinitionParserRegistry operationDefinitionParserRegistry(
             ObjectProvider<List<OperationMethodAnnotationDefinitionParser>> methodAnnotationDefinitionParsersProvider,
-            ObjectProvider<List<OperationRepositoryParser>> repositoryDefinitionParsersProvider
+            @Autowired(required = false) ObjectProvider<List<OperationRepositoryParser>> repositoryDefinitionParsersProvider
     ) {
         OperationDefinitionParserRegistry registry = new OperationDefinitionParserRegistry();
         Collects.forEach(methodAnnotationDefinitionParsersProvider.getObject(), new Consumer<OperationMethodAnnotationDefinitionParser>() {
