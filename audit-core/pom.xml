@@ -11,10 +11,6 @@
 
     <artifactId>audit-core</artifactId>
 
-    <properties>
-        <snakeyaml.version>1.25</snakeyaml.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.github.fangjinuo.langx</groupId>
