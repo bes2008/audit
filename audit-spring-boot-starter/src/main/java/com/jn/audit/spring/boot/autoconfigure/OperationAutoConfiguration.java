@@ -109,11 +109,13 @@ public class OperationAutoConfiguration {
         return new OperationAnnotationParser();
     }
 
+    /*
     @Bean
     @ConditionalOnMissingBean(value = {NoopOperationRepositoryParser.class})
     public NoopOperationRepositoryParser noopOperationRepositoryParser(){
         return new NoopOperationRepositoryParser();
     }
+     */
 
     @Autowired
     @ConditionalOnMissingBean(value = {OperationDefinitionParserRegistry.class})
