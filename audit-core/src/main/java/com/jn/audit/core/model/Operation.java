@@ -5,9 +5,21 @@ import com.jn.langx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Map;
 
+/**
+ * 代表了AuditEvent中的Operation
+ */
 public class Operation implements Serializable {
+    /**
+     * 操作定义
+     */
     private OperationDefinition definition;
+    /**
+     * 执行Operation时，提供的参数
+     */
     private Map<String, ?> parameters; // {optional}
+    /**
+     * 操作成功或失败
+     */
     private OperationResult result;
 
     public OperationDefinition getDefinition() {

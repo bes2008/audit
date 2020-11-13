@@ -17,7 +17,15 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 基于MethodInvocation 的方式来提取 参数
+ * @param <AuditedRequest> 包装的 audit request
+ * @see com.jn.audit.spring.simple.ControllerMethodInterceptor
+ */
 public class OperationParameterMethodInvocationExtractor<AuditedRequest> implements OperationParametersExtractor<AuditedRequest, MethodInvocation> {
+    /**
+     * 参数值排除
+     */
     private List<Predicate<Object>> parameterValueExclusionPredicates = Collects.<Predicate<Object>>newArrayList();
 
     public void addExclusionPredicate(Predicate<Object> predicate) {

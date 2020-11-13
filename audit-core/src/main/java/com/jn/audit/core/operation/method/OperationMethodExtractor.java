@@ -93,7 +93,7 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
         return null;
     }
 
-    public OperationDefinition findOperationDefinition(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
+    public OperationDefinition  findOperationDefinition(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
         final Method method = wrappedRequest.getRequestContext();
         // step 1: get operation definition from cache
         final Holder<OperationDefinition> operationDefinition = new Holder<OperationDefinition>(getOperationDefinitionByCachedId(method));

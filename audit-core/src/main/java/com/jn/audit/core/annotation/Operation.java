@@ -20,5 +20,7 @@ public @interface Operation {
 
     String type() default ""; //
 
+    String module() default "";
+
     Resource resourceDefinition() default @Resource();
 }
