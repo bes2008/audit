@@ -10,6 +10,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 提供多维度的 Operation Definition Parser 注册中心
+ */
 public class OperationDefinitionParserRegistry {
     private Map<Class<? extends Annotation>, OperationMethodAnnotationDefinitionParser<?>> annotationParserMap = new LinkedHashMap<Class<? extends Annotation>, OperationMethodAnnotationDefinitionParser<?>>();
     private Map<String, OperationRepositoryParser> repositoryParserMap = new LinkedHashMap<String, OperationRepositoryParser>();

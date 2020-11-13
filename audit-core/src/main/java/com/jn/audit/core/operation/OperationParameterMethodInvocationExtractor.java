@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * 基于MethodInvocation 的方式来提取 参数
  * @param <AuditedRequest> 包装的 audit request
- * @see com.jn.audit.spring.simple.ControllerMethodInterceptor
+ * @see {@literal com.jn.audit.spring.simple.ControllerMethodInterceptor}
  */
 public class OperationParameterMethodInvocationExtractor<AuditedRequest> implements OperationParametersExtractor<AuditedRequest, MethodInvocation> {
     /**
