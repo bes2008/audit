@@ -12,12 +12,12 @@
     <artifactId>audit-examples-springmvcdemo</artifactId>
 
     <properties>
-        <mybatis.version>3.5.3</mybatis.version>
-        <mybatis.spring.version>2.0.3</mybatis.spring.version>
-        <mybatis.springboot.version>2.1.1</mybatis.springboot.version>
+        <mybatis.version>3.4.0</mybatis.version>
+        <mybatis.spring.version>1.3.2</mybatis.spring.version>
+        <mybatis.springboot.version>1.3.5</mybatis.springboot.version>
         <swagger.version>2.9.2</swagger.version>
         <junit.version>4.13.1</junit.version>
-        <sqlhelper.version>3.2.5</sqlhelper.version>
+        <sqlhelper.version>3.3.0</sqlhelper.version>
     </properties>
 
     <dependencyManagement>

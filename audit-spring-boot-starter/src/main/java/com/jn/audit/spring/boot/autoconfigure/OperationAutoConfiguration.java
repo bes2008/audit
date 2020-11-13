@@ -124,7 +124,7 @@ public class OperationAutoConfiguration {
             ObjectProvider<List<OperationMethodAnnotationDefinitionParser>> methodAnnotationDefinitionParsersProvider,
             @Autowired(required = false) ObjectProvider<List<OperationRepositoryParser>> repositoryDefinitionParsersProvider
     ) {
-        OperationDefinitionParserRegistry registry = new OperationDefinitionParserRegistry();
+        final OperationDefinitionParserRegistry registry = new OperationDefinitionParserRegistry();
         Collects.forEach(methodAnnotationDefinitionParsersProvider.getObject(), new Consumer<OperationMethodAnnotationDefinitionParser>() {
             @Override
             public void accept(OperationMethodAnnotationDefinitionParser operationMethodAnnotationDefinitionParser) {

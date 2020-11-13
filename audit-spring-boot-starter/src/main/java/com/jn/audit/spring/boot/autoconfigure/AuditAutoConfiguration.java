@@ -28,7 +28,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ConditionalOnProperty(value = "auditor.enabled", havingValue = "true", matchIfMissing = true)
 @Configuration
@@ -101,7 +100,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     @ConditionalOnMissingBean(name = "auditor")
     @Autowired
     public Auditor auditor(AuditProperties auditSettings,
-                           MessageTopicDispatcher dispatcher,
+                           final MessageTopicDispatcher dispatcher,
                            AuditEventExtractor auditEventExtractor,
                            DebugConsumer debugConsumer
     ) {
