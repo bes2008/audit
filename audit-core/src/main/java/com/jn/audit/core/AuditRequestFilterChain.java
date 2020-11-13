@@ -5,6 +5,11 @@ import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
 
+/**
+ * 提供AuditRequestFilter的链式结构
+ * @param <AuditedRequest>
+ * @param <AuditedRequestContext>
+ */
 public class AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> implements AuditRequestFilter<AuditedRequest, AuditedRequestContext> {
 
     private List<AuditRequestFilter<AuditedRequest, AuditedRequestContext>> filters = Collects.newArrayList();

@@ -26,18 +26,38 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     private static Logger logger = LoggerFactory.getLogger(Auditor.class);
     public static ThreadLocalHolder<AuditRequest> auditRequestHolder = new ThreadLocalHolder<AuditRequest>();
     private static ThreadLocalHolder<CompletableFuture<Void>> asyncTaskHolder = new ThreadLocalHolder<CompletableFuture<Void>>();
+
+    /**
+     * 用于在audit event 提取之前进行过滤
+     */
     @NonNull
     private AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> beforeExtractFilterChain;
 
+    /**
+     * 用于在audit event 提取之后进行过滤
+     */
     @NonNull
     private AuditRequestFilterChain<AuditedRequest, AuditedRequestContext> afterExtractFilterChain;
 
+    /**
+     * audit event 提取器
+     */
     @NonNull
     private AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor;
+
+    /**
+     * 在finishAudit方法执行时，通过producer来把audit event 发布到响应的topic里
+     */
     @NonNull
     private Producer<AuditEvent> producer;
+    /**
+     * 用于async执行的audit
+     */
     @Nullable
     private Executor executor;
+    /**
+     * 异步执行开关
+     */
     private boolean asyncAudit = true;
 
     /**
@@ -55,6 +75,11 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     }
 
+    /**
+     * 判断request是否要进行异步审计
+     * @param request
+     * @return
+     */
     public boolean isAsyncAudit(AuditedRequest request) {
         if (asyncAudit && executor != null && request != null) {
             try {
@@ -109,6 +134,12 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         }
     }
 
+    /**
+     * 开始审计，该方法要在请求执行之前执行，内部会调用 startAsyncAudit或者 startSyncAudit
+     * @param request
+     * @param ctx
+     * @return
+     */
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         if (isAsyncAudit(request)) {
             return startAsyncAudit(request, ctx);
@@ -117,6 +148,12 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         }
     }
 
+    /**
+     * 开始审计，该方法要在请求执行之前执行
+     * @param request
+     * @param ctx
+     * @return
+     */
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAsyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = createAuditRequest(request, ctx);
         auditRequestHolder.set(wrappedRequest);
@@ -138,6 +175,12 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         return wrappedRequest;
     }
 
+    /**
+     * 开始审计，该方法要在请求执行之前执行
+     * @param request
+     * @param ctx
+     * @return
+     */
     public AuditRequest<AuditedRequest, AuditedRequestContext> startSyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = createAuditRequest(request, ctx);
         logger.warn("start sync audit {}", wrappedRequest.toString());
@@ -171,6 +214,11 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     }
 
 
+    /**
+     * 完成审计，该方法要在请求执行之后执行，该方法内部会调用finishSyncAudit或者finishAsyncAudit
+     * @param wrappedRequest
+     * @return
+     */
     public void finishAudit(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         if (isAsyncAudit(wrappedRequest.getRequest())) {
             finishAsyncAudit(wrappedRequest);
@@ -179,7 +227,11 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         }
     }
 
-
+    /**
+     * 完成审计，该方法要在请求执行之后执行
+     * @param wrappedRequest
+     * @return
+     */
     public void finishSyncAudit(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         try {
             wrappedRequest.setEndTime(System.currentTimeMillis());
@@ -192,6 +244,11 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         }
     }
 
+    /**
+     * 完成审计，该方法要在请求执行之后执行
+     * @param wrappedRequest
+     * @return
+     */
     public void finishAsyncAudit(final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         wrappedRequest.setEndTime(System.currentTimeMillis());
         logger.warn("finish sync audit {}", wrappedRequest.toString());
