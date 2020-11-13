@@ -48,10 +48,10 @@
     </licenses>
 
     <properties>
-        <langx-java.version>2.10.5</langx-java.version>
-        <easyjson.version>3.0.3</easyjson.version>
+        <langx-java.version>2.10.6</langx-java.version>
+        <easyjson.version>3.0.4</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
-        <agileway.version>2.0.0</agileway.version>
+        <agileway.version>2.0.1</agileway.version>
         <spring.version>4.3.25.RELEASE</spring.version>
         <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
         <snakeyaml.version>1.23</snakeyaml.version>
