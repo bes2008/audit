@@ -9,7 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResourcesSupplier<T> implements ValueGetter<List<T>, List<Resource>> {
-    private List<ResourceSupplier<T>> resourceSuppliers;
+    private List<ResourceSupplier<T>> resourceSuppliers = Collects.emptyArrayList();
+
+    public ResourcesSupplier() {
+    }
+
+    public ResourcesSupplier(List<ResourceSupplier<T>> resourceSuppliers) {
+        Collects.addAll(this.resourceSuppliers, resourceSuppliers);
+    }
+
+    public void addResourceSupplier(ResourceSupplier<T> supplier) {
+        resourceSuppliers.add(supplier);
+    }
 
     @Override
     public List<Resource> get(final List<T> args) {
