@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 基于langx-java : configuration API 提供的一套 OperationDefinition Repository API
+ */
 public class OperationDefinitionRepository extends AbstractConfigurationRepository<OperationDefinition, OperationDefinitionLoader, ConfigurationWriter<OperationDefinition>> {
     /**
      * key: OperationImportance#getKey()

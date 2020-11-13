@@ -24,6 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 基于YAML文件方式配置 Operation Definition
+ */
 public class YamlOperationDefinitionLoader implements OperationDefinitionLoader {
     private static final Logger logger = LoggerFactory.getLogger(YamlOperationDefinitionLoader.class);
     private String definitionFilePath;
