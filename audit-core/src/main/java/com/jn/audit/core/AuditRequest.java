@@ -3,14 +3,44 @@ package com.jn.audit.core;
 import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.core.model.OperationResult;
 
+/**
+ * 对真实请求的封装。
+ * @param <AuditedRequest>
+ * @param <AuditedRequestContext>
+ */
 public class AuditRequest<AuditedRequest, AuditedRequestContext> {
+    /**
+     * 某个请求的对应的event
+     */
     private AuditEvent auditEvent;
+    /**
+     * 审计请求，可以HttpRequest，也可以是方法调用
+     */
     private AuditedRequest request;
+    /**
+     * 请求上下文
+     */
     private AuditedRequestContext requestContext;
+    /**
+     * 控制该Request是否需要审计
+     */
     private boolean auditIt = true;
+    /**
+     * 请求开始时间，单位 mills
+     */
     private long startTime;
+    /**
+     * 请求结束时间，单位 mills
+     */
     private long endTime;
+    /**
+     * 该请求对应的event 最终会发到哪个topic里
+     */
     private String topic;
+
+    /**
+     * 请求执行的结果
+     */
     private OperationResult result;
 
     public String getTopic() {

@@ -15,6 +15,7 @@ import com.jn.langx.util.concurrent.WrappedTasks;
 import com.jn.langx.util.concurrent.completion.CompletableFuture;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Function2;
+import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.ThreadLocalHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,10 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     @Nullable
     private Executor executor;
     private boolean asyncAudit = true;
+
+    /**
+     * 用于创建自定义的AuditRequest 对象
+     */
     private Function2<AuditedRequest, AuditedRequestContext, AuditRequest<AuditedRequest, AuditedRequestContext>> auditRequestFactory;
 
     @Override
@@ -54,7 +59,12 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         if (asyncAudit && executor != null && request != null) {
             try {
                 Class httpServletRequest = ClassLoaders.loadClass("javax.servlet.http.HttpServletRequest", request.getClass().getClassLoader());
-                return httpServletRequest == null;
+                if (httpServletRequest != null) {
+                    if (Reflects.isSubClassOrEquals(httpServletRequest, request.getClass())) {
+                        return false;
+                    }
+                }
+                return true;
             } catch (ClassNotFoundException ex) {
                 return true;
             }
