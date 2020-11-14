@@ -4,7 +4,7 @@ import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.Auditor;
 import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.core.model.Resource;
-import com.jn.audit.core.operation.OperationParameterMethodInvocationExtractor;
+import com.jn.audit.core.operation.method.OperationParameterMethodInvocationExtractor;
 import com.jn.audit.core.resource.ResourceMethodInvocationExtractor;
 import com.jn.langx.proxy.aop.DefaultMethodInvocation;
 import com.jn.langx.util.function.Predicate;
