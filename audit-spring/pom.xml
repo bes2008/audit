@@ -25,6 +25,16 @@
             <groupId>com.github.fangjinuo.audit</groupId>
             <artifactId>audit-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-web</artifactId>
+            <version>${agileway.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-aop</artifactId>
+            <version>${agileway.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>

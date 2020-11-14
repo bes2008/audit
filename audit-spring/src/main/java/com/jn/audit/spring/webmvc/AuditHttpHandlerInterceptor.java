@@ -21,11 +21,10 @@ import java.lang.reflect.Method;
  * 大家通常使用他们来进行全局的返回值、异常处理等。
  * 这就导致了最终的 OperationResult 可能会获取的不准确，具体是来说是不能根据 http response status 进行最后的判断。
  * 2) 任意方法拦截器，是不一定能拿到 HttpServletRequest的，对于Web请求，必须要拿到HttpServletRequest对象才能进行其他数据的提取。
- *
- *
+ * <p>
+ * <p>
  * 但是这里作为入口，有一个不足：这里取不到运行时参数，因为这里调用时，Spring还没有组装运行时参数。
  * 所以需要一个AOP method interceptor来配合。例如 ControllerMethodInterceptor。
- *
  */
 public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
     /**
