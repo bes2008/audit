@@ -11,6 +11,7 @@ import com.jn.audit.spring.webmvc.RequestMappingOperationDefinitionIdGenerator;
 import com.jn.langx.cache.Cache;
 import com.jn.langx.cache.CacheBuilder;
 import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.function.Consumer;
@@ -135,7 +136,7 @@ public class OperationAutoConfiguration {
     @Order(3)
     @Bean
     @ConditionalOnWebApplication
-    public OperationIdGenerator<HttpServletRequest, Method> urlOperationDefinitionIdGenerator() {
+    public OperationIdGenerator<HttpServletRequest, MethodInvocation> urlOperationDefinitionIdGenerator() {
         return new ServletUrlOperationIdGenerator();
     }
 
@@ -143,7 +144,7 @@ public class OperationAutoConfiguration {
     @Order(2)
     @Bean
     @ConditionalOnWebApplication
-    public OperationIdGenerator<HttpServletRequest, Method> requestMappingOperationDefinitionIdGenerator() {
+    public OperationIdGenerator<HttpServletRequest, MethodInvocation> requestMappingOperationDefinitionIdGenerator() {
         return new RequestMappingOperationDefinitionIdGenerator();
     }
 }

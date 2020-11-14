@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 import java.util.List;
 
 @ConditionalOnProperty(value = "auditor.enabled", havingValue = "true", matchIfMissing = true)
