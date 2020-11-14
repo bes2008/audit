@@ -26,7 +26,7 @@ import java.util.Map;
  *      execution(public * your.controller.package..*Controller.*(..))
  * </pre>
  */
-public class ControllerMethodInterceptor implements MethodInterceptor, InitializingBean {
+public class GenericMethodInterceptor implements MethodInterceptor, InitializingBean {
     private OperationParameterMethodInvocationExtractor operationParameterExtractor;
     private ResourceMethodInvocationExtractor resourceExtractor;
 

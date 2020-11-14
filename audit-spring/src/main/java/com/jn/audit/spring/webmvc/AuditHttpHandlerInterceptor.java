@@ -37,16 +37,10 @@ public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
      */
     private static final String SPRING_BOOT_WEBFLUX_ERROR_ATTRIBUTE = "org.springframework.boot.web.reactive.error.DefaultErrorAttributes.ERROR";
 
-    @Autowired
     private Auditor<HttpServletRequest, Method> auditor;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (handler instanceof HandlerMethod) {
-            HandlerMethod handlerMethod = (HandlerMethod) handler;
-            Method method = handlerMethod.getMethod();
-            auditor.startAudit(request, method);
-        }
         return true;
     }
 
@@ -77,5 +71,10 @@ public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
                 auditor.finishAudit(wrappedRequest);
             }
         }
+    }
+
+    @Autowired
+    public void setAuditor(Auditor<HttpServletRequest, Method> auditor) {
+        this.auditor = auditor;
     }
 }
