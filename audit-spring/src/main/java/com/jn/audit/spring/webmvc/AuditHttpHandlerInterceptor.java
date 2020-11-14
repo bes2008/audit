@@ -50,7 +50,12 @@ public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
                 if (ex != null) {
                     result = OperationResult.FAIL;
                 } else {
-                    result = request.getAttribute(SPRING_BOOT_WEBMVC_ERROR_ATTRIBUTE) == null ? OperationResult.SUCCESS : OperationResult.FAIL;
+                    Object errorObj = request.getAttribute(SPRING_BOOT_WEBMVC_ERROR_ATTRIBUTE);
+                    if (errorObj == null && response.getStatus() < 400) {
+                        result = OperationResult.SUCCESS;
+                    } else {
+                        result = OperationResult.FAIL;
+                    }
                 }
                 wrappedRequest.setResult(result);
                 auditor.finishAudit(wrappedRequest);
