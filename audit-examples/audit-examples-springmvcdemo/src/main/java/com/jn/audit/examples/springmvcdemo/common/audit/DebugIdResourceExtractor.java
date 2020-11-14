@@ -5,7 +5,7 @@ import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.AbstractIdResourceExtractor;
 import com.jn.audit.examples.springmvcdemo.common.dao.UserDao;
 import com.jn.audit.examples.springmvcdemo.common.model.User;
-import com.jn.langx.proxy.aop.MethodInvocation;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 

@@ -5,15 +5,16 @@ import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.Principal;
 import com.jn.audit.core.model.PrincipalType;
 import com.jn.audit.core.model.Service;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
-public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<HttpServletRequest, Method> {
+public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<HttpServletRequest, MethodInvocation> {
 
     @Override
-    public Service extractService(AuditRequest<HttpServletRequest, Method> wrappedRequest) {
+    public Service extractService(AuditRequest<HttpServletRequest, MethodInvocation> wrappedRequest) {
         HttpServletRequest request = wrappedRequest.getRequest();
         Service service = new Service();
         service.setServicePort(request.getLocalPort());
@@ -31,7 +32,7 @@ public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<Http
     }
 
     @Override
-    public Principal extractPrincipal(AuditRequest<HttpServletRequest, Method> wrappedRequest) {
+    public Principal extractPrincipal(AuditRequest<HttpServletRequest, MethodInvocation> wrappedRequest) {
         HttpServletRequest request = wrappedRequest.getRequest();
         Principal principal = new Principal();
         principal.setClientHost(request.getRemoteHost());

@@ -2,6 +2,7 @@ package com.jn.audit.servlet;
 
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.operation.OperationParametersExtractor;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Objects;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
@@ -14,11 +15,11 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ServletHttpParametersExtractor implements OperationParametersExtractor<HttpServletRequest, Method> {
+public class ServletHttpParametersExtractor implements OperationParametersExtractor<HttpServletRequest, MethodInvocation> {
     private String encoding = Charsets.UTF_8.name();
 
     @Override
-    public Map<String, Object> get(AuditRequest<HttpServletRequest, Method> wrappedRequest) {
+    public Map<String, Object> get(AuditRequest<HttpServletRequest, MethodInvocation> wrappedRequest) {
         HttpServletRequest request = wrappedRequest.getRequest();
         try {
             request.setCharacterEncoding(encoding);

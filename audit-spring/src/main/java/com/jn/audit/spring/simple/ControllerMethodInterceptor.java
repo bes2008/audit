@@ -6,7 +6,7 @@ import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.operation.method.OperationParameterMethodInvocationExtractor;
 import com.jn.audit.core.resource.ResourceMethodInvocationExtractor;
-import com.jn.langx.proxy.aop.DefaultMethodInvocation;
+import com.jn.langx.invocation.aop.AopMethodInvocation;
 import com.jn.langx.util.function.Predicate;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -36,7 +36,7 @@ public class ControllerMethodInterceptor implements MethodInterceptor, Initializ
         if (request != null) {
             AuditEvent event = request.getAuditEvent();
             if (event != null && request.isAuditIt()) {
-                DefaultMethodInvocation commonMethodInvocation = new DefaultMethodInvocation(invocation.getThis(), invocation.getThis(), invocation.getMethod(), invocation.getArguments());
+                AopMethodInvocation commonMethodInvocation = new AopMethodInvocation(invocation.getThis(), invocation.getThis(), invocation.getMethod(), invocation.getArguments());
                 AuditRequest newRequest = new AuditRequest();
                 newRequest.setRequestContext(commonMethodInvocation);
                 newRequest.setRequest(request.getRequest());

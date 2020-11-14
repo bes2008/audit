@@ -6,7 +6,7 @@ import com.jn.audit.core.model.*;
 import com.jn.audit.core.resource.parser.clazz.CustomNamedEntityResourceSupplierParser;
 import com.jn.audit.core.resource.parser.parameter.*;
 import com.jn.langx.annotation.NonNull;
-import com.jn.langx.proxy.aop.MethodInvocation;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;

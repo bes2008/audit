@@ -7,11 +7,12 @@ import com.jn.audit.core.filter.MethodAuditAnnotationFilter;
 import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.OperationParametersExtractor;
-import com.jn.audit.core.operation.method.OperationMethodExtractor;
+import com.jn.audit.core.operation.method.OperationMethodInvocationExtractor;
 import com.jn.audit.servlet.ServletAuditEventExtractor;
 import com.jn.audit.servlet.ServletAuditRequest;
 import com.jn.audit.servlet.ServletHttpParametersExtractor;
 import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.function.Function2;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
@@ -49,16 +50,16 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     @ConditionalOnWebApplication
     @Bean(name = "operationMethodExtractor")
     @ConditionalOnMissingBean(name = {"operationMethodExtractor"})
-    public OperationMethodExtractor<HttpServletRequest> operationMethodExtractor(
+    public OperationMethodInvocationExtractor<HttpServletRequest> operationMethodExtractor(
             @Autowired @Qualifier("multipleLevelOperationDefinitionRepository")
                     MultipleLevelConfigurationRepository multipleLevelConfigurationRepository,
-            ObjectProvider<List<OperationIdGenerator<HttpServletRequest, Method>>> operationIdGenerators,
+            ObjectProvider<List<OperationIdGenerator<HttpServletRequest, MethodInvocation>>> operationIdGenerators,
             @Autowired @Qualifier("servletHttpParametersExtractor")
-                    OperationParametersExtractor<HttpServletRequest, Method> httpOperationParametersExtractor,
+                    OperationParametersExtractor<HttpServletRequest, MethodInvocation> httpOperationParametersExtractor,
             @Autowired @Qualifier("operationDefinitionParserRegistry")
                     OperationDefinitionParserRegistry definitionParserRegistry
     ) {
-        OperationMethodExtractor<HttpServletRequest> operationExtractor = new OperationMethodExtractor<>();
+        OperationMethodInvocationExtractor<HttpServletRequest> operationExtractor = new OperationMethodInvocationExtractor<HttpServletRequest>();
         operationExtractor.setOperationDefinitionRepository(multipleLevelConfigurationRepository);
         operationExtractor.setOperationIdGenerators(operationIdGenerators.getObject());
         operationExtractor.setOperationParametersExtractor(httpOperationParametersExtractor);
@@ -71,7 +72,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     @ConditionalOnMissingBean(name = {"servletAuditEventExtractor"})
     public ServletAuditEventExtractor servletAuditEventExtractor(
             @Autowired @Qualifier("operationMethodExtractor")
-                    OperationMethodExtractor<HttpServletRequest> operationMethodExtractor) {
+                    OperationMethodInvocationExtractor<HttpServletRequest> operationMethodExtractor) {
         ServletAuditEventExtractor auditEventExtractor = new ServletAuditEventExtractor();
         auditEventExtractor.setOperationExtractor(operationMethodExtractor);
         return auditEventExtractor;
@@ -80,10 +81,10 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     @ConditionalOnWebApplication
     @Bean(name = "auditRequestFactory")
     @ConditionalOnMissingBean(name = "auditRequestFactory")
-    public Function2<HttpServletRequest, Method, ServletAuditRequest> servletAuditRequestFactory() {
-        return new Function2<HttpServletRequest, Method, ServletAuditRequest>() {
+    public Function2<HttpServletRequest, MethodInvocation, ServletAuditRequest> servletAuditRequestFactory() {
+        return new Function2<HttpServletRequest, MethodInvocation, ServletAuditRequest>() {
             @Override
-            public ServletAuditRequest apply(HttpServletRequest request, Method method) {
+            public ServletAuditRequest apply(HttpServletRequest request, MethodInvocation method) {
                 return new ServletAuditRequest(request, method);
             }
         };

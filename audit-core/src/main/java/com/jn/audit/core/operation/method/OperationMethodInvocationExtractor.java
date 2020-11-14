@@ -12,6 +12,7 @@ import com.jn.langx.cache.CacheBuilder;
 import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -41,7 +42,7 @@ import java.util.Map;
  *
  * @param <AuditedRequest>
  */
-public class OperationMethodExtractor<AuditedRequest> implements OperationExtractor<AuditedRequest, Method>, Initializable {
+public class OperationMethodInvocationExtractor<AuditedRequest> implements OperationExtractor<AuditedRequest, MethodInvocation>, Initializable {
     private volatile boolean inited = false;
     /**
      * value: operation definition id
@@ -50,13 +51,13 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
 
     private OperationDefinitionParserRegistry operationParserRegistry;
 
-    private List<OperationIdGenerator<AuditedRequest, Method>> operationIdGenerators;
+    private List<OperationIdGenerator<AuditedRequest, MethodInvocation>> operationIdGenerators;
 
     private MultipleLevelConfigurationRepository operationDefinitionRepository;
 
-    private OperationParametersExtractor<AuditedRequest, Method> operationParametersExtractor;
+    private OperationParametersExtractor<AuditedRequest, MethodInvocation> operationParametersExtractor;
 
-    private Map<String, Object> extractOperationParameters(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
+    private Map<String, Object> extractOperationParameters(final AuditRequest<AuditedRequest, MethodInvocation> wrappedRequest) {
         return Emptys.isNull(operationParametersExtractor) ? null : operationParametersExtractor.get(wrappedRequest);
     }
 
@@ -73,7 +74,7 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
     }
 
     @Override
-    public Operation get(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
+    public Operation get(final AuditRequest<AuditedRequest, MethodInvocation> wrappedRequest) {
         if (!inited) {
             init();
         }
@@ -93,8 +94,9 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
         return null;
     }
 
-    public OperationDefinition  findOperationDefinition(final AuditRequest<AuditedRequest, Method> wrappedRequest) {
-        final Method method = wrappedRequest.getRequestContext();
+    public OperationDefinition findOperationDefinition(final AuditRequest<AuditedRequest, MethodInvocation> wrappedRequest) {
+        MethodInvocation methodInvocation = wrappedRequest.getRequestContext();
+        final Method method = methodInvocation.getJoinPoint();
         // step 1: get operation definition from cache
         final Holder<OperationDefinition> operationDefinition = new Holder<OperationDefinition>(getOperationDefinitionByCachedId(method));
 
@@ -121,15 +123,15 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
             // 2.2) parse from configuration file
             if (operationDefinition.isNull()) {
                 // 2.2.1 using custom operation id generator
-                Collects.forEach(operationIdGenerators, new Consumer<OperationIdGenerator<AuditedRequest, Method>>() {
+                Collects.forEach(operationIdGenerators, new Consumer<OperationIdGenerator<AuditedRequest, MethodInvocation>>() {
                     @Override
-                    public void accept(OperationIdGenerator<AuditedRequest, Method> generator) {
+                    public void accept(OperationIdGenerator<AuditedRequest, MethodInvocation> generator) {
                         String operationDefinitionId = generator.get(wrappedRequest);
                         operationDefinition.set((OperationDefinition) operationDefinitionRepository.getById(operationDefinitionId));
                     }
-                }, new Predicate<OperationIdGenerator<AuditedRequest, Method>>() {
+                }, new Predicate<OperationIdGenerator<AuditedRequest, MethodInvocation>>() {
                     @Override
-                    public boolean test(OperationIdGenerator<AuditedRequest, Method> value) {
+                    public boolean test(OperationIdGenerator<AuditedRequest, MethodInvocation> value) {
                         return !operationDefinition.isNull();
                     }
                 });
@@ -172,24 +174,24 @@ public class OperationMethodExtractor<AuditedRequest> implements OperationExtrac
         this.operationParserRegistry = operationParserRegistry;
     }
 
-    public List<OperationIdGenerator<AuditedRequest, Method>> getOperationIdGenerators() {
+    public List<OperationIdGenerator<AuditedRequest, MethodInvocation>> getOperationIdGenerators() {
         return operationIdGenerators;
     }
 
-    public void setOperationIdGenerators(List<OperationIdGenerator<AuditedRequest, Method>> operationIdGenerators) {
+    public void setOperationIdGenerators(List<OperationIdGenerator<AuditedRequest, MethodInvocation>> operationIdGenerators) {
         this.operationIdGenerators = operationIdGenerators;
     }
 
-    public void addOperationIdGenerator(OperationIdGenerator<AuditedRequest, Method> generator) {
+    public void addOperationIdGenerator(OperationIdGenerator<AuditedRequest, MethodInvocation> generator) {
         this.operationIdGenerators.add(generator);
     }
 
 
-    public OperationParametersExtractor<AuditedRequest, Method> getOperationParametersExtractor() {
+    public OperationParametersExtractor<AuditedRequest, MethodInvocation> getOperationParametersExtractor() {
         return operationParametersExtractor;
     }
 
-    public void setOperationParametersExtractor(OperationParametersExtractor<AuditedRequest, Method> operationParametersExtractor) {
+    public void setOperationParametersExtractor(OperationParametersExtractor<AuditedRequest, MethodInvocation> operationParametersExtractor) {
         this.operationParametersExtractor = operationParametersExtractor;
     }
 
