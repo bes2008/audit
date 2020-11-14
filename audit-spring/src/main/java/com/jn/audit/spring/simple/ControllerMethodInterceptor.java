@@ -35,7 +35,7 @@ public class ControllerMethodInterceptor implements MethodInterceptor, Initializ
         AuditRequest request = Auditor.auditRequestHolder.get();
         if (request != null) {
             AuditEvent event = request.getAuditEvent();
-            if (event != null) {
+            if (event != null && request.isAuditIt()) {
                 DefaultMethodInvocation commonMethodInvocation = new DefaultMethodInvocation(invocation.getThis(), invocation.getThis(), invocation.getMethod(), invocation.getArguments());
                 AuditRequest newRequest = new AuditRequest();
                 newRequest.setRequestContext(commonMethodInvocation);
