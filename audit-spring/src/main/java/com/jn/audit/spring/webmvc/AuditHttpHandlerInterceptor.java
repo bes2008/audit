@@ -12,6 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
+/**
+ * 实际情况下，我们应该是去拦截 method invocation，也就是我们应该使用普通的 AOP method interceptor，
+ * 但是这里为啥是采用了HttpInterceptor了呢？
+ * <p>
+ * 原因：
+ * Spring里有 @ControllerAdvice，@RestControllerAdvice
+ * 大家通常使用他们来进行全局的返回值、异常处理等。
+ * 这就导致了最终的 OperationResult 可能会获取的不准确，具体是来说是不能根据 http response status 进行最后的判断。
+ *
+ *
+ * 但是这里作为入口，有一个不足：这里取不到运行时参数，因为这里调用时，Spring还没有组装运行时参数。
+ * 所以需要一个AOP method interceptor来配合。例如 ControllerMethodInterceptor。
+ *
+ */
 public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
     /**
      * Spring Boot WebMvc 环境下，会将 error 放到 request.attributes中
@@ -46,15 +60,17 @@ public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             AuditRequest<HttpServletRequest, Method> wrappedRequest = Auditor.auditRequestHolder.get();
             if (wrappedRequest != null) {
-                OperationResult result = null;
-                if (ex != null) {
-                    result = OperationResult.FAIL;
-                } else {
-                    Object errorObj = request.getAttribute(SPRING_BOOT_WEBMVC_ERROR_ATTRIBUTE);
-                    if (errorObj == null && response.getStatus() < 400) {
-                        result = OperationResult.SUCCESS;
-                    } else {
+                OperationResult result = wrappedRequest.getResult();
+                if (result == null) {
+                    if (ex != null) {
                         result = OperationResult.FAIL;
+                    } else {
+                        Object errorObj = request.getAttribute(SPRING_BOOT_WEBMVC_ERROR_ATTRIBUTE);
+                        if (errorObj == null && response.getStatus() < 400) {
+                            result = OperationResult.SUCCESS;
+                        } else {
+                            result = OperationResult.FAIL;
+                        }
                     }
                 }
                 wrappedRequest.setResult(result);
