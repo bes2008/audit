@@ -3,6 +3,7 @@ package com.jn.audit.core.resource;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.annotation.ResourceId;
 import com.jn.audit.core.model.*;
+import com.jn.audit.core.resource.idresource.AbstractIdResourceExtractor;
 import com.jn.audit.core.resource.parser.clazz.CustomNamedEntityResourceSupplierParser;
 import com.jn.audit.core.resource.parser.parameter.*;
 import com.jn.langx.annotation.NonNull;
@@ -139,7 +140,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                 }).asList();
 
                 // 通常应该在 数据访问层执行下面的代码，例如mybatis 通用的 service 层
-                List<Resource> resourceList = idResourceExtractor.findResources(wrappedRequest.getRequest(), ids);
+                List<Resource> resourceList = idResourceExtractor.findResources(wrappedRequest, ids);
                 resourceList = Pipeline.of(resourceList).filter(new Predicate<Resource>() {
                     @Override
                     public boolean test(Resource resource) {

@@ -1,7 +1,8 @@
-package com.jn.audit.core.resource;
+package com.jn.audit.core.resource.idresource;
 
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.Resource;
+import com.jn.audit.core.resource.ResourceExtractor;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 
@@ -12,16 +13,16 @@ public abstract class AbstractIdResourceExtractor<E, AuditedRequest, AuditedRequ
 
     public abstract List<Serializable> findIds(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest);
 
-    public abstract List<E> findEntities(List<Serializable> ids);
+    public abstract List<E> findEntities(AuditRequest<AuditedRequest, AuditedRequestContext> request, List<Serializable> ids);
 
     @Override
     public List<Resource> get(final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         List<Serializable> ids = findIds(wrappedRequest);
-        return findResources(wrappedRequest.getRequest(), ids);
+        return findResources(wrappedRequest, ids);
     }
 
-    public List<Resource> findResources(final AuditedRequest request, List<Serializable> ids) {
-        List<E> entities = findEntities(ids);
+    public List<Resource> findResources(final AuditRequest<AuditedRequest, AuditedRequestContext> request, List<Serializable> ids) {
+        List<E> entities = findEntities(request, ids);
         return Pipeline.<E>of(entities).map(new Function<E, Resource>() {
             @Override
             public Resource apply(E e) {
@@ -30,5 +31,5 @@ public abstract class AbstractIdResourceExtractor<E, AuditedRequest, AuditedRequ
         }).asList();
     }
 
-    public abstract Resource extractResource(AuditedRequest request, E entity);
+    public abstract Resource extractResource(AuditRequest<AuditedRequest, AuditedRequestContext> request, E entity);
 }

@@ -2,7 +2,7 @@ package com.jn.audit.examples.springmvcdemo.common.audit;
 
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.Resource;
-import com.jn.audit.core.resource.AbstractIdResourceExtractor;
+import com.jn.audit.core.resource.idresource.AbstractIdResourceExtractor;
 import com.jn.audit.examples.springmvcdemo.common.dao.UserDao;
 import com.jn.audit.examples.springmvcdemo.common.model.User;
 import com.jn.langx.invocation.MethodInvocation;
@@ -23,7 +23,7 @@ public class DebugIdResourceExtractor extends AbstractIdResourceExtractor<User, 
     private UserDao userDao;
 
     @Override
-    public List<User> findEntities(List<Serializable> ids) {
+    public List<User> findEntities(final AuditRequest<HttpServletRequest, MethodInvocation> wrappedRequest, List<Serializable> ids) {
         final List<User> users = new ArrayList<>();
         Collects.forEach(ids, new Consumer<Serializable>() {
             @Override
@@ -38,9 +38,10 @@ public class DebugIdResourceExtractor extends AbstractIdResourceExtractor<User, 
     }
 
     @Override
-    public Resource extractResource(HttpServletRequest httpServletRequest, User user) {
+    public Resource extractResource(AuditRequest<HttpServletRequest, MethodInvocation> request, User user) {
         Resource resource = new Resource();
         resource.setResourceId(user.getId());
         return null;
     }
+
 }
