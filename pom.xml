@@ -63,6 +63,8 @@
         <module>audit-servlet</module>
         <module>audit-spring-boot-starter</module>
         <module>audit-examples</module>
+        <module>audit-entityloader</module>
+
     </modules>
     <dependencyManagement>
         <dependencies>
