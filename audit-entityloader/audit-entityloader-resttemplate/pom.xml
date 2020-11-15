@@ -11,5 +11,11 @@
 
     <artifactId>audit-entityloader-resttemplate</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.fangjinuo.audit</groupId>
+            <artifactId>audit-core</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
