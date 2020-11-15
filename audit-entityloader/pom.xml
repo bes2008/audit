@@ -16,5 +16,6 @@
     <modules>
         <module>audit-entityloader-mybatis</module>
         <module>audit-entityloader-esmvc</module>
+        <module>audit-entityloader-rest</module>
     </modules>
 </project>
