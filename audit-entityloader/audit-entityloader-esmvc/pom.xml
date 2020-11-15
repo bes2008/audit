@@ -11,5 +11,18 @@
 
     <artifactId>audit-entityloader-esmvc</artifactId>
 
-
+    <properties>
+        <esmvc.version>1.2.4</esmvc.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.fangjinuo.audit</groupId>
+            <artifactId>audit-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.esmvc</groupId>
+            <artifactId>esmvc-service</artifactId>
+            <version>${esmvc.version}</version>
+        </dependency>
+    </dependencies>
 </project>
