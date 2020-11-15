@@ -11,5 +11,15 @@
 
     <artifactId>audit-entityloader-mybatis</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.audit</groupId>
+            <artifactId>audit-core</artifactId>
+        </dependency>
+    </dependencies>
 </project>
