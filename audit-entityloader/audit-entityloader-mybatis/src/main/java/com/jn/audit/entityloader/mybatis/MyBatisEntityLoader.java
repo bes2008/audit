@@ -8,12 +8,15 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class MyBatisEntityLoader implements EntityLoader<Object> {
-
+    private static final Logger logger = LoggerFactory.getLogger(MyBatisEntityLoader.class);
+    private static final String STATEMENT_ID_FQN = "statementIdFQN";
     private String name = "mybatis";
     private SqlSessionFactory sessionFactory;
 
@@ -34,8 +37,8 @@ public class MyBatisEntityLoader implements EntityLoader<Object> {
             return null;
         }
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
-        String statementIdFQN = mapAccessor.getString("statementIdFQN");
-        Preconditions.checkNotNull(statementIdFQN, "the mybatis statement id is null");
+        String statementIdFQN = mapAccessor.getString(STATEMENT_ID_FQN);
+        Preconditions.checkNotEmpty(statementIdFQN, "the {} is undefined in the resource definition", STATEMENT_ID_FQN);
         if (ids.size() == 1) {
             SqlSession session = sessionFactory.openSession();
             try {
