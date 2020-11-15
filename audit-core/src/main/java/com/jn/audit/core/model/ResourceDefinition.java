@@ -36,7 +36,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
     public static final ResourceDefinition DEFAULT_DEFINITION = getDefaultResourceDefinition();
 
     private static final ResourceDefinition getDefaultResourceDefinition() {
-        return new ResourceDefinition(Collects.<String,Object>emptyHashMap());
+        return new ResourceDefinition(Collects.<String, Object>emptyHashMap());
     }
 
     public ResourceDefinition() {
@@ -106,5 +106,17 @@ public class ResourceDefinition extends HashMap<String, Object> {
     @Override
     public String toString() {
         return JSONBuilderProvider.simplest().toJson(this);
+    }
+
+    public void setEntityLoader(String entityLoaderKey) {
+        accessor.set(Resource.RESOURCE_LOADER, entityLoaderKey);
+    }
+
+    public String getEntityLoader(){
+        return accessor.getString(Resource.RESOURCE_LOADER);
+    }
+
+    public MapAccessor getDefinitionAccessor() {
+        return accessor;
     }
 }

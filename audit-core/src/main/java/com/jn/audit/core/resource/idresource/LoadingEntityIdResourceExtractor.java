@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestContext> extends AbstractIdResourceExtractor<E, AuditedRequest, AuditedRequestContext> {
 
-    private ConcurrentHashMap<Class, Holder<EntityResourceSupplier<E>>> entityResourceSupplierMap = new ConcurrentHashMap<Class, Holder<EntityResourceSupplier<E>>>();
+    private final ConcurrentHashMap<Class, Holder<EntityResourceSupplier<E>>> entityResourceSupplierMap = new ConcurrentHashMap<Class, Holder<EntityResourceSupplier<E>>>();
 
     private DefaultEntityClassResourceSupplierParser parser = DefaultEntityClassResourceSupplierParser.DEFAULT_INSTANCE;
 
@@ -26,7 +26,7 @@ public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestC
 
     @Override
     public List<E> findEntities(AuditRequest<AuditedRequest, AuditedRequestContext> request, List<Serializable> ids) {
-        return entityLoader.load(ids);
+        return entityLoader.load(request.getAuditEvent().getOperation().getDefinition().getResourceDefinition(), ids);
     }
 
     @Override
@@ -56,4 +56,19 @@ public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestC
         return supplier.get().get(entity);
     }
 
+    public EntityLoader getEntityLoader() {
+        return entityLoader;
+    }
+
+    public void setEntityLoader(EntityLoader entityLoader) {
+        this.entityLoader = entityLoader;
+    }
+
+    public DefaultEntityClassResourceSupplierParser getParser() {
+        return parser;
+    }
+
+    public void setParser(DefaultEntityClassResourceSupplierParser parser) {
+        this.parser = parser;
+    }
 }

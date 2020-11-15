@@ -11,6 +11,7 @@ public class Resource extends HashMap<String, Object> implements Serializable {
     public static final String RESOURCE_TYPE_DEFAULT_KEY = "type";
     public static final String RESOURCE_NAME = "resourceName";
     public static final String RESOURCE_NAME_DEFAULT_KEY = "name";
+    public static final String RESOURCE_LOADER = "entityLoader";
 
     public String getResourceId() {
         Object resourceId = get(RESOURCE_ID);
