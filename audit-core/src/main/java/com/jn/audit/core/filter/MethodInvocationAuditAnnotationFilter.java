@@ -3,6 +3,7 @@ package com.jn.audit.core.filter;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.AuditRequestFilter;
 import com.jn.audit.core.annotation.Audit;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.collection.ConcurrentReferenceHashMap;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.reference.ReferenceType;
@@ -15,13 +16,14 @@ import java.lang.reflect.Method;
  *
  * @param <AuditedRequest>
  */
-public class MethodAuditAnnotationFilter<AuditedRequest> implements AuditRequestFilter<AuditedRequest, Method> {
+public class MethodInvocationAuditAnnotationFilter<AuditedRequest> implements AuditRequestFilter<AuditedRequest, MethodInvocation> {
     private boolean auditIfAnnotationNotExists = true;
     private ConcurrentReferenceHashMap<Method, Boolean> cache = new ConcurrentReferenceHashMap<Method, Boolean>(100, 0.75f, Runtime.getRuntime().availableProcessors(), ReferenceType.SOFT, ReferenceType.STRONG);
 
     @Override
-    public boolean accept(AuditRequest<AuditedRequest, Method> wrappedRequest) {
-        Method method = wrappedRequest.getRequestContext();
+    public boolean accept(AuditRequest<AuditedRequest, MethodInvocation> wrappedRequest) {
+        MethodInvocation invocation = wrappedRequest.getRequestContext();
+        Method method = invocation.getJoinPoint();
         Boolean auditIt = cache.get(method);
         if (auditIt == null) {
             auditIt = compute(method);

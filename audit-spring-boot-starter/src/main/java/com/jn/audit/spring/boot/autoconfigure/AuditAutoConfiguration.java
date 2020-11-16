@@ -2,9 +2,10 @@ package com.jn.audit.spring.boot.autoconfigure;
 
 import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
 import com.jn.agileway.dmmq.core.consumer.DebugConsumer;
+import com.jn.agileway.web.filter.rr.RRHolder;
 import com.jn.audit.core.*;
 import com.jn.audit.core.auditing.aop.AuditMethodInterceptor;
-import com.jn.audit.core.filter.MethodAuditAnnotationFilter;
+import com.jn.audit.core.filter.MethodInvocationAuditAnnotationFilter;
 import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.OperationParametersExtractor;
@@ -21,6 +22,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -118,7 +120,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
 
             @Override
             protected void initBeforeFilterChain(AuditRequestFilterChain chain, AuditSettings settings) {
-                chain.addFilter(new MethodAuditAnnotationFilter<>());
+                chain.addFilter(new MethodInvocationAuditAnnotationFilter<>());
             }
 
             @Override
@@ -142,15 +144,19 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
         return new MessageTopicDispatcher();
     }
 
+    @Value("${audit.lazyFinishMode:true}")
+    private boolean lazyFinishMode = false;
+
     @Bean
     @Autowired
     public AuditMethodInterceptor auditMethodInterceptor(final Auditor auditor) {
         AuditMethodInterceptor interceptor = new AuditMethodInterceptor();
         interceptor.setAuditor(auditor);
+        interceptor.setLazyFinish(lazyFinishMode);
         interceptor.setThreadLocalFactory(new ThreadLocalFactory(new Factory() {
             @Override
             public Object get(Object o) {
-                return Auditor.auditRequestHolder.get();
+                return RRHolder.getRequest();
             }
         }));
         return interceptor;

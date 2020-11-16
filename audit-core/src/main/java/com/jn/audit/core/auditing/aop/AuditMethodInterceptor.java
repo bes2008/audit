@@ -19,11 +19,11 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
     @NonNull
     private Auditor auditor;
     @NonNull
-    private ThreadLocalFactory<Object, REQUEST> threadLocalFactory;
+    private ThreadLocalFactory<MethodInvocation, REQUEST> threadLocalFactory;
 
     @Override
     public Object intercept(MethodInvocation invocation) throws Throwable {
-        REQUEST request = threadLocalFactory.get();
+        REQUEST request = threadLocalFactory.get(invocation);
         // 存在审计请求时，则进行审计
         if (request != null) {
             Object ret = null;
@@ -61,11 +61,11 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
         }
     }
 
-    public ThreadLocalFactory<Object, REQUEST> getThreadLocalFactory() {
+    public ThreadLocalFactory<MethodInvocation, REQUEST> getThreadLocalFactory() {
         return threadLocalFactory;
     }
 
-    public void setThreadLocalFactory(ThreadLocalFactory<Object, REQUEST> threadLocalFactory) {
+    public void setThreadLocalFactory(ThreadLocalFactory<MethodInvocation, REQUEST> threadLocalFactory) {
         this.threadLocalFactory = threadLocalFactory;
     }
 
@@ -75,5 +75,13 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
 
     public void setAuditor(Auditor auditor) {
         this.auditor = auditor;
+    }
+
+    public void setLazyFinish(boolean lazyFinish) {
+        this.lazyFinish = lazyFinish;
+    }
+
+    public boolean isLazyFinish() {
+        return lazyFinish;
     }
 }

@@ -41,6 +41,11 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-spring</artifactId>
+            <version>${agileway.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.fangjinuo.audit</groupId>
             <artifactId>audit-spring</artifactId>
         </dependency>

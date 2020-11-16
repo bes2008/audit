@@ -1,5 +1,6 @@
 package com.jn.audit.spring.boot.autoconfigure;
 
+import com.jn.agileway.springboot.web.filter.EnableAgilewayWebFilters;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.BeansException;
@@ -26,6 +27,7 @@ import java.util.List;
 @ConditionalOnBean(name = "auditHttpHandlerInterceptor")
 @EnableConfigurationProperties(AuditProperties.class)
 @Configuration
+@EnableAgilewayWebFilters
 public class WebappInterceptorRegisterConfiguration implements WebMvcConfigurer, ApplicationContextAware {
     private ApplicationContext ctx;
     private AuditProperties properties;

@@ -302,7 +302,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         producer.setMessageTopicDispatcher(dispatcher);
     }
 
-    private AuditRequest<AuditedRequest, AuditedRequestContext> createAuditRequest(AuditedRequest auditedRequest, AuditedRequestContext ctx) {
+    public AuditRequest<AuditedRequest, AuditedRequestContext> createAuditRequest(AuditedRequest auditedRequest, AuditedRequestContext ctx) {
         AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = null;
         if (auditRequestFactory != null) {
             wrappedRequest = auditRequestFactory.apply(auditedRequest, ctx);
