@@ -5,7 +5,9 @@ import com.jn.langx.Parser;
 
 /**
  * OperationDefinition  解析器，解析出OperationDefinition
+ *
  * @param <E>
  */
 public interface OperationDefinitionParser<E> extends Parser<E, OperationDefinition> {
+    String getName();
 }

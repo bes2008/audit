@@ -16,6 +16,10 @@ public class OperationAnnotationParser implements OperationMethodAnnotationDefin
         return Operation.class;
     }
 
+    @Override
+    public String getName() {
+        return Reflects.getFQNClassName(Operation.class);
+    }
 
     @Override
     public OperationDefinition parse(Method method) {
