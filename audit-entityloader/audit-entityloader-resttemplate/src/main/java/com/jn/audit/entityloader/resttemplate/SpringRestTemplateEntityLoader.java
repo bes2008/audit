@@ -57,7 +57,7 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
                 HttpEntity httpEntity = httpRequestBuilder.url(url).method(httpMethod).build();
                 ParameterizedTypeReference responseEntityClass = parameterizedResponseClassProvider.get(url, httpMethod, resourceDefinition);
                 RestTemplate restTemplate = restTemplateProvider.get(url, httpMethod, resourceDefinition);
-                Preconditions.checkNotNull(restTemplate,"the restTemplate is null");
+                Preconditions.checkNotNull(restTemplate, "the restTemplate is null");
                 ResponseEntity responseEntity = restTemplate.exchange(url, httpMethod, httpEntity, responseEntityClass, urlVariables);
                 List<Object> objs = extractResult(responseEntity);
                 entities.addAll(objs);
