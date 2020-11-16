@@ -29,7 +29,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 import java.util.List;
 
 @Configuration
@@ -101,6 +100,16 @@ public class OperationAutoConfiguration {
                 .build());
         repository.startup();
         return repository;
+    }
+
+    @Bean
+    @Autowired
+    public DefaultOperationRepositoryParser defaultOperationRepositoryParser(
+            @Qualifier("multipleLevelOperationDefinitionRepository")
+                    MultipleLevelConfigurationRepository repository) {
+        DefaultOperationRepositoryParser parser = new DefaultOperationRepositoryParser();
+        parser.setRepository(repository);
+        return parser;
     }
 
     @Bean

@@ -59,7 +59,6 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
                     OperationDefinitionParserRegistry definitionParserRegistry
     ) {
         OperationMethodInvocationExtractor<HttpServletRequest> operationExtractor = new OperationMethodInvocationExtractor<HttpServletRequest>();
-        operationExtractor.setOperationDefinitionRepository(multipleLevelConfigurationRepository);
         operationExtractor.setOperationIdGenerators(operationIdGenerators.getObject());
         operationExtractor.setOperationParametersExtractor(httpOperationParametersExtractor);
         operationExtractor.setOperationParserRegistry(definitionParserRegistry);

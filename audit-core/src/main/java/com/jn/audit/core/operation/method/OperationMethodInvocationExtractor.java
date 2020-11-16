@@ -7,15 +7,16 @@ import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationExtractor;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.OperationParametersExtractor;
+import com.jn.audit.core.operation.repository.OperationRepositoryParser;
 import com.jn.langx.cache.Cache;
 import com.jn.langx.cache.CacheBuilder;
-import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
+import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
-import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Holder;
@@ -53,7 +54,6 @@ public class OperationMethodInvocationExtractor<AuditedRequest> implements Opera
 
     private List<OperationIdGenerator<AuditedRequest, MethodInvocation>> operationIdGenerators;
 
-    private MultipleLevelConfigurationRepository operationDefinitionRepository;
 
     private OperationParametersExtractor<AuditedRequest, MethodInvocation> operationParametersExtractor;
 
@@ -87,9 +87,18 @@ public class OperationMethodInvocationExtractor<AuditedRequest> implements Opera
     }
 
     private OperationDefinition getOperationDefinitionByCachedId(Method method) {
-        String id = methodOperationDefinitionCache.get(method);
-        if (Emptys.isNotEmpty(id)) {
-            return (OperationDefinition) operationDefinitionRepository.getById(id);
+        final String id = methodOperationDefinitionCache.get(method);
+        return getOperationDefinitionFormRepositories(id);
+    }
+
+    private OperationDefinition getOperationDefinitionFormRepositories(final String definitionId) {
+        if (Emptys.isNotEmpty(definitionId)) {
+            return Collects.firstMap(operationParserRegistry.getRepositoryParsers(), new Function2<Integer, OperationRepositoryParser, OperationDefinition>() {
+                @Override
+                public OperationDefinition apply(Integer integer, OperationRepositoryParser operationRepositoryParser) {
+                    return operationRepositoryParser.parse(definitionId);
+                }
+            });
         }
         return null;
     }
@@ -126,8 +135,8 @@ public class OperationMethodInvocationExtractor<AuditedRequest> implements Opera
                 Collects.forEach(operationIdGenerators, new Consumer<OperationIdGenerator<AuditedRequest, MethodInvocation>>() {
                     @Override
                     public void accept(OperationIdGenerator<AuditedRequest, MethodInvocation> generator) {
-                        String operationDefinitionId = generator.get(wrappedRequest);
-                        operationDefinition.set((OperationDefinition) operationDefinitionRepository.getById(operationDefinitionId));
+                        final String operationDefinitionId = generator.get(wrappedRequest);
+                        operationDefinition.set(getOperationDefinitionFormRepositories(operationDefinitionId));
                     }
                 }, new Predicate<OperationIdGenerator<AuditedRequest, MethodInvocation>>() {
                     @Override
@@ -140,7 +149,7 @@ public class OperationMethodInvocationExtractor<AuditedRequest> implements Opera
             if (operationDefinition.isNull()) {
                 // 2.2.2 using method full name (exclude parameters)
                 String operationDefinitionId = Reflects.getFQNClassName(method.getDeclaringClass()) + "." + method.getName();
-                operationDefinition.set((OperationDefinition) operationDefinitionRepository.getById(operationDefinitionId));
+                operationDefinition.set(getOperationDefinitionFormRepositories(operationDefinitionId));
             }
             if (!operationDefinition.isNull()) {
                 methodOperationDefinitionCache.set(method, operationDefinition.get().getId());
@@ -149,14 +158,6 @@ public class OperationMethodInvocationExtractor<AuditedRequest> implements Opera
         return operationDefinition.get();
     }
 
-
-    public MultipleLevelConfigurationRepository getOperationDefinitionRepository() {
-        return operationDefinitionRepository;
-    }
-
-    public void setOperationDefinitionRepository(MultipleLevelConfigurationRepository operationDefinitionRepository) {
-        this.operationDefinitionRepository = operationDefinitionRepository;
-    }
 
     public Cache<Method, String> getMethodOperationDefinitionCache() {
         return methodOperationDefinitionCache;
