@@ -16,6 +16,17 @@
             <groupId>com.github.fangjinuo.audit</groupId>
             <artifactId>audit-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-spring</artifactId>
+            <version>${agileway.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
