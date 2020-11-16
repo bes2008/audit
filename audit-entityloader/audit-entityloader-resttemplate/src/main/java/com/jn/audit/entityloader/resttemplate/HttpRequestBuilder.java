@@ -6,7 +6,9 @@ import org.springframework.http.HttpMethod;
 
 public interface HttpRequestBuilder extends Builder<HttpEntity> {
     HttpRequestBuilder url(String url);
+
     HttpRequestBuilder method(HttpMethod method);
+
     @Override
     HttpEntity build();
 }

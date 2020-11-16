@@ -6,6 +6,7 @@ import com.jn.audit.core.resource.idresource.EntityLoader;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
@@ -13,6 +14,7 @@ import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.function.Predicate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -28,12 +30,13 @@ import java.util.regex.Pattern;
 
 public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
 
-    private Pattern restTemplateVariablePattern = Pattern.compile("\\{\\w+(\\.[\\w\\-]+)*}");
-    private Pattern httpUrlVariablePattern = Pattern.compile("\\$\\{\\w+(\\.[\\w\\-]+)*}");
+    private static Pattern restTemplateVariablePattern = Pattern.compile("\\{\\w+(\\.[\\w\\-]+)*}");
+    private static Pattern httpUrlVariablePattern = Pattern.compile("\\$\\{\\w+(\\.[\\w\\-]+)*}");
     private Environment environment;
     private HttpRequestBuilder httpRequestBuilder = new DefaultHttpRequestBuilder();
-    private ParameterizedResponseClassProvider parameterizedResponseClassProvider;
+    private ParameterizedResponseClassProvider parameterizedResponseClassProvider = new DefaultParameterizedResponseClassProvider();
     private ResourceEntityExtractor resourceEntityExtractor = new DefaultResourceEntityExtractor();
+    private RestTemplateProvider restTemplateProvider;
     private String name = "rest";
 
     @Override
@@ -52,8 +55,9 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
                 HttpMethod httpMethod = findHttpMethod(resourceDefinition);
 
                 HttpEntity httpEntity = httpRequestBuilder.url(url).method(httpMethod).build();
-                Class responseEntityClass = null;
-                RestTemplate restTemplate = null;
+                ParameterizedTypeReference responseEntityClass = parameterizedResponseClassProvider.get(url, httpMethod, resourceDefinition);
+                RestTemplate restTemplate = restTemplateProvider.get(url, httpMethod, resourceDefinition);
+                Preconditions.checkNotNull(restTemplate,"the restTemplate is null");
                 ResponseEntity responseEntity = restTemplate.exchange(url, httpMethod, httpEntity, responseEntityClass, urlVariables);
                 List<Object> objs = extractResult(responseEntity);
                 entities.addAll(objs);
@@ -158,14 +162,6 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
         return HttpMethod.resolve(httpMethod);
     }
 
-    public void setRestTemplateVariablePattern(Pattern restTemplateVariablePattern) {
-        this.restTemplateVariablePattern = restTemplateVariablePattern;
-    }
-
-    public void setHttpUrlVariablePattern(Pattern httpUrlVariablePattern) {
-        this.httpUrlVariablePattern = httpUrlVariablePattern;
-    }
-
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
@@ -191,5 +187,13 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
         if (httpRequestBuilder != null) {
             this.httpRequestBuilder = httpRequestBuilder;
         }
+    }
+
+    public void setParameterizedResponseClassProvider(ParameterizedResponseClassProvider parameterizedResponseClassProvider) {
+        this.parameterizedResponseClassProvider = parameterizedResponseClassProvider;
+    }
+
+    public void setRestTemplateProvider(RestTemplateProvider restTemplateProvider) {
+        this.restTemplateProvider = restTemplateProvider;
     }
 }
