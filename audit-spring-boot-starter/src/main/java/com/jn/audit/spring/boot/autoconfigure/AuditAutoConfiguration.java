@@ -3,6 +3,7 @@ package com.jn.audit.spring.boot.autoconfigure;
 import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
 import com.jn.agileway.dmmq.core.consumer.DebugConsumer;
 import com.jn.audit.core.*;
+import com.jn.audit.core.auditing.aop.AuditMethodInterceptor;
 import com.jn.audit.core.filter.MethodAuditAnnotationFilter;
 import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
@@ -12,6 +13,8 @@ import com.jn.audit.servlet.ServletAuditEventExtractor;
 import com.jn.audit.servlet.ServletAuditRequest;
 import com.jn.audit.servlet.ServletHttpParametersExtractor;
 import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
+import com.jn.langx.factory.Factory;
+import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.function.Function2;
 import org.springframework.beans.BeansException;
@@ -139,5 +142,18 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
         return new MessageTopicDispatcher();
     }
 
+    @Bean
+    @Autowired
+    public AuditMethodInterceptor auditMethodInterceptor(final Auditor auditor) {
+        AuditMethodInterceptor interceptor = new AuditMethodInterceptor();
+        interceptor.setAuditor(auditor);
+        interceptor.setThreadLocalFactory(new ThreadLocalFactory(new Factory() {
+            @Override
+            public Object get(Object o) {
+                return Auditor.auditRequestHolder.get();
+            }
+        }));
+        return interceptor;
+    }
 
 }
