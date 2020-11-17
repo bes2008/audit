@@ -10,6 +10,7 @@ import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.OperationParametersExtractor;
 import com.jn.audit.core.operation.method.OperationMethodInvocationExtractor;
+import com.jn.audit.core.resource.ResourceMethodInvocationExtractor;
 import com.jn.audit.servlet.ServletAuditEventExtractor;
 import com.jn.audit.servlet.ServletAuditRequest;
 import com.jn.audit.servlet.ServletHttpParametersExtractor;
@@ -75,9 +76,11 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     @ConditionalOnMissingBean(name = {"servletAuditEventExtractor"})
     public ServletAuditEventExtractor servletAuditEventExtractor(
             @Autowired @Qualifier("operationMethodExtractor")
-                    OperationMethodInvocationExtractor<HttpServletRequest> operationMethodExtractor) {
+                    OperationMethodInvocationExtractor<HttpServletRequest> operationMethodExtractor,
+            @Autowired ResourceMethodInvocationExtractor resourceMethodInvocationExtractor) {
         ServletAuditEventExtractor auditEventExtractor = new ServletAuditEventExtractor();
         auditEventExtractor.setOperationExtractor(operationMethodExtractor);
+        auditEventExtractor.setResourceExtractor(resourceMethodInvocationExtractor);
         return auditEventExtractor;
     }
 
@@ -148,6 +151,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     private boolean lazyFinishMode = false;
 
     @Bean
+    @ConditionalOnMissingBean(AuditMethodInterceptor.class)
     @Autowired
     public AuditMethodInterceptor auditMethodInterceptor(final Auditor auditor) {
         AuditMethodInterceptor interceptor = new AuditMethodInterceptor();

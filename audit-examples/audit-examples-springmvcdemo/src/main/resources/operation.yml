@@ -58,6 +58,14 @@ operationDefinitions:
     description: 使用MyBatis来删除用户
     resourceDefinition:
       resourceId: ids
+  GET-/users/{id}:
+    code: Audit_springmvc_USER_GetById
+    name: 查看用户
+    type: GET
+    importance: minor
+    resourceDefinition:
+      entityLoader: mybatis
+
   GET-/users/_useMyBatis:
     code: Audit_springmvc_USER_LIST_MyBatis
     name: 使用mybatis API 测试SQLHelper
