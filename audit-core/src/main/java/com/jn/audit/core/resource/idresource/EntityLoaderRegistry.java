@@ -15,6 +15,9 @@ public class EntityLoaderRegistry implements Registry<String, EntityLoader> {
 
     @Override
     public void register(String name, EntityLoader entityLoader) {
+        if(entityLoader instanceof EntityLoaderDispatcher){
+            return;
+        }
         Preconditions.checkNotEmpty(name,"the entity loader name is null or empty");
         map.put(name, entityLoader);
     }
