@@ -3,7 +3,7 @@ package com.jn.audit.servlet;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.operation.OperationParametersExtractor;
 import com.jn.langx.invocation.MethodInvocation;
-import com.jn.langx.util.Objects;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
@@ -11,7 +11,6 @@ import com.jn.langx.util.io.Charsets;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public class ServletHttpParametersExtractor implements OperationParametersExtrac
         Collects.forEach(parameterMap, new Consumer2<String, String[]>() {
             @Override
             public void accept(String key, String[] values) {
-                if (Objects.length(values) > 1) {
+                if (Objs.length(values) > 1) {
                     ret.put(key, Collects.newArrayList(values));
                 } else {
                     ret.put(key, values[0]);
