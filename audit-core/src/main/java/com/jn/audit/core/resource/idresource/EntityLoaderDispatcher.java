@@ -37,7 +37,7 @@ public class EntityLoaderDispatcher<E> implements EntityLoader<E> {
         try {
             entities = loader.load(resourceDefinition, ids);
         } catch (Throwable ex) {
-            logger.error("error occur when loading auditing resources by the {} entity loader, ids: {}: ", entityLoaderName, Strings.join(",", ids));
+            logger.error("error occur when loading auditing resources by the {} entity loader, ids: {} ", entityLoaderName, Strings.join(",", ids), ex);
         }
         return entities;
     }

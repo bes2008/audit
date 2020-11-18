@@ -136,6 +136,21 @@
                 <artifactId>audit-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.audit.entityloader</groupId>
+                <artifactId>audit-entityloader-mybatis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.audit.entityloader</groupId>
+                <artifactId>audit-entityloader-esmvc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.audit.entityloader</groupId>
+                <artifactId>audit-entityloader-resttemplate</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

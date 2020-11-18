@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.List;
 
-public class MyBatisEntityLoader implements EntityLoader<Object> {
-    private static final Logger logger = LoggerFactory.getLogger(MyBatisEntityLoader.class);
-    private static final String STATEMENT_ID_FQN = "statementIdFQN";
+public class MybatisEntityLoader implements EntityLoader<Object> {
+    private static final Logger logger = LoggerFactory.getLogger(MybatisEntityLoader.class);
+    private static final String STATEMENT_ID = "statementId";
     private String name = "mybatis";
     private SqlSessionFactory sessionFactory;
 
@@ -37,12 +37,12 @@ public class MyBatisEntityLoader implements EntityLoader<Object> {
             return null;
         }
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
-        String statementIdFQN = mapAccessor.getString(STATEMENT_ID_FQN);
-        Preconditions.checkNotEmpty(statementIdFQN, "the {} is undefined in the resource definition", STATEMENT_ID_FQN);
+        String statementId = mapAccessor.getString(STATEMENT_ID);
+        Preconditions.checkNotEmpty(statementId, "the {} is undefined in the resource definition", STATEMENT_ID);
         if (ids.size() == 1) {
             SqlSession session = sessionFactory.openSession();
             try {
-                Object object = session.selectOne(statementIdFQN, ids.get(0));
+                Object object = session.selectOne(statementId, ids.get(0));
                 return Collects.newArrayList(object);
             } finally {
                 session.close();
@@ -50,7 +50,7 @@ public class MyBatisEntityLoader implements EntityLoader<Object> {
         } else {
             SqlSession session = sessionFactory.openSession();
             try {
-                return session.selectList(statementIdFQN, ids);
+                return session.selectList(statementId, ids);
             } finally {
                 session.close();
             }

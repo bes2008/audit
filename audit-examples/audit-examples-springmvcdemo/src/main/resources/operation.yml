@@ -65,6 +65,7 @@ operationDefinitions:
     importance: minor
     resourceDefinition:
       entityLoader: mybatis
+      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectById
 
   GET-/users/_useMyBatis:
     code: Audit_springmvc_USER_LIST_MyBatis

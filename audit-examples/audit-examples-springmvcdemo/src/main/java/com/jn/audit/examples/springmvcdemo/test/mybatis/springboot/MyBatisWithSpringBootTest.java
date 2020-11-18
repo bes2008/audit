@@ -20,8 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.jn.audit.examples.springmvcdemo",
-        "com.jn.audit.spring"
+        "com.jn.audit.examples.springmvcdemo"
 })
 @ImportResource(locations = {"classpath:/applicationContext.xml"})
 @MapperScan("com.jn.audit.examples.springmvcdemo.common.dao")
