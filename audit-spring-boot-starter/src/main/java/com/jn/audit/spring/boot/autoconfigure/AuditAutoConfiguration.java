@@ -14,7 +14,6 @@ import com.jn.audit.core.resource.ResourceMethodInvocationExtractor;
 import com.jn.audit.servlet.ServletAuditEventExtractor;
 import com.jn.audit.servlet.ServletAuditRequest;
 import com.jn.audit.servlet.ServletHttpParametersExtractor;
-import com.jn.langx.configuration.MultipleLevelConfigurationRepository;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.invocation.MethodInvocation;
