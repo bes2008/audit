@@ -9,7 +9,6 @@ import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 
 public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<HttpServletRequest, MethodInvocation> {
 
