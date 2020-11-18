@@ -56,8 +56,6 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     @Bean(name = "operationMethodExtractor")
     @ConditionalOnMissingBean(name = {"operationMethodExtractor"})
     public OperationMethodInvocationExtractor<HttpServletRequest> operationMethodExtractor(
-            @Autowired @Qualifier("multipleLevelOperationDefinitionRepository")
-                    MultipleLevelConfigurationRepository multipleLevelConfigurationRepository,
             ObjectProvider<List<OperationIdGenerator<HttpServletRequest, MethodInvocation>>> operationIdGenerators,
             @Autowired @Qualifier("servletHttpParametersExtractor")
                     OperationParametersExtractor<HttpServletRequest, MethodInvocation> httpOperationParametersExtractor,
