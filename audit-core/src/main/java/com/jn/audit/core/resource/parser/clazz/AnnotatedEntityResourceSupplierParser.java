@@ -8,7 +8,9 @@ import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Modifiers;
 import com.jn.langx.util.reflect.Reflects;
@@ -21,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +39,8 @@ public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassReso
     private static final Logger logger = LoggerFactory.getLogger(AnnotatedEntityResourceSupplierParser.class);
     public static final AnnotatedEntityResourceSupplierParser DEFAULT_INSTANCE = new AnnotatedEntityResourceSupplierParser();
 
+    private final MemberNameEntityResourceSupplierParser delegate = MemberNameEntityResourceSupplierParser.DEFAULT_INSTANCE;
+
     @Override
     public EntityResourceSupplier<T> parse(Class<T> entityClass) {
 
@@ -47,8 +52,32 @@ public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassReso
         if (Emptys.isEmpty(getterMap)) {
             return null;
         }
-        EntityResourceSupplier supplier = new EntityResourceSupplier(entityClass);
+
+        final EntityResourceSupplier supplier = new EntityResourceSupplier(entityClass);
         supplier.register(getterMap);
+
+        // 判断是否缺少属性
+        List<String> deficientProperties = supplier.getDeficientProperties();
+        if (deficientProperties.isEmpty()) {
+            // 不缺少，直接返回
+            return supplier;
+        }
+        // 基于成员进行解析
+        try {
+            final EntityResourceSupplier memberBasedEntityResourceSupplier = delegate.parse(entityClass);
+            // 进行合并
+            Collects.forEach(deficientProperties, new Consumer<String>() {
+                @Override
+                public void accept(String property) {
+                    MemberValueGetter valueGetter = (MemberValueGetter) memberBasedEntityResourceSupplier.getPropertyValueGetter(property);
+                    if (valueGetter != null) {
+                        supplier.register(property, valueGetter);
+                    }
+                }
+            });
+        } catch (Throwable ex) {
+            logger.error("Error occur when parse class {}", Reflects.getFQNClassName(entityClass));
+        }
         return supplier;
     }
 

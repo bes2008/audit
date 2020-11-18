@@ -9,7 +9,9 @@ import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.valuegetter.ValueGetter;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +42,26 @@ public abstract class ContainerResourceSupplier<Container, VG extends ValueGette
 
     public void register(Map<String, ? extends VG> mapValueGetterMap) {
         propertyToValueGetterMap.putAll(mapValueGetterMap);
+    }
+
+
+    public VG getPropertyValueGetter(String property) {
+        return propertyToValueGetterMap.get(property);
+    }
+
+    /**
+     * 必备的属性
+     */
+    private static final List<String> requiredResourceProperties = Collects.asList(Resource.RESOURCE_ID, Resource.RESOURCE_NAME);
+
+    /**
+     * 获取缺失的 properties
+     * @return
+     */
+    public List<String> getDeficientProperties() {
+        List<String> ret = new ArrayList<String>(requiredResourceProperties);
+        ret.removeAll(propertyToValueGetterMap.keySet());
+        return ret;
     }
 
     @Override
