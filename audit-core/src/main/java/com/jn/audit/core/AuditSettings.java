@@ -1,9 +1,7 @@
 package com.jn.audit.core;
 
-import com.jn.agileway.dmmq.core.DefaultMessageTranslator;
 import com.jn.agileway.dmmq.core.MessageTopicConfiguration;
 import com.jn.agileway.dmmq.core.allocator.DefaultTopicAllocator;
-import com.jn.audit.core.operation.repository.OperationDefinitionRepository;
 import com.jn.langx.util.reflect.Reflects;
 
 import java.io.Serializable;
@@ -52,41 +50,7 @@ public class AuditSettings implements Serializable {
         this.topics = topics;
     }
 
-    /**
-     * the class name of your custom message translator.
-     */
-    private String messageTranslator = Reflects.getFQNClassName(DefaultMessageTranslator.class);
-
     private String topicAllocator = Reflects.getFQNClassName(DefaultTopicAllocator.class);
-
-
-    /**************************************************
-     *  Operation Repository Settings
-     **************************************************/
-    /**
-     * units: seconds
-     * scan interval, if <=0, will not refresh
-     *
-     * @see {@link OperationDefinitionRepository#setReloadIntervalInSeconds(int)}
-     */
-    private int operationDefinitionReloadIntervalInSeconds = -1;
-    private String operationDefinitionResource;
-
-    public String getOperationDefinitionResource() {
-        return operationDefinitionResource;
-    }
-
-    public void setOperationDefinitionResource(String operationDefinitionResource) {
-        this.operationDefinitionResource = operationDefinitionResource;
-    }
-
-    public int getOperationDefinitionReloadIntervalInSeconds() {
-        return operationDefinitionReloadIntervalInSeconds;
-    }
-
-    public void setOperationDefinitionReloadIntervalInSeconds(int operationDefinitionReloadIntervalInSeconds) {
-        this.operationDefinitionReloadIntervalInSeconds = operationDefinitionReloadIntervalInSeconds;
-    }
 
     public boolean isAsyncMode() {
         return asyncMode;
