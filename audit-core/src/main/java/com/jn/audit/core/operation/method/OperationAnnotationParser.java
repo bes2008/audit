@@ -30,13 +30,6 @@ public class OperationAnnotationParser implements OperationMethodAnnotationDefin
     public OperationDefinition parse(Method method) {
         Operation operation = Reflects.getAnnotation(method, getAnnotation());
 
-        Resource resource = Reflects.getAnnotation(method, Resource.class);
-        ResourceDefinition resourceDefinition = null;
-        if (resource != null) {
-            resourceDefinition = resourceDefinitionParser.parse(resource);
-        } else {
-            resourceDefinition = new ResourceDefinition();
-        }
 
         if (operation != null) {
             OperationDefinition operationDefinition = new OperationDefinition();
@@ -47,7 +40,16 @@ public class OperationAnnotationParser implements OperationMethodAnnotationDefin
             operationDefinition.setDescription(operation.description());
             operationDefinition.setModule(operation.module());
 
-            ResourceDefinition resourceDefinition2 = resourceDefinitionParser.parse(operation.resourceDefinition());
+            ResourceDefinition resourceDefinition = resourceDefinitionParser.parse(operation.resourceDefinition());
+
+            Resource resource = Reflects.getAnnotation(method, Resource.class);
+            ResourceDefinition resourceDefinition2 = null;
+            if (resource != null) {
+                resourceDefinition2 = resourceDefinitionParser.parse(resource);
+            } else {
+                resourceDefinition2 = new ResourceDefinition();
+            }
+
             resourceDefinition.putAll(resourceDefinition2);
             operationDefinition.setResourceDefinition(resourceDefinition);
             return operationDefinition;
