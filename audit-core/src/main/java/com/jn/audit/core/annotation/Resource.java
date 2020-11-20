@@ -15,5 +15,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({PARAMETER, ANNOTATION_TYPE})
 public @interface Resource {
-    ResourceMapping value() default @ResourceMapping (id = "id", name = "name", type = "");
+    ResourceMapping value() default @ResourceMapping(id = "id", name = "name", type = "");
+
+    ResourceProperty[] properties() default {};
 }

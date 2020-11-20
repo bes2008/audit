@@ -6,14 +6,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.*;
 
 /**
  * 用在一个Entity类上，用于标注 分别代表 id, name的字段名
+ *
+ * 用在方法上，id,name 分别代表 resourceId,resourceName所对应的参数名称
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({TYPE, PARAMETER})
+@Target({TYPE, PARAMETER, METHOD})
 public @interface ResourceMapping {
     /**
      * @see com.jn.audit.core.model.Resource resourceName

@@ -66,6 +66,7 @@
         <module>audit-spring-boot-starter</module>
         <module>audit-examples</module>
         <module>audit-entityloader</module>
+        <module>audit-swagger</module>
 
     </modules>
     <dependencyManagement>
