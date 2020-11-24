@@ -40,7 +40,7 @@ Resource的结构
 ### 方法四： 简化方式
 Java Bean 里的字段名，本身是 id, name，那么上述方法二、三种中，就可以直接使用注解，注解内不需要任何的其他的配置
 
-### 方法五：yaml文件的方式
+### 方法五：yaml文件
 operation.yml 文件中的 每个操作的 resourceDefinition定义区域内，可以直接使用 resourceId, resourceName, resourceType, resource 这四个关键字来替代 @ResourceId,@ResourceName,@ResourceType
 
 ### 方法六：EntityLoader 
