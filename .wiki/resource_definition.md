@@ -20,7 +20,7 @@ Resource的结构
 
 其实不论是注解方式，还是配置文件方式，最核心的就是配置 resourceId {Required}, resourceName {Required}, resourceType {Optional}
 
-## 注解方式
+## Resource定义的常用方法
 
 注解方面，提供了大量的注解：@Resource, @ResourceMapping, @ResourceName, @ResourceId, @ResourceProperty @ResourceType
 
