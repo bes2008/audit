@@ -17,6 +17,7 @@ import java.util.List;
 public class MybatisEntityLoader implements EntityLoader<Object> {
     private static final Logger logger = LoggerFactory.getLogger(MybatisEntityLoader.class);
     private static final String STATEMENT_ID = "statementId";
+    private static final String SELECT_TYPE = "selectType";
     private String name = "mybatis";
     private SqlSessionFactory sessionFactory;
 
@@ -38,8 +39,9 @@ public class MybatisEntityLoader implements EntityLoader<Object> {
         }
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
         String statementId = mapAccessor.getString(STATEMENT_ID);
+        String selectType = mapAccessor.getString(SELECT_TYPE, "selectList");
         Preconditions.checkNotEmpty(statementId, "the {} is undefined in the resource definition", STATEMENT_ID);
-        if (ids.size() == 1) {
+        if ("selectOne".equals(selectType)) {
             SqlSession session = sessionFactory.openSession();
             try {
                 Object object = session.selectOne(statementId, ids.get(0));
@@ -47,7 +49,7 @@ public class MybatisEntityLoader implements EntityLoader<Object> {
             } finally {
                 session.close();
             }
-        } else {
+        } else if ("selectList".equals(selectType)) {
             SqlSession session = sessionFactory.openSession();
             try {
                 return session.selectList(statementId, ids);
@@ -55,6 +57,7 @@ public class MybatisEntityLoader implements EntityLoader<Object> {
                 session.close();
             }
         }
+        return null;
     }
 
     public SqlSessionFactory getSessionFactory() {
