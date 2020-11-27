@@ -53,7 +53,7 @@ public class ResourceExtractAutoConfiguration {
 
     @Autowired
     public void registerEntityLoaders(final EntityLoaderRegistry registry, @Autowired(required = false) ObjectProvider<List<EntityLoader>> entityLoadersProvider) {
-        Collects.forEach(entityLoadersProvider.getObject(), new Consumer<EntityLoader>() {
+        Collects.forEach(entityLoadersProvider.getIfAvailable(), new Consumer<EntityLoader>() {
             @Override
             public void accept(EntityLoader entityLoader) {
                 registry.register(entityLoader);
