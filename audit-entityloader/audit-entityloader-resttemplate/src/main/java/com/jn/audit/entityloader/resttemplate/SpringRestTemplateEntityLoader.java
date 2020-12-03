@@ -6,6 +6,7 @@ import com.jn.audit.core.resource.idresource.EntityLoader;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Arrs;
@@ -33,7 +34,7 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
     private static Pattern restTemplateVariablePattern = Pattern.compile("\\{\\w+(\\.[\\w\\-]+)*}");
     private static Pattern httpUrlVariablePattern = Pattern.compile("\\$\\{\\w+(\\.[\\w\\-]+)*}");
     private Environment environment;
-    private HttpRequestBuilder httpRequestBuilder = new DefaultHttpRequestBuilder();
+    private HttpRequestProvider httpRequestProvider = new DefaultHttpRequestProvider();
     private ParameterizedResponseClassProvider parameterizedResponseClassProvider = new DefaultParameterizedResponseClassProvider();
     private ResourceEntityExtractor resourceEntityExtractor = new DefaultResourceEntityExtractor();
     private RestTemplateProvider restTemplateProvider;
@@ -53,8 +54,7 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
                 Map<String, Object> urlVariables = findSpringRestUrlVariables(url, resourceDefinition, ids, httpBatchMode, index);
 
                 HttpMethod httpMethod = findHttpMethod(resourceDefinition);
-
-                HttpEntity httpEntity = httpRequestBuilder.url(url).method(httpMethod).build();
+                HttpEntity httpEntity = httpRequestProvider.get(url, httpMethod, resourceDefinition, ids.get(index));
                 ParameterizedTypeReference responseEntityClass = parameterizedResponseClassProvider.get(url, httpMethod, resourceDefinition);
                 RestTemplate restTemplate = restTemplateProvider.get(url, httpMethod, resourceDefinition);
                 Preconditions.checkNotNull(restTemplate, "the restTemplate is null");
@@ -74,6 +74,9 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
 
     protected List<Object> extractResult(ResponseEntity responseEntity) {
         Object obj = resourceEntityExtractor.extract(responseEntity);
+        if(Objs.isEmpty(obj)){
+            return null;
+        }
         if (obj instanceof Collection) {
             return Collects.asList(obj);
         } else {
@@ -183,9 +186,9 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
         }
     }
 
-    public void setHttpRequestBuilder(HttpRequestBuilder httpRequestBuilder) {
-        if (httpRequestBuilder != null) {
-            this.httpRequestBuilder = httpRequestBuilder;
+    public void setHttpRequestProvider(HttpRequestProvider httpRequestProvider) {
+        if (httpRequestProvider != null) {
+            this.httpRequestProvider = httpRequestProvider;
         }
     }
 
@@ -196,4 +199,5 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
     public void setRestTemplateProvider(RestTemplateProvider restTemplateProvider) {
         this.restTemplateProvider = restTemplateProvider;
     }
+
 }
