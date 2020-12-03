@@ -12,9 +12,9 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function2;
-import com.jn.langx.util.function.Predicate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -43,18 +43,19 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
     @Override
     public List<Object> load(final ResourceDefinition resourceDefinition, final List<Serializable> ids) {
         final MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
-        final boolean httpBatchMode = mapAccessor.getBoolean("httpBatchMode", false);
-
+        final int batchStep = mapAccessor.getInteger("batchStep", 1);
+        Preconditions.checkArgument(batchStep > 0, "step should be > 0");
         final List<Object> entities = Collects.emptyArrayList();
-        Collects.forEach(Collects.asList(Arrs.range(ids.size())), new Consumer<Integer>() {
+        Collects.forEach(Collects.asList(Arrs.range(0, ids.size(), batchStep)), new Consumer<Integer>() {
             @Override
-            public void accept(Integer index) {
+            public void accept(Integer offset) {
                 String url = findHttpUrl(resourceDefinition);
-                url = replaceAuditVariables(url, resourceDefinition, ids, httpBatchMode, index);
-                Map<String, Object> urlVariables = findSpringRestUrlVariables(url, resourceDefinition, ids, httpBatchMode, index);
+                List<Serializable> stepIds = Pipeline.of(ids).skip(offset).limit(batchStep).asList();
+                url = replaceAuditVariables(url, resourceDefinition, stepIds);
+                Map<String, Object> urlVariables = findSpringRestUrlVariables(url, resourceDefinition, stepIds);
 
                 HttpMethod httpMethod = findHttpMethod(resourceDefinition);
-                HttpEntity httpEntity = httpRequestProvider.get(url, httpMethod, resourceDefinition, ids.get(index));
+                HttpEntity httpEntity = httpRequestProvider.get(url, httpMethod, resourceDefinition, stepIds);
                 ParameterizedTypeReference responseEntityClass = parameterizedResponseClassProvider.get(url, httpMethod, resourceDefinition);
                 RestTemplate restTemplate = restTemplateProvider.get(url, httpMethod, resourceDefinition);
                 Preconditions.checkNotNull(restTemplate, "the restTemplate is null");
@@ -62,19 +63,15 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
                 List<Object> objs = extractResult(responseEntity);
                 entities.addAll(objs);
             }
-        }, new Predicate<Integer>() {
-            @Override
-            public boolean test(Integer index) {
-                return httpBatchMode;
-            }
         });
+
         return entities;
     }
 
 
     protected List<Object> extractResult(ResponseEntity responseEntity) {
         Object obj = resourceEntityExtractor.extract(responseEntity);
-        if(Objs.isEmpty(obj)){
+        if (Objs.isEmpty(obj)) {
             return null;
         }
         if (obj instanceof Collection) {
@@ -97,9 +94,7 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
     protected String replaceAuditVariables(
             @NonNull String url,
             @NonNull final ResourceDefinition resourceDefinition,
-            @NonNull final List<Serializable> ids,
-            @NonNull final boolean httpBatchMode,
-            @NonNull final int index) {
+            @NonNull final List<Serializable> subIds) {
         final MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
         url = StringTemplates.format(url, httpUrlVariablePattern, new Function2<String, Object[], String>() {
             public String apply(String variable, final Object[] args) {
@@ -107,10 +102,7 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
                     variable = variable.substring(2, variable.length() - 1);
                 }
                 if (variable.equals("resourceId")) {
-                    if (httpBatchMode) {
-                        return Strings.join(",", ids);
-                    }
-                    return ids.get(index).toString();
+                    return Strings.join(",", subIds);
                 }
                 String variableValue = environment.getProperty(variable);
                 if (Emptys.isEmpty(variableValue)) {
@@ -126,9 +118,8 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
     protected Map<String, Object> findSpringRestUrlVariables(
             @NonNull String url,
             @NonNull final ResourceDefinition resourceDefinition,
-            @NonNull final List<Serializable> ids,
-            @NonNull final boolean httpBatchMode,
-            @NonNull final int index) {
+            @NonNull final List<Serializable> stepIds
+    ) {
 
         final Map<String, Object> urlVariables = new HashMap<String, Object>();
         StringTemplates.format(url, restTemplateVariablePattern, new Function2<String, Object[], String>() {
@@ -138,11 +129,7 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
                     variable = variable.substring(1, variable.length() - 1);
                 }
                 if (variable.equals("resourceId")) {
-                    if (httpBatchMode) {
-                        variableValue = Strings.join(",", ids);
-                    } else {
-                        variableValue = ids.get(index).toString();
-                    }
+                    variableValue = Strings.join(",", stepIds);
                 }
                 if (Emptys.isEmpty(variableValue)) {
                     variableValue = environment.getProperty(variable);

@@ -1,12 +1,21 @@
 package com.jn.audit.entityloader.resttemplate;
 
 import com.jn.audit.core.model.ResourceDefinition;
-import com.jn.langx.Builder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface HttpRequestProvider {
-    HttpEntity get(String url, HttpMethod method, ResourceDefinition resourceDefinition, Serializable entityId);
+    /**
+     * 如果是批量模式，这个方法只会调用一次，所以index 为 0，并且要将 ids全放进去
+     *
+     * @param url                url
+     * @param method             http method
+     * @param resourceDefinition the resource definition
+     * @param stepEntityIds      all entity ids in a step
+     * @return
+     */
+    HttpEntity get(String url, HttpMethod method, ResourceDefinition resourceDefinition, List<Serializable> stepEntityIds);
 }
