@@ -5,7 +5,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
 public class DefaultRestTemplateProvider implements RestTemplateProvider {
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public RestTemplate get(String url, HttpMethod httpMethod, ResourceDefinition resourceDefinition) {
