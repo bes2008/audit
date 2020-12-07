@@ -3,7 +3,7 @@
 
 [![maven](https://img.shields.io/badge/maven-v2.2.1-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.audit%20AND%20v:2.2.1)
 
-教程 : https://fangjinuo.gitee.io/docs/index.html
+[教程](./.wiki/index.md)
 
 
 ## Features
