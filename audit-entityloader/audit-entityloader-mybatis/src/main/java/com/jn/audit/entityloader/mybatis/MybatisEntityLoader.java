@@ -4,8 +4,12 @@ import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.idresource.EntityLoader;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Consumer;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
@@ -18,6 +22,7 @@ public class MybatisEntityLoader implements EntityLoader<Object> {
     private static final Logger logger = LoggerFactory.getLogger(MybatisEntityLoader.class);
     private static final String STATEMENT_ID = "statementId";
     private static final String SELECT_TYPE = "selectType";
+    private static final String SELECT_LIST_SEPARATOR = "separator";
     private String name = "mybatis";
     private SqlSessionFactory sessionFactory;
 
@@ -33,13 +38,15 @@ public class MybatisEntityLoader implements EntityLoader<Object> {
     }
 
     @Override
-    public List load(ResourceDefinition resourceDefinition, List<Serializable> ids) {
+    public List load(ResourceDefinition resourceDefinition, final List ids) {
         if (Emptys.isEmpty(ids)) {
             return null;
         }
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
-        String statementId = mapAccessor.getString(STATEMENT_ID);
+        final String statementId = mapAccessor.getString(STATEMENT_ID);
         String selectType = mapAccessor.getString(SELECT_TYPE, "selectList");
+        String selectListIdSeparator = mapAccessor.getString(SELECT_LIST_SEPARATOR, "");
+        final int batchSize = mapAccessor.getInteger("batchSize", 100);
         Preconditions.checkNotEmpty(statementId, "the {} is undefined in the resource definition", STATEMENT_ID);
         if ("selectOne".equals(selectType)) {
             SqlSession session = sessionFactory.openSession();
@@ -50,9 +57,33 @@ public class MybatisEntityLoader implements EntityLoader<Object> {
                 session.close();
             }
         } else if ("selectList".equals(selectType)) {
-            SqlSession session = sessionFactory.openSession();
+            final SqlSession session = sessionFactory.openSession();
             try {
-                return session.selectList(statementId, ids);
+                if (Emptys.getLength(ids) == 1) {
+                    Serializable id = (Serializable) ids.get(0);
+                    if (id instanceof String && Emptys.isNotEmpty(selectListIdSeparator)) {
+                        String idListString = (String) id;
+                        if (Emptys.isNotEmpty(idListString)) {
+                            String[] idStrings = Strings.split(idListString, selectListIdSeparator);
+                            if (Emptys.isNotEmpty(idStrings)) {
+                                ids.clear();
+                                Collects.addAll(ids, idStrings);
+                            }
+                        }
+                    }
+                }
+                if (Emptys.isNotEmpty(ids)) {
+                    final List entities = Collects.emptyArrayList();
+                    Collects.forEach(Collects.asList(Arrs.range(0, ids.size(), batchSize)), new Consumer<Integer>() {
+                        @Override
+                        public void accept(Integer offset) {
+                            List<Serializable> partitionIds = Pipeline.of(ids).skip(offset).limit(batchSize).asList();
+                            List partition = session.selectList(statementId, partitionIds);
+                            entities.addAll(partition);
+                        }
+                    });
+                    return entities;
+                }
             } finally {
                 session.close();
             }
