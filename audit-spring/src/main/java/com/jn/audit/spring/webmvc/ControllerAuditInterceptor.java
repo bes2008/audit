@@ -1,4 +1,4 @@
-package com.jn.audit.spring.simple;
+package com.jn.audit.spring.webmvc;
 
 import com.jn.agileway.aop.adapter.aopalliance.MethodInvocationAdapter;
 import com.jn.audit.core.auditing.aop.AuditMethodInterceptor;

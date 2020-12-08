@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
 ">
-    <bean id="auditInvocationInterceptor" class="com.jn.audit.spring.simple.ControllerAuditInterceptor"/>
+    <bean id="auditInvocationInterceptor" class="com.jn.audit.spring.webmvc.ControllerAuditInterceptor"/>
 
     <aop:config>
         <aop:advisor pointcut="execution(public * com.jn.audit.examples.springmvcdemo.common.controller.*Controller.*(..))"
