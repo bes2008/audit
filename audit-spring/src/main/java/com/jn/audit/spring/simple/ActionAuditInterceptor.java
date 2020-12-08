@@ -1,4 +1,4 @@
-package com.jn.audit.spring.webmvc;
+package com.jn.audit.spring.simple;
 
 import com.jn.agileway.aop.adapter.aopalliance.MethodInvocationAdapter;
 import com.jn.audit.core.auditing.aop.AuditMethodInterceptor;
@@ -6,7 +6,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ControllerAuditInterceptor implements MethodInterceptor {
+public class ActionAuditInterceptor implements MethodInterceptor {
 
     private AuditMethodInterceptor delegate;
 
