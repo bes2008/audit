@@ -6,12 +6,14 @@ operationImportance:
   veryImportant: 很重要
 ---
 operationDefinitions:
-  com.jn.audit.examples.springmvcdemo.controller.UserController.add: # the method name
+  com.jn.audit.examples.springmvcdemo.common.controller.UserController.add: # the method name
     code: Audit_springmvc_USER_CREATE
     name: 创建用户
     type: user_create
     importance: major
     description: 使用MyBatis来创建用户
+    resourceDefinition:
+      resource: user
   PUT-/users/{id}:  # the http URL
     code: Audit_springmvc_USER_UPDATE
     name: 更新用户
@@ -20,9 +22,8 @@ operationDefinitions:
     description: 使用MyBatis来更新用户
     resourceDefinition:
       annotation_first: true
-      statmentId: select
-      statementIdFQN: com.jn.sqlhelper.examples.common.dao.UserDao.selectById
-      entity: com.jn.sqlhelper.examples.common.model.User
+      entityLoader: mybatis
+      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectById
   PUT-/users:  # the http URL
     code: Audit_springmvc_USER_UPDATE_2
     name: 更新用户
@@ -31,9 +32,8 @@ operationDefinitions:
     description: 使用MyBatis来更新用户2
     resourceDefinition:
       annotation_first: true
-      statmentId: select
-      statementIdFQN: com.jn.sqlhelper.examples.common.dao.UserDao.selectById
-      entity: com.jn.sqlhelper.examples.common.model.User
+      entityLoader: mybatis
+      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectById
   DELETE-/users/ids:
     code: Audit_springmvc_USER_DELETE
     name: 删除用户
@@ -50,6 +50,9 @@ operationDefinitions:
     description: 使用MyBatis来删除用户
     resourceDefinition:
       resourceId: id
+      entityLoader: mybatis
+      selectType: selectOne
+      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectById
   DELETE-/users:
     code: Audit_springmvc_USER_DELETE1
     name: 删除用户1
@@ -58,6 +61,9 @@ operationDefinitions:
     description: 使用MyBatis来删除用户
     resourceDefinition:
       resourceId: ids
+      entityLoader: mybatis
+      selectType: selectList
+      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectByIds
   GET-/users/{id}:
     code: Audit_springmvc_USER_GetById
     name: 查看用户
@@ -66,7 +72,6 @@ operationDefinitions:
     resourceDefinition:
       entityLoader: mybatis
       statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectById
-
   GET-/users/_useMyBatis:
     code: Audit_springmvc_USER_LIST_MyBatis
     name: 使用mybatis API 测试SQLHelper

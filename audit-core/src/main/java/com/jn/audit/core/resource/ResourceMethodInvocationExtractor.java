@@ -235,6 +235,8 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                             // @Resource Array, @Resource Collection
                             // @Resource javaBean
                             supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
+                        }else{
+                            supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
                         }
                     }
 
