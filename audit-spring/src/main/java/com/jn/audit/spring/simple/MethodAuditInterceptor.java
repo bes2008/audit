@@ -6,7 +6,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ActionAuditInterceptor implements MethodInterceptor {
+public class MethodAuditInterceptor implements MethodInterceptor {
 
     private AuditMethodInterceptor delegate;
 
