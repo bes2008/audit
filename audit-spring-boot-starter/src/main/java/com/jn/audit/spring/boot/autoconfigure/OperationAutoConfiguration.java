@@ -133,7 +133,7 @@ public class OperationAutoConfiguration {
                 registry.registry(operationMethodAnnotationDefinitionParser);
             }
         });
-        Collects.forEach(repositoryDefinitionParsersProvider.getObject(), new Consumer<OperationRepositoryParser>() {
+        Collects.forEach(repositoryDefinitionParsersProvider.getIfAvailable(), new Consumer<OperationRepositoryParser>() {
             @Override
             public void accept(OperationRepositoryParser operationRepositoryParser) {
                 registry.registry(operationRepositoryParser);
