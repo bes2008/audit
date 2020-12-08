@@ -43,14 +43,14 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
     @Override
     public List<Object> load(final ResourceDefinition resourceDefinition, final List<Serializable> ids) {
         final MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
-        final int batchStep = mapAccessor.getInteger("batchStep", 1);
-        Preconditions.checkArgument(batchStep > 0, "step should be > 0");
+        final int batchSize = mapAccessor.getInteger("batchSize", 1);
+        Preconditions.checkArgument(batchSize > 0, "step should be > 0");
         final List<Object> entities = Collects.emptyArrayList();
-        Collects.forEach(Collects.asList(Arrs.range(0, ids.size(), batchStep)), new Consumer<Integer>() {
+        Collects.forEach(Collects.asList(Arrs.range(0, ids.size(), batchSize)), new Consumer<Integer>() {
             @Override
             public void accept(Integer offset) {
                 String url = findHttpUrl(resourceDefinition);
-                List<Serializable> stepIds = Pipeline.of(ids).skip(offset).limit(batchStep).asList();
+                List<Serializable> stepIds = Pipeline.of(ids).skip(offset).limit(batchSize).asList();
                 url = replaceAuditVariables(url, resourceDefinition, stepIds);
                 Map<String, Object> urlVariables = findSpringRestUrlVariables(url, resourceDefinition, stepIds);
 
