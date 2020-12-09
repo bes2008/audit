@@ -66,7 +66,6 @@ public class CustomNamedMapParameterResourceSupplierParser implements ResourceSu
 
         if(Emptys.isNotEmpty(supplier.getDeficientProperties())){
             logger.warn("the resource definition mapping has some deficient or invalid properties: {}", Strings.join(",", supplier.getDeficientProperties()));
-            return null;
         }
         return supplier;
     }

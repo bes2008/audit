@@ -263,7 +263,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
             }
 
             // step 3: 解析 Collection ids
-            // 这一步只针对 id 是Collection或者Array， 并且有 @ResourceId 标注的情况
+            // 这一步只针对 id 是Collection或者Array
             if (resourceGetter == null && Emptys.isNotEmpty(resourceDefinition.getResourceId())) {
                 MethodParameter parameter = (MethodParameter) parameterMap.get(resourceDefinition.getResourceId());
                 if (parameter != null) {
