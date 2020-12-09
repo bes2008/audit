@@ -42,7 +42,7 @@ import java.util.Map;
  * 必须在 operation extractor 之后执行才有意义
  *
  * @param <AuditedRequest>
- * @since audit 1.0.3+, jdk 1.8+
+ * @since audit 1.0.3+, jdk 1.7+
  */
 public class ResourceMethodInvocationExtractor<AuditedRequest> implements ResourceExtractor<AuditedRequest, MethodInvocation> {
     /**
