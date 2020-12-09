@@ -259,6 +259,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
             // step 2: parse by resourceId, resourceName, resourceType
             // 这一步只针对字面量类型的解析
             if (resourceGetter == null) {
+                // 这个解析，不要求 resourceId, resourceName, resourceType 这三个都必须有
                 resourceGetter = new CustomResourcePropertyParameterResourceSupplierParser(mapping).parse(parameters);
             }
 
@@ -391,6 +392,7 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
         // step 2: 解析 @ResourceId, @ResourceName, @ResourceType 注解
         // 这一步只针对字面量类型的解析
         if (resourceGetter.isNull()) {
+            // 这个解析，不要求  @ResourceId, @ResourceName, @ResourceType 这三个都必须有
             resourceGetter.set(new ResourcePropertyAnnotatedResourceSupplierParser().parse(parameters));
         }
         // step 3: 解析 Collection ids
@@ -407,7 +409,6 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                     new Consumer2<Integer, Parameter>() {
                         @Override
                         public void accept(Integer index, Parameter parameter) {
-                            ValueGetter supplier = null;
                             Class parameterType = parameter.getType();
                             Class parameterType0 = parameterType;
                             boolean isArray = false;
