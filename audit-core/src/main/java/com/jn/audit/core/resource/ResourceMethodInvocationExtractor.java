@@ -267,7 +267,6 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
             if (resourceGetter == null && Emptys.isNotEmpty(resourceDefinition.getResourceId())) {
                 MethodParameter parameter = (MethodParameter) parameterMap.get(resourceDefinition.getResourceId());
                 if (parameter != null) {
-                    ValueGetter supplier = null;
                     Class parameterType = parameter.getType();
                     Class parameterType0 = parameterType;
                     boolean isArray = false;

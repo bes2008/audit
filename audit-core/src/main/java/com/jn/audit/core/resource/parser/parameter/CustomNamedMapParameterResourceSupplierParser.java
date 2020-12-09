@@ -4,11 +4,14 @@ import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.parser.ResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.MapResourceSupplier;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.valuegetter.MapValueGetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,7 @@ import java.util.Map;
  * @see ResourceAnnotatedMapParameterResourceSupplierParser
  */
 public class CustomNamedMapParameterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
+    private static final Logger logger = LoggerFactory.getLogger(CustomNamedMapParameterResourceSupplierParser.class);
 
     /**
      * key: resource property, e.g.
@@ -59,6 +63,11 @@ public class CustomNamedMapParameterResourceSupplierParser implements ResourceSu
         }
         MapResourceSupplier supplier = new MapResourceSupplier();
         supplier.register(getterMap);
+
+        if(Emptys.isNotEmpty(supplier.getDeficientProperties())){
+            logger.warn("the resource definition mapping has some deficient or invalid properties: {}", Strings.join(",", supplier.getDeficientProperties()));
+            return null;
+        }
         return supplier;
     }
 }

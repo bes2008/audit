@@ -8,12 +8,15 @@ import com.jn.audit.core.resource.parser.ResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.EnumerationValueGetter;
 import com.jn.audit.core.resource.supplier.IterableResourceSupplier;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Types;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +30,7 @@ import java.util.Map;
  * @see CustomResourcePropertyParameterResourceSupplierParser
  */
 public class ResourcePropertyAnnotatedResourceSupplierParser implements ResourceSupplierParser<Parameter[], IterableResourceSupplier> {
+    private static final Logger logger = LoggerFactory.getLogger(ResourcePropertyAnnotatedResourceSupplierParser.class);
     @Override
     public IterableResourceSupplier parse(Parameter[] parameters) {
 
@@ -58,6 +62,10 @@ public class ResourcePropertyAnnotatedResourceSupplierParser implements Resource
 
         IterableResourceSupplier supplier = new IterableResourceSupplier();
         supplier.register(getterMap);
+
+        if(Emptys.isNotEmpty(supplier.getDeficientProperties())){
+            logger.warn("the resource definition mapping has some deficient or invalid properties: {}", Strings.join(",", supplier.getDeficientProperties()));
+        }
         return supplier;
     }
 }
