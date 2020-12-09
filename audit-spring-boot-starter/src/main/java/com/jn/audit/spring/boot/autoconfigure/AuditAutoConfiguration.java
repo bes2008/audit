@@ -10,10 +10,10 @@ import com.jn.audit.core.operation.OperationDefinitionParserRegistry;
 import com.jn.audit.core.operation.OperationIdGenerator;
 import com.jn.audit.core.operation.OperationParametersExtractor;
 import com.jn.audit.core.operation.method.OperationMethodInvocationExtractor;
+import com.jn.audit.core.principal.PrincipalExtractor;
 import com.jn.audit.core.resource.ResourceMethodInvocationExtractor;
-import com.jn.audit.servlet.ServletAuditEventExtractor;
-import com.jn.audit.servlet.ServletAuditRequest;
-import com.jn.audit.servlet.ServletHttpParametersExtractor;
+import com.jn.audit.core.service.ServiceExtractor;
+import com.jn.audit.servlet.*;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.invocation.MethodInvocation;
@@ -68,16 +68,41 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
         return operationExtractor;
     }
 
+
+    @Bean(name="servletAuditEventPrincipalExtractor")
+    @ConditionalOnWebApplication
+    @ConditionalOnMissingBean(name = {"servletAuditEventPrincipalExtractor"})
+    public ServletAuditEventPrincipalExtractor servletAuditEventPrincipalExtractor(){
+        return new ServletAuditEventPrincipalExtractor();
+    }
+
+
+    @Bean(name="servletAuditEventServiceExtractor")
+    @ConditionalOnWebApplication
+    @ConditionalOnMissingBean(name = {"servletAuditEventServiceExtractor"})
+    public ServletAuditEventServiceExtractor servletAuditEventServiceExtractor(){
+        return new ServletAuditEventServiceExtractor();
+    }
+
+
     @Bean(name = "servletAuditEventExtractor")
     @ConditionalOnWebApplication
     @ConditionalOnMissingBean(name = {"servletAuditEventExtractor"})
     public ServletAuditEventExtractor servletAuditEventExtractor(
-            @Autowired @Qualifier("operationMethodExtractor")
+            @Qualifier("operationMethodExtractor")
                     OperationMethodInvocationExtractor<HttpServletRequest> operationMethodExtractor,
-            @Autowired ResourceMethodInvocationExtractor resourceMethodInvocationExtractor) {
+
+            ResourceMethodInvocationExtractor resourceMethodInvocationExtractor,
+            @Qualifier("servletAuditEventServiceExtractor")
+            ServiceExtractor serviceExtractor,
+            @Qualifier("servletAuditEventPrincipalExtractor")
+            PrincipalExtractor principalExtractor
+            ) {
         ServletAuditEventExtractor auditEventExtractor = new ServletAuditEventExtractor();
         auditEventExtractor.setOperationExtractor(operationMethodExtractor);
         auditEventExtractor.setResourceExtractor(resourceMethodInvocationExtractor);
+        auditEventExtractor.setServiceExtractor(serviceExtractor);
+        auditEventExtractor.setPrincipalExtractor(principalExtractor);
         return auditEventExtractor;
     }
 
