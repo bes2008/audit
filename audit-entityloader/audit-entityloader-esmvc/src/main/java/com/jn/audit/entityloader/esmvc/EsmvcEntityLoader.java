@@ -1,7 +1,7 @@
 package com.jn.audit.entityloader.esmvc;
 
 import com.jn.audit.core.model.ResourceDefinition;
-import com.jn.audit.core.resource.idresource.EntityLoader;
+import com.jn.audit.core.resource.idresource.AbstractEntityLoader;
 import com.jn.esmvc.service.ESModelService;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.util.ClassLoaders;
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.List;
 
-public class EsmvcEntityLoader implements EntityLoader<Object> {
+public class EsmvcEntityLoader extends AbstractEntityLoader<Object> {
     private static final String SERVICE_IMPL_CLASS_NAME = "serviceImplClassName";
     private static final Logger logger = LoggerFactory.getLogger(EsmvcEntityLoader.class);
 
@@ -36,9 +36,19 @@ public class EsmvcEntityLoader implements EntityLoader<Object> {
     }
 
     @Override
-    public List<Object> load(ResourceDefinition resourceDefinition, List<Serializable> ids) {
+    public Logger getLogger() {
+        return logger;
+    }
+
+    @Override
+    protected int getBatchSize(MapAccessor mapAccessor, List<Serializable> ids) {
+        return mapAccessor.getInteger("batchSize", 100);
+    }
+
+    @Override
+    protected List<Object> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         Preconditions.checkNotNull(esModelServiceFactory, "the EsModelServiceFactory is null or empty");
-        if (Emptys.isEmpty(ids)) {
+        if (Emptys.isEmpty(partitionIds)) {
             return null;
         }
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
@@ -52,7 +62,7 @@ public class EsmvcEntityLoader implements EntityLoader<Object> {
             return null;
         }
         ESModelService esModelService = esModelServiceFactory.get(serviceImplClass);
-        List<String> stringIds = Pipeline.of(ids).map(new Function<Serializable, String>() {
+        List<String> stringIds = Pipeline.of(partitionIds).map(new Function<Serializable, String>() {
             @Override
             public String apply(Serializable id) {
                 return id.toString();

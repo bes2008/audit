@@ -2,19 +2,18 @@ package com.jn.audit.entityloader.resttemplate;
 
 import com.jn.audit.core.exception.IllegalResourceDefinition;
 import com.jn.audit.core.model.ResourceDefinition;
-import com.jn.audit.core.resource.idresource.EntityLoader;
+import com.jn.audit.core.resource.idresource.AbstractEntityLoader;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
-import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -29,8 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
+public class SpringRestTemplateEntityLoader extends AbstractEntityLoader<Object> {
 
+    private static final Logger logger = LoggerFactory.getLogger(SpringRestTemplateEntityLoader.class);
     private static Pattern restTemplateVariablePattern = Pattern.compile("\\{\\w+(\\.[\\w\\-]+)*}");
     private static Pattern httpUrlVariablePattern = Pattern.compile("\\$\\{\\w+(\\.[\\w\\-]+)*}");
     private Environment environment;
@@ -40,30 +40,27 @@ public class SpringRestTemplateEntityLoader implements EntityLoader<Object> {
     private RestTemplateProvider restTemplateProvider;
     private String name = "rest";
 
-    @Override
-    public List<Object> load(final ResourceDefinition resourceDefinition, final List<Serializable> ids) {
-        final MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
-        final int batchSize = mapAccessor.getInteger("batchSize", 1);
-        Preconditions.checkArgument(batchSize > 0, "step should be > 0");
-        final List<Object> entities = Collects.emptyArrayList();
-        Collects.forEach(Collects.asList(Arrs.range(0, ids.size(), batchSize)), new Consumer<Integer>() {
-            @Override
-            public void accept(Integer offset) {
-                String url = findHttpUrl(resourceDefinition);
-                List<Serializable> stepIds = Pipeline.of(ids).skip(offset).limit(batchSize).asList();
-                url = replaceAuditVariables(url, resourceDefinition, stepIds);
-                Map<String, Object> urlVariables = findSpringRestUrlVariables(url, resourceDefinition, stepIds);
 
-                HttpMethod httpMethod = findHttpMethod(resourceDefinition);
-                HttpEntity httpEntity = httpRequestProvider.get(url, httpMethod, resourceDefinition, stepIds);
-                ParameterizedTypeReference responseEntityClass = parameterizedResponseClassProvider.get(url, httpMethod, resourceDefinition);
-                RestTemplate restTemplate = restTemplateProvider.get(url, httpMethod, resourceDefinition);
-                Preconditions.checkNotNull(restTemplate, "the restTemplate is null");
-                ResponseEntity responseEntity = restTemplate.exchange(url, httpMethod, httpEntity, responseEntityClass, urlVariables);
-                List<Object> objs = extractResult(responseEntity);
-                entities.addAll(objs);
-            }
-        });
+    @Override
+    protected Logger getLogger() {
+        return logger;
+    }
+
+    @Override
+    protected List<Object> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+        final List<Object> entities = Collects.emptyArrayList();
+        String url = findHttpUrl(resourceDefinition);
+        url = replaceAuditVariables(url, resourceDefinition, partitionIds);
+        Map<String, Object> urlVariables = findSpringRestUrlVariables(url, resourceDefinition, partitionIds);
+
+        HttpMethod httpMethod = findHttpMethod(resourceDefinition);
+        HttpEntity httpEntity = httpRequestProvider.get(url, httpMethod, resourceDefinition, partitionIds);
+        ParameterizedTypeReference responseEntityClass = parameterizedResponseClassProvider.get(url, httpMethod, resourceDefinition);
+        RestTemplate restTemplate = restTemplateProvider.get(url, httpMethod, resourceDefinition);
+        Preconditions.checkNotNull(restTemplate, "the restTemplate is null");
+        ResponseEntity responseEntity = restTemplate.exchange(url, httpMethod, httpEntity, responseEntityClass, urlVariables);
+        List<Object> objs = extractResult(responseEntity);
+        entities.addAll(objs);
 
         return entities;
     }

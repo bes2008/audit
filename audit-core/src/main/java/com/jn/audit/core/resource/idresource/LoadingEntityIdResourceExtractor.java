@@ -2,8 +2,18 @@ package com.jn.audit.core.resource.idresource;
 
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.Resource;
+import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.parser.clazz.DefaultEntityClassResourceSupplierParser;
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
+import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.MapAccessor;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Functions;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
@@ -16,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestContext> extends AbstractIdResourceExtractor<E, AuditedRequest, AuditedRequestContext> {
     private static final Logger logger = LoggerFactory.getLogger(LoadingEntityIdResourceExtractor.class);
-
+    private static final String SELECT_LIST_SEPARATOR = "separator";
     private final ConcurrentHashMap<Class, Holder<EntityResourceSupplier<E>>> entityResourceSupplierMap = new ConcurrentHashMap<Class, Holder<EntityResourceSupplier<E>>>();
 
     private DefaultEntityClassResourceSupplierParser parser = DefaultEntityClassResourceSupplierParser.DEFAULT_INSTANCE;
@@ -30,7 +40,37 @@ public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestC
 
     @Override
     public List<E> findEntities(AuditRequest<AuditedRequest, AuditedRequestContext> request, List<Serializable> ids) {
-        return entityLoader.load(request.getAuditEvent().getOperation().getDefinition().getResourceDefinition(), ids);
+        ResourceDefinition resourceDefinition = request.getAuditEvent().getOperation().getDefinition().getResourceDefinition();
+        MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
+        if(Emptys.isEmpty(ids)){
+            return null;
+        }
+        boolean idIsString = ids.get(0) instanceof String;
+
+        final String selectListIdSeparator = mapAccessor.getString(SELECT_LIST_SEPARATOR, "");
+        if(idIsString && Strings.isNotBlank(selectListIdSeparator)) {
+            final List transformedIds = Collects.emptyArrayList();
+            // 过滤出有效的id,并根据指定的分隔符进行id 分割提取
+            Pipeline.of(ids).filter(new Predicate<Serializable>() {
+                @Override
+                public boolean test(Serializable id) {
+                    return Strings.isNotBlank((String) id);
+                }
+            }).map(new Function<Serializable, List<String>>() {
+                @Override
+                public List<String> apply(Serializable id) {
+                    String idListString = (String) id;
+                    return Collects.newArrayList(Strings.split(idListString, selectListIdSeparator));
+                }
+            }).flatMap(Functions.noopFunction())
+                    .addTo(transformedIds);
+            ids.clear();
+            ids.addAll(transformedIds);
+        }
+        if(Emptys.isEmpty(ids)){
+            return null;
+        }
+        return entityLoader.load(resourceDefinition, ids);
     }
 
     @Override
