@@ -34,4 +34,6 @@ public interface UserDao {
     User selectById(String id);
 
     void batchInsert(List<User> users);
+
+    void selectByIds(List<String> ids);
 }

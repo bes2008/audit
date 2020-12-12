@@ -57,6 +57,16 @@
         WHERE ID = #{id}
     </select>
 
+    <select id="selectByIds" parameterType="java.lang.String" resultMap="entity">
+        SELECT
+        <include refid="all_columns"/>
+        FROM USER
+        WHERE ID in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
     <select id="selectByLimit" parameterType="com.jn.audit.examples.springmvcdemo.common.model.User" resultMap="entity">
         SELECT
         <include refid="all_columns"/>

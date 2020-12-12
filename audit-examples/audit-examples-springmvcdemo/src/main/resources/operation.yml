@@ -42,6 +42,8 @@ operationDefinitions:
     description: 使用MyBatis来删除用户
     resourceDefinition:
       resourceId: ids
+      entityLoader: mybatis
+      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectByIds
   DELETE-/users/{id}:
     code: Audit_springmvc_USER_DELETE
     name: 删除用户

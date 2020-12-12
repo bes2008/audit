@@ -41,7 +41,7 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
         final int batchSize = _batchSize;
 
         // 是否批量执行
-        int taskCount = size / batchSize + (size % batchSize == 0 ? 1 : 0);
+        int taskCount = size / batchSize + (size % batchSize != 0 ? 1 : 0);
         // 是否并行执行
         boolean _isParallel = false;
         if (taskCount > 1) {
