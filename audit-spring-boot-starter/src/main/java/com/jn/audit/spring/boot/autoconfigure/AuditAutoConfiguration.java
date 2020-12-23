@@ -3,6 +3,7 @@ package com.jn.audit.spring.boot.autoconfigure;
 import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
 import com.jn.agileway.dmmq.core.consumer.DebugConsumer;
 import com.jn.agileway.spring.aop.AspectJExpressionPointcutAdvisorBuilder;
+import com.jn.agileway.spring.aop.AspectJExpressionPointcutAdvisorProperties;
 import com.jn.agileway.web.filter.rr.RRHolder;
 import com.jn.audit.core.*;
 import com.jn.audit.core.auditing.aop.AuditMethodInterceptor;
@@ -210,7 +211,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
                     MethodAuditInterceptor interceptor,
             AuditProperties auditProperties) {
 
-        AuditAdvisorPointcutProperties pointcutProperties = auditProperties.getAdvisorPointcut();
+        AspectJExpressionPointcutAdvisorProperties pointcutProperties = auditProperties.getAdvisorPointcut();
         String expression = pointcutProperties.getExpression();
         if (Strings.isBlank(expression)) {
             throw new IllegalPropertyException(StringTemplates.formatWithPlaceholder("Illegal property: audit.advisorPointcut.expression, value: {}", expression));
@@ -218,8 +219,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
 
         return new AspectJExpressionPointcutAdvisorBuilder()
                 .interceptor(interceptor)
-                .order(pointcutProperties.getOrder())
-                .expression(pointcutProperties.getExpression())
+                .properties(pointcutProperties)
                 .build();
     }
 

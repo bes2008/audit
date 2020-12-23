@@ -1,6 +1,8 @@
 package com.jn.audit.spring.boot.autoconfigure;
 
+import com.jn.agileway.spring.aop.AspectJExpressionPointcutAdvisorProperties;
 import com.jn.audit.core.AuditSettings;
+import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -15,7 +17,7 @@ public class AuditProperties extends AuditSettings {
     private List<String> httpInterceptorPatterns;
     private boolean debugConsumerEnabled = true;
     @NestedConfigurationProperty
-    private AuditAdvisorPointcutProperties advisorPointcut;
+    private AspectJExpressionPointcutAdvisorProperties advisorPointcut;
 
     public boolean isDebugConsumerEnabled() {
         return debugConsumerEnabled;
@@ -41,11 +43,11 @@ public class AuditProperties extends AuditSettings {
         this.httpInterceptorPatterns = httpInterceptorPatterns;
     }
 
-    public void setAdvisorPointcut(AuditAdvisorPointcutProperties advisorPointcut) {
+    public void setAdvisorPointcut(AspectJExpressionPointcutAdvisorProperties advisorPointcut) {
         this.advisorPointcut = advisorPointcut;
     }
 
-    public AuditAdvisorPointcutProperties getAdvisorPointcut() {
+    public AspectJExpressionPointcutAdvisorProperties getAdvisorPointcut() {
         return advisorPointcut;
     }
 }
