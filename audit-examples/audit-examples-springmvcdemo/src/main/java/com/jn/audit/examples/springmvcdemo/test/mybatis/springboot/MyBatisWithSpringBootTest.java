@@ -22,7 +22,7 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication(scanBasePackages = {
         "com.jn.audit.examples.springmvcdemo"
 })
-@ImportResource(locations = {"classpath:/applicationContext.xml"})
+//@ImportResource(locations = {"classpath:/applicationContext.xml"})
 @MapperScan("com.jn.audit.examples.springmvcdemo.common.dao")
 public class MyBatisWithSpringBootTest {
     public static void main(String[] args) {

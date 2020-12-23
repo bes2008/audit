@@ -4,10 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
 ">
+    <!-- 该配置文件已无效，可以忽略，这里面的相关配置，在 AuditAutoConfiguration 中已体现 -->
+
     <bean id="auditInvocationInterceptor" class="com.jn.audit.spring.simple.MethodAuditInterceptor"/>
 
     <aop:config>
-        <aop:advisor pointcut="execution(public * com.jn.audit.examples.springmvcdemo.common.controller.*Controller.*(..))"
+        <aop:advisor id="auditAdvisor" pointcut="execution(public * com.jn.audit.examples.springmvcdemo.common.controller.*Controller.*(..))"
                      advice-ref="auditInvocationInterceptor"/>
     </aop:config>
 

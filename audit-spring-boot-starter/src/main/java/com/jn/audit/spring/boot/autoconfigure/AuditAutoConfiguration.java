@@ -2,6 +2,7 @@ package com.jn.audit.spring.boot.autoconfigure;
 
 import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
 import com.jn.agileway.dmmq.core.consumer.DebugConsumer;
+import com.jn.agileway.spring.aop.AspectJExpressionPointcutAdvisorBuilder;
 import com.jn.agileway.web.filter.rr.RRHolder;
 import com.jn.audit.core.*;
 import com.jn.audit.core.auditing.aop.AuditMethodInterceptor;
@@ -14,10 +15,15 @@ import com.jn.audit.core.principal.PrincipalExtractor;
 import com.jn.audit.core.resource.ResourceMethodInvocationExtractor;
 import com.jn.audit.core.service.ServiceExtractor;
 import com.jn.audit.servlet.*;
+import com.jn.audit.spring.simple.MethodAuditInterceptor;
+import com.jn.langx.exception.IllegalPropertyException;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.invocation.MethodInvocation;
+import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.function.Function2;
+import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,18 +75,18 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
     }
 
 
-    @Bean(name="servletAuditEventPrincipalExtractor")
+    @Bean(name = "servletAuditEventPrincipalExtractor")
     @ConditionalOnWebApplication
     @ConditionalOnMissingBean(name = {"servletAuditEventPrincipalExtractor"})
-    public ServletAuditEventPrincipalExtractor servletAuditEventPrincipalExtractor(){
+    public ServletAuditEventPrincipalExtractor servletAuditEventPrincipalExtractor() {
         return new ServletAuditEventPrincipalExtractor();
     }
 
 
-    @Bean(name="servletAuditEventServiceExtractor")
+    @Bean(name = "servletAuditEventServiceExtractor")
     @ConditionalOnWebApplication
     @ConditionalOnMissingBean(name = {"servletAuditEventServiceExtractor"})
-    public ServletAuditEventServiceExtractor servletAuditEventServiceExtractor(){
+    public ServletAuditEventServiceExtractor servletAuditEventServiceExtractor() {
         return new ServletAuditEventServiceExtractor();
     }
 
@@ -94,10 +100,10 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
 
             ResourceMethodInvocationExtractor resourceMethodInvocationExtractor,
             @Qualifier("servletAuditEventServiceExtractor")
-            ServiceExtractor serviceExtractor,
+                    ServiceExtractor serviceExtractor,
             @Qualifier("servletAuditEventPrincipalExtractor")
-            PrincipalExtractor principalExtractor
-            ) {
+                    PrincipalExtractor principalExtractor
+    ) {
         ServletAuditEventExtractor auditEventExtractor = new ServletAuditEventExtractor();
         auditEventExtractor.setOperationExtractor(operationMethodExtractor);
         auditEventExtractor.setResourceExtractor(resourceMethodInvocationExtractor);
@@ -164,8 +170,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
 
     @Bean
     @ConditionalOnMissingBean(value = {MessageTopicDispatcher.class})
-    @Autowired
-    public MessageTopicDispatcher messageTopicDispatcher(AuditProperties auditSettings) {
+    public MessageTopicDispatcher messageTopicDispatcher() {
         return new MessageTopicDispatcher();
     }
 
@@ -186,6 +191,36 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
             }
         }));
         return interceptor;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(MethodAuditInterceptor.class)
+    @Autowired
+    public MethodAuditInterceptor methodAuditInterceptor(AuditMethodInterceptor delegate) {
+        MethodAuditInterceptor interceptor = new MethodAuditInterceptor();
+        interceptor.setDelegate(delegate);
+        return interceptor;
+    }
+
+    @Bean("auditAdvisor")
+    @ConditionalOnMissingBean(name = "auditAdvisor")
+    @Autowired
+    public AspectJExpressionPointcutAdvisor auditAdvisor(
+            @Qualifier("methodAuditInterceptor")
+                    MethodAuditInterceptor interceptor,
+            AuditProperties auditProperties) {
+
+        AuditAdvisorPointcutProperties pointcutProperties = auditProperties.getAdvisorPointcut();
+        String expression = pointcutProperties.getExpression();
+        if (Strings.isBlank(expression)) {
+            throw new IllegalPropertyException(StringTemplates.formatWithPlaceholder("Illegal property: audit.advisorPointcut.expression, value: {}", expression));
+        }
+
+        return new AspectJExpressionPointcutAdvisorBuilder()
+                .interceptor(interceptor)
+                .order(pointcutProperties.getOrder())
+                .expression(pointcutProperties.getExpression())
+                .build();
     }
 
 }

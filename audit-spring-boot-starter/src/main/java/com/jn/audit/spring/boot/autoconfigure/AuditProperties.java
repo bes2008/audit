@@ -3,6 +3,8 @@ package com.jn.audit.spring.boot.autoconfigure;
 import com.jn.audit.core.AuditSettings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
@@ -12,6 +14,8 @@ public class AuditProperties extends AuditSettings {
     private boolean enabled = true;
     private List<String> httpInterceptorPatterns;
     private boolean debugConsumerEnabled = true;
+    @NestedConfigurationProperty
+    private AuditAdvisorPointcutProperties advisorPointcut;
 
     public boolean isDebugConsumerEnabled() {
         return debugConsumerEnabled;
@@ -35,5 +39,13 @@ public class AuditProperties extends AuditSettings {
 
     public void setHttpInterceptorPatterns(List<String> httpInterceptorPatterns) {
         this.httpInterceptorPatterns = httpInterceptorPatterns;
+    }
+
+    public void setAdvisorPointcut(AuditAdvisorPointcutProperties advisorPointcut) {
+        this.advisorPointcut = advisorPointcut;
+    }
+
+    public AuditAdvisorPointcutProperties getAdvisorPointcut() {
+        return advisorPointcut;
     }
 }

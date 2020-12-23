@@ -40,7 +40,8 @@ audit:
   http-interceptor-patterns:
     - /consumers/**
     - /users/**
-
+  advisor-pointcut:
+    expression: execution(public * com.jn.audit.examples.springmvcdemo.common.controller.*Controller.*(..))
 spring:
   datasource:
     url: jdbc:h2:file:${user.dir}/audit-examples/audit-examples-springmvcdemo/src/main/resources/test
