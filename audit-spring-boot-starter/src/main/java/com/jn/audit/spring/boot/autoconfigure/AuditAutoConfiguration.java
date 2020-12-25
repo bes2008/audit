@@ -212,6 +212,9 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
             AuditProperties auditProperties) {
 
         AspectJExpressionPointcutAdvisorProperties pointcutProperties = auditProperties.getAdvisorPointcut();
+        if(pointcutProperties==null){
+            throw new IllegalPropertyException(StringTemplates.formatWithPlaceholder("Illegal property: audit.advisorPointcut is not found"));
+        }
         String expression = pointcutProperties.getExpression();
         if (Strings.isBlank(expression)) {
             throw new IllegalPropertyException(StringTemplates.formatWithPlaceholder("Illegal property: audit.advisorPointcut.expression, value: {}", expression));
