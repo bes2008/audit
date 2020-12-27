@@ -12,10 +12,15 @@ import java.util.List;
 import java.util.Map;
 
 public class DynamicDataSourceFactoryProvider implements SqlSessionFactoryProvider {
+    private DataSourceKeySelector keySelector;
     private DynamicSqlSessionFactory dynamicDataSourceFactory;
 
     public DynamicDataSourceFactoryProvider(DynamicSqlSessionFactory dynamicDataSourceFactory) {
         this.dynamicDataSourceFactory = dynamicDataSourceFactory;
+    }
+
+    public void setKeySelector(DataSourceKeySelector keySelector) {
+        this.keySelector = keySelector;
     }
 
     @Override
@@ -24,9 +29,19 @@ public class DynamicDataSourceFactoryProvider implements SqlSessionFactoryProvid
     }
 
     private SqlSessionFactory getDelegatingSqlSessionFactory() {
+        boolean needClear = false;
+        if (DataSourceKeySelector.getCurrent() == null) {
+            keySelector.select(null);
+            needClear = true;
+        }
+
         if (DataSourceKeySelector.getCurrent() != null) {
             Map<DataSourceKey, SqlSessionFactory> factoryMap = dynamicDataSourceFactory.getDelegates();
-            return factoryMap.get(DataSourceKeySelector.getCurrent());
+            SqlSessionFactory delegate = factoryMap.get(DataSourceKeySelector.getCurrent());
+            if (needClear) {
+                DataSourceKeySelector.removeCurrent();
+            }
+            return delegate;
         }
         return null;
     }

@@ -60,6 +60,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
         Preconditions.checkNotEmpty(statementId, "the {} is undefined in the resource definition", STATEMENT_ID);
         if ("selectOne".equals(selectType)) {
             SqlSessionFactory sessionFactory = getSessionFactory(resourceDefinition, partitionIds);
+            Preconditions.checkNotNull(sessionFactory, "the session factory is null");
             SqlSession session = sessionFactory.openSession();
             try {
                 Object object = session.selectOne(statementId, partitionIds.get(0));
@@ -69,6 +70,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
             }
         } else if ("selectList".equals(selectType)) {
             SqlSessionFactory sessionFactory = getSessionFactory(resourceDefinition, partitionIds);
+            Preconditions.checkNotNull(sessionFactory, "the session factory is null");
             final SqlSession session = sessionFactory.openSession();
             try {
                 List partition = session.selectList(statementId, partitionIds);
