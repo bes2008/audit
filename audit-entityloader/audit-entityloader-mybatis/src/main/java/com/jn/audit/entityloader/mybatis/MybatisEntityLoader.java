@@ -19,7 +19,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
     private static final String STATEMENT_ID = "statementId";
     private static final String SELECT_TYPE = "selectType";
     private String name = "mybatis";
-    private SqlSessionFactory sessionFactory;
+    private SqlSessionFactoryProvider sessionFactoryProvider;
 
     @Override
     public String getName() {
@@ -43,7 +43,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
         if ("selectOne".equals(selectType)) {
             return 1;
         }
-        if("selectList".equals(selectType)) {
+        if ("selectList".equals(selectType)) {
             return mapAccessor.getInteger("batchSize", 100);
         }
         return super.getBatchSize(mapAccessor, ids);
@@ -59,6 +59,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
         String selectType = mapAccessor.getString(SELECT_TYPE, "selectList");
         Preconditions.checkNotEmpty(statementId, "the {} is undefined in the resource definition", STATEMENT_ID);
         if ("selectOne".equals(selectType)) {
+            SqlSessionFactory sessionFactory = getSessionFactory(resourceDefinition, partitionIds);
             SqlSession session = sessionFactory.openSession();
             try {
                 Object object = session.selectOne(statementId, partitionIds.get(0));
@@ -67,6 +68,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
                 session.close();
             }
         } else if ("selectList".equals(selectType)) {
+            SqlSessionFactory sessionFactory = getSessionFactory(resourceDefinition, partitionIds);
             final SqlSession session = sessionFactory.openSession();
             try {
                 List partition = session.selectList(statementId, partitionIds);
@@ -80,11 +82,19 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
         return null;
     }
 
-    public SqlSessionFactory getSessionFactory() {
-        return sessionFactory;
+    public SqlSessionFactory getSessionFactory(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+        return this.sessionFactoryProvider.get(resourceDefinition, partitionIds);
     }
 
     public void setSessionFactory(SqlSessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+        if (sessionFactory != null) {
+            setSessionFactoryProvider(new SimpleSqlSessionFactoryProvider(sessionFactory));
+        }
+    }
+
+    public void setSessionFactoryProvider(SqlSessionFactoryProvider provider) {
+        if (provider != null) {
+            this.sessionFactoryProvider = provider;
+        }
     }
 }
