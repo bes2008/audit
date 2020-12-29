@@ -39,15 +39,20 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
             }
 
             if (!lazyFinish) {
+                Throwable e = null;
                 try {
                     ret = invocation.proceed();
                 } catch (Throwable ex) {
                     wrappedRequest.setResult(OperationResult.FAIL);
+                    e = ex;
                 } finally {
                     try {
                         auditor.finishAudit(wrappedRequest);
                     } catch (Throwable ex) {
                         logger.error("error when the auditing finished, error: {}, request: {}", ex.getMessage(), request, ex);
+                    }
+                    if (e != null) {
+                        throw e;
                     }
                     return ret;
                 }
