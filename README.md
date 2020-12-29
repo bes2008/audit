@@ -48,7 +48,8 @@ audit:
   http-interceptor-patterns:  # Spring MVC HandlerInterceptor的拦截 pathPatterns
     - /consumers/**
     - /users/**
-
+  advisor-pointcut:
+    expression: execution(public * com.jn.audit.examples.springmvcdemo.common.controller.*Controller.*(..))
 
 ```
 
