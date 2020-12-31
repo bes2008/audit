@@ -1,5 +1,6 @@
 package com.jn.audit.servlet;
 
+import com.jn.agileway.web.servlet.Servlets;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.Principal;
 import com.jn.audit.core.model.PrincipalType;
@@ -15,7 +16,7 @@ public class ServletAuditEventPrincipalExtractor implements PrincipalExtractor<H
         HttpServletRequest request = wrappedRequest.getRequest();
         Principal principal = new Principal();
         principal.setClientHost(request.getRemoteHost());
-        principal.setClientIp(request.getRemoteAddr());
+        principal.setClientIp(Servlets.getClientIP(request));
         principal.setClientPort(request.getRemotePort());
         java.security.Principal p = request.getUserPrincipal();
         String principalName = null;
