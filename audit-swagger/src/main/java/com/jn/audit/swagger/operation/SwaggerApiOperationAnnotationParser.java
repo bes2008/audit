@@ -6,13 +6,15 @@ import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.operation.method.OperationMethodAnnotationDefinitionParser;
 import com.jn.audit.core.operation.method.ResourceDefinitionParser;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.reflect.Reflects;
 import io.swagger.annotations.ApiOperation;
 
 import java.lang.reflect.Method;
 
 public class SwaggerApiOperationAnnotationParser implements OperationMethodAnnotationDefinitionParser<ApiOperation> {
-
+    private String name;
     private ResourceDefinitionParser resourceDefinitionParser = new ResourceDefinitionParser();
 
     @Override
@@ -22,7 +24,17 @@ public class SwaggerApiOperationAnnotationParser implements OperationMethodAnnot
 
     @Override
     public String getName() {
-        return "Swagger-ApiOperation-Parser";
+        return Objs.useValueIfEmpty(name, new Supplier<String, String>() {
+            @Override
+            public String get(String s) {
+                return "Swagger-ApiOperation-Parser";
+            }
+        });
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

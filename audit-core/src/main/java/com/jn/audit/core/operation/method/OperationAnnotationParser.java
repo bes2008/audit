@@ -4,6 +4,8 @@ import com.jn.audit.core.annotation.Operation;
 import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.model.ResourceDefinition;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.reflect.Reflects;
 
 import java.lang.reflect.Method;
@@ -13,7 +15,7 @@ import java.lang.reflect.Method;
  * 如果要支持自定义的注解，可以自定义
  */
 public class OperationAnnotationParser implements OperationMethodAnnotationDefinitionParser<Operation> {
-
+    private String name;
     private ResourceDefinitionParser resourceDefinitionParser = new ResourceDefinitionParser();
 
     @Override
@@ -23,7 +25,17 @@ public class OperationAnnotationParser implements OperationMethodAnnotationDefin
 
     @Override
     public String getName() {
-        return Reflects.getFQNClassName(Operation.class);
+        return Objs.useValueIfEmpty(name, new Supplier<String, String>() {
+            @Override
+            public String get(String s) {
+                return Reflects.getFQNClassName(Operation.class);
+            }
+        });
+    }
+
+    @Override
+    public void setName(String s) {
+        this.name = s;
     }
 
     @Override
