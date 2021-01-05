@@ -1,12 +1,10 @@
 package com.jn.audit.spring.boot.autoconfigure;
 
-import com.jn.agileway.spring.aop.AspectJExpressionPointcutAdvisorProperties;
 import com.jn.audit.core.AuditSettings;
-import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
+import com.jn.langx.invocation.aop.expression.AspectJExpressionPointcutAdvisorProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
