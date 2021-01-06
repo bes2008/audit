@@ -1,30 +1,27 @@
 package com.jn.audit.servlet;
 
+import com.jn.agileway.web.servlet.HttpServletRequestStreamWrapper;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.operation.OperationParametersExtractor;
+import com.jn.langx.http.mime.MediaType;
 import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Objs;
-import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
-import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.io.IOs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ServletHttpParametersExtractor implements OperationParametersExtractor<HttpServletRequest, MethodInvocation> {
-    private String encoding = Charsets.UTF_8.name();
+    private static final Logger logger = LoggerFactory.getLogger(ServletHttpParametersExtractor.class);
 
     @Override
     public Map<String, Object> get(AuditRequest<HttpServletRequest, MethodInvocation> wrappedRequest) {
         HttpServletRequest request = wrappedRequest.getRequest();
-        try {
-            request.setCharacterEncoding(encoding);
-        } catch (UnsupportedEncodingException ex) {
-            throw Throwables.wrapAsRuntimeException(ex);
-        }
         Map<String, String[]> parameterMap = request.getParameterMap();
         final Map<String, Object> ret = new LinkedHashMap<String, Object>();
         Collects.forEach(parameterMap, new Consumer2<String, String[]>() {
@@ -37,14 +34,30 @@ public class ServletHttpParametersExtractor implements OperationParametersExtrac
                 }
             }
         });
+
+        boolean readBody = true;
+        int contentLength = request.getContentLength();
+        if (contentLength < 1) {
+            readBody = false;
+        }
+        if (!(request instanceof HttpServletRequestStreamWrapper)) {
+            readBody = false;
+        }
+        String contentType = request.getContentType();
+        if (readBody) {
+            if (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(contentType) || MediaType.MULTIPART_FORM_DATA_VALUE.equals(contentType)) {
+                readBody = false;
+            }
+        }
+
+        if (readBody) {
+            try {
+                String content = IOs.readAsString(request.getInputStream());
+                ret.put("REQUEST_BODY", content);
+            } catch (Throwable ex) {
+                logger.warn(ex.getMessage(), ex);
+            }
+        }
         return ret;
-    }
-
-    public String getEncoding() {
-        return encoding;
-    }
-
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
     }
 }
