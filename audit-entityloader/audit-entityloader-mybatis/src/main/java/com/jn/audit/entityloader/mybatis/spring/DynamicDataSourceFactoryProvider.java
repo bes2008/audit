@@ -6,6 +6,9 @@ import com.jn.sqlhelper.mybatis.spring.session.factory.dynamicdatasource.Dynamic
 import com.jn.sqlhelper.mybatis.spring.session.factory.dynamicdatasource.DynamicSqlSessionFactory;
 
 public class DynamicDataSourceFactoryProvider extends DynamicDataSourceSqlSessionFactoryProvider<ResourceDefinition> {
+    public DynamicDataSourceFactoryProvider(DynamicSqlSessionFactory dynamicSqlSessionFactory) {
+        this(new ResourceDefinitionDataSourceKeySelector(), dynamicSqlSessionFactory);
+    }
 
     public DynamicDataSourceFactoryProvider(DataSourceKeySelector<ResourceDefinition> selector, DynamicSqlSessionFactory dynamicSqlSessionFactory) {
         setSelector(selector);
