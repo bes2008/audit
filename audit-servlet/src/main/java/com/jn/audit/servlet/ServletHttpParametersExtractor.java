@@ -5,6 +5,7 @@ import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.operation.OperationParametersExtractor;
 import com.jn.langx.http.mime.MediaType;
 import com.jn.langx.invocation.MethodInvocation;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
@@ -37,14 +38,15 @@ public class ServletHttpParametersExtractor implements OperationParametersExtrac
 
         boolean readBody = true;
         int contentLength = request.getContentLength();
-        if (contentLength < 1) {
+        // 如果 请求头 content-length没有设置的话，该值可能为 -1
+        if (contentLength == 0) {
             readBody = false;
         }
         if (!(request instanceof HttpServletRequestStreamWrapper)) {
             readBody = false;
         }
         String contentType = request.getContentType();
-        if (readBody) {
+        if (readBody && Emptys.isNotEmpty(contentType)) {
             if (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(contentType) || MediaType.MULTIPART_FORM_DATA_VALUE.equals(contentType)) {
                 readBody = false;
             }

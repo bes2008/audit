@@ -14,6 +14,7 @@
 
 package com.jn.audit.examples.springmvcdemo.test.mybatis.springboot;
 
+import com.jn.agileway.springboot.web.filter.EnableAgilewayWebFilters;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.ImportResource;
 })
 //@ImportResource(locations = {"classpath:/applicationContext.xml"})
 @MapperScan("com.jn.audit.examples.springmvcdemo.common.dao")
+@EnableAgilewayWebFilters
 public class MyBatisWithSpringBootTest {
     public static void main(String[] args) {
         SpringApplication.run(MyBatisWithSpringBootTest.class, args);
