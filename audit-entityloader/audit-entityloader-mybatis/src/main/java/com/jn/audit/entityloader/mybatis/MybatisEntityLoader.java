@@ -6,6 +6,8 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
+import com.jn.sqlhelper.mybatis.session.factory.SimpleSqlSessionFactoryProvider;
+import com.jn.sqlhelper.mybatis.session.factory.SqlSessionFactoryProvider;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
     private static final String STATEMENT_ID = "statementId";
     private static final String SELECT_TYPE = "selectType";
     private String name = "mybatis";
-    private SqlSessionFactoryProvider sessionFactoryProvider;
+    private SqlSessionFactoryProvider<ResourceDefinition> sessionFactoryProvider;
 
     @Override
     public String getName() {
@@ -85,16 +87,16 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
     }
 
     public SqlSessionFactory getSessionFactory(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
-        return this.sessionFactoryProvider.get(resourceDefinition, partitionIds);
+        return this.sessionFactoryProvider.get(resourceDefinition);
     }
 
     public void setSessionFactory(SqlSessionFactory sessionFactory) {
         if (sessionFactory != null) {
-            setSessionFactoryProvider(new SimpleSqlSessionFactoryProvider(sessionFactory));
+            setSessionFactoryProvider(new SimpleSqlSessionFactoryProvider<ResourceDefinition>(sessionFactory));
         }
     }
 
-    public void setSessionFactoryProvider(SqlSessionFactoryProvider provider) {
+    public void setSessionFactoryProvider(SqlSessionFactoryProvider<ResourceDefinition> provider) {
         if (provider != null) {
             this.sessionFactoryProvider = provider;
         }
