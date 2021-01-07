@@ -48,6 +48,7 @@ public class ServletHttpParametersExtractor implements OperationParametersExtrac
         String contentType = request.getContentType();
         if (readBody && Emptys.isNotEmpty(contentType)) {
             if (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(contentType) || MediaType.MULTIPART_FORM_DATA_VALUE.equals(contentType)) {
+                // 在这两种contentType下，上面的 getParameter时 就已经将这部分内容读过了
                 readBody = false;
             }
         }
