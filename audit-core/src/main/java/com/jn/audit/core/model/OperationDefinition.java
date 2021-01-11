@@ -4,9 +4,12 @@ import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.configuration.Configuration;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.hash.HashCodeBuilder;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * may be in any style: xml, yaml, database
@@ -18,9 +21,9 @@ public class OperationDefinition implements Configuration, Serializable {
     private String name; // {required}  the operate name
     private String type; // {optional}  the operate type
     private String module; // {optional}  the module
-    private Map<String,String> props; // {optional}  the props
     private String description;// {optional} the operate description
     private OperationImportance importance;  // {optional} the importance
+    private Map<String, Object> props; // {optional}  the props
     private ResourceDefinition resourceDefinition;
 
     public String getCode() {
@@ -31,14 +34,18 @@ public class OperationDefinition implements Configuration, Serializable {
         this.code = code;
     }
 
-    public Map<String, String> getProps() {
-		return props;
-	}
+    public Map<String, Object> getProps() {
+        return props;
+    }
 
-	public void setProps(Map<String, String> props) {
-		this.props = props;
-	}
-    
+    public MapAccessor getPropsAccessor() {
+        return props == null ? new MapAccessor(Collects.<String, Object>emptyHashMap()) : new MapAccessor(props);
+    }
+
+    public void setProps(Map<String, Object> props) {
+        this.props = props;
+    }
+
     public String getName() {
         return name;
     }
