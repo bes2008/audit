@@ -18,6 +18,7 @@ public class OperationDefinition implements Configuration, Serializable {
     private String name; // {required}  the operate name
     private String type; // {optional}  the operate type
     private String module; // {optional}  the module
+    private Map<String,String> props; // {optional}  the props
     private String description;// {optional} the operate description
     private OperationImportance importance;  // {optional} the importance
     private ResourceDefinition resourceDefinition;
@@ -30,6 +31,14 @@ public class OperationDefinition implements Configuration, Serializable {
         this.code = code;
     }
 
+    public Map<String, String> getProps() {
+		return props;
+	}
+
+	public void setProps(Map<String, String> props) {
+		this.props = props;
+	}
+    
     public String getName() {
         return name;
     }
