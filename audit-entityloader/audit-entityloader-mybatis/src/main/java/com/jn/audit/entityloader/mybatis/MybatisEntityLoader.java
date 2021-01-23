@@ -1,5 +1,6 @@
 package com.jn.audit.entityloader.mybatis;
 
+import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.idresource.AbstractEntityLoader;
 import com.jn.langx.util.Emptys;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.List;
 
-public class MybatisEntityLoader<AuditedRequestContext> extends AbstractEntityLoader<Object,AuditedRequestContext> {
+public class MybatisEntityLoader<AuditedRequest, AuditedRequestContext> extends AbstractEntityLoader<Object, AuditedRequest, AuditedRequestContext> {
     private static final Logger logger = LoggerFactory.getLogger(MybatisEntityLoader.class);
     private static final String STATEMENT_ID = "statementId";
     private static final String SELECT_TYPE = "selectType";
@@ -52,7 +53,7 @@ public class MybatisEntityLoader<AuditedRequestContext> extends AbstractEntityLo
     }
 
     @Override
-    protected List<Object> loadInternal(AuditedRequestContext auditedRequestContext,ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+    protected List<Object> loadInternal(AuditRequest<AuditedRequest, AuditedRequestContext> request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         if (Emptys.isEmpty(partitionIds)) {
             return null;
         }

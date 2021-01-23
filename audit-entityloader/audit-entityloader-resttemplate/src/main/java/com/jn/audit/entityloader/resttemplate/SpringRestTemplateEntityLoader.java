@@ -1,5 +1,6 @@
 package com.jn.audit.entityloader.resttemplate;
 
+import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.exception.IllegalResourceDefinition;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.idresource.AbstractEntityLoader;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class SpringRestTemplateEntityLoader<AuditedRequestContext> extends AbstractEntityLoader<Object, AuditedRequestContext> {
+public class SpringRestTemplateEntityLoader<AuditedRequest, AuditedRequestContext> extends AbstractEntityLoader<Object,AuditedRequest, AuditedRequestContext> {
 
     private static final Logger logger = LoggerFactory.getLogger(SpringRestTemplateEntityLoader.class);
     private static Pattern restTemplateVariablePattern = Pattern.compile("\\{\\w+(\\.[\\w\\-]+)*}");
@@ -47,7 +48,7 @@ public class SpringRestTemplateEntityLoader<AuditedRequestContext> extends Abstr
     }
 
     @Override
-    protected List<Object> loadInternal(AuditedRequestContext auditedRequestContext, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+    protected List<Object> loadInternal(AuditRequest<AuditedRequest, AuditedRequestContext> request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         final List<Object> entities = Collects.emptyArrayList();
         String url = findHttpUrl(resourceDefinition);
         url = replaceAuditVariables(url, resourceDefinition, partitionIds);

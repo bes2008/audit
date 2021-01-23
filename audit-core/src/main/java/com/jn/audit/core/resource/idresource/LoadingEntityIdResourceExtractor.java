@@ -69,7 +69,7 @@ public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestC
         if (Emptys.isEmpty(ids)) {
             return null;
         }
-        return entityLoader.load(request.getRequestContext(), resourceDefinition, ids);
+        return entityLoader.load(request, resourceDefinition, ids);
     }
 
     @Override
