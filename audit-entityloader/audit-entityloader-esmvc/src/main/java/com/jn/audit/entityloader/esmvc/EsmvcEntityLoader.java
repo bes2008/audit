@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.List;
 
-public class EsmvcEntityLoader<AuditedRequest, AuditedRequestContext> extends AbstractEntityLoader<Object, AuditedRequest, AuditedRequestContext> {
+public class EsmvcEntityLoader extends AbstractEntityLoader<Object> {
     private static final String SERVICE_IMPL_CLASS_NAME = "serviceImplClassName";
     private static final Logger logger = LoggerFactory.getLogger(EsmvcEntityLoader.class);
 
@@ -47,7 +47,7 @@ public class EsmvcEntityLoader<AuditedRequest, AuditedRequestContext> extends Ab
     }
 
     @Override
-    protected List<Object> loadInternal(AuditRequest<AuditedRequest, AuditedRequestContext> request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+    protected List<Object> loadInternal(AuditRequest request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         Preconditions.checkNotNull(esModelServiceFactory, "the EsModelServiceFactory is null or empty");
         if (Emptys.isEmpty(partitionIds)) {
             return null;

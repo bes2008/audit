@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.List;
 
-public class EntityLoaderDispatcher<E,AuditedRequest, AuditedRequestContext> implements EntityLoader<E, AuditedRequest, AuditedRequestContext> {
+public class EntityLoaderDispatcher<E> implements EntityLoader<E> {
     private static final Logger logger = LoggerFactory.getLogger(EntityLoaderDispatcher.class);
     private EntityLoaderRegistry registry;
 
@@ -22,7 +22,7 @@ public class EntityLoaderDispatcher<E,AuditedRequest, AuditedRequestContext> imp
     }
 
     @Override
-    public List<E> load(AuditRequest<AuditedRequest, AuditedRequestContext> request, ResourceDefinition resourceDefinition, List<Serializable> ids) {
+    public List<E> load(AuditRequest request, ResourceDefinition resourceDefinition, List<Serializable> ids) {
         String entityLoaderName = resourceDefinition.getEntityLoader();
         if (Emptys.isEmpty(entityLoaderName)) {
             logger.warn("Can't load resource entities, because of the idLoader is null or empty");
