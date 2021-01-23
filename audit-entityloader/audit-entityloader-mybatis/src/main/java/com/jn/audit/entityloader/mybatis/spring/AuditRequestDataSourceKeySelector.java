@@ -17,6 +17,13 @@ public class AuditRequestDataSourceKeySelector implements DataSourceKeySelector<
 
     private MethodInvocationDataSourceKeySelector delegate;
 
+    public AuditRequestDataSourceKeySelector(){
+
+    }
+
+    public AuditRequestDataSourceKeySelector(MethodInvocationDataSourceKeySelector delegate){
+        setDelegate(delegate);
+    }
     public void setDelegate(MethodInvocationDataSourceKeySelector delegate) {
         this.delegate = delegate;
     }
