@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class SpringRestTemplateEntityLoader extends AbstractEntityLoader<Object> {
+public class SpringRestTemplateEntityLoader<AuditedRequestContext> extends AbstractEntityLoader<Object, AuditedRequestContext> {
 
     private static final Logger logger = LoggerFactory.getLogger(SpringRestTemplateEntityLoader.class);
     private static Pattern restTemplateVariablePattern = Pattern.compile("\\{\\w+(\\.[\\w\\-]+)*}");
@@ -47,7 +47,7 @@ public class SpringRestTemplateEntityLoader extends AbstractEntityLoader<Object>
     }
 
     @Override
-    protected List<Object> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+    protected List<Object> loadInternal(AuditedRequestContext auditedRequestContext, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         final List<Object> entities = Collects.emptyArrayList();
         String url = findHttpUrl(resourceDefinition);
         url = replaceAuditVariables(url, resourceDefinition, partitionIds);

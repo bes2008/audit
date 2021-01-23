@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 
-public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
+public abstract class AbstractEntityLoader<E, AuditedRequestContext> implements EntityLoader<E, AuditedRequestContext> {
     private ExecutorService executor;
 
     public void setExecutor(ExecutorService executor) {
@@ -28,7 +28,7 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
     protected abstract Logger getLogger();
 
     @Override
-    public List<E> load(final ResourceDefinition resourceDefinition, final List<Serializable> ids) {
+    public List<E> load(final AuditedRequestContext auditedRequestContext, final ResourceDefinition resourceDefinition, final List<Serializable> ids) {
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
 
         // 总数
@@ -61,7 +61,7 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
                     @Override
                     public void run() {
                         try {
-                            List<E> partition = loadInternal(resourceDefinition, partitionIds);
+                            List<E> partition = loadInternal(auditedRequestContext, resourceDefinition, partitionIds);
                             entitiesVector.addAll(partition);
                         } catch (Throwable ex) {
                             Throwables.log(getLogger(),
@@ -101,7 +101,7 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
     /**
      * 一次性取一批
      */
-    protected abstract List<E> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds);
+    protected abstract List<E> loadInternal(AuditedRequestContext auditedRequestContext, ResourceDefinition resourceDefinition, List<Serializable> partitionIds);
 
 
 }

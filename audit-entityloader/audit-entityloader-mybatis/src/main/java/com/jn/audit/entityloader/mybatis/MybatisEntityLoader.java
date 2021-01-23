@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.List;
 
-public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
+public class MybatisEntityLoader<AuditedRequestContext> extends AbstractEntityLoader<Object,AuditedRequestContext> {
     private static final Logger logger = LoggerFactory.getLogger(MybatisEntityLoader.class);
     private static final String STATEMENT_ID = "statementId";
     private static final String SELECT_TYPE = "selectType";
@@ -52,7 +52,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
     }
 
     @Override
-    protected List<Object> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+    protected List<Object> loadInternal(AuditedRequestContext auditedRequestContext,ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         if (Emptys.isEmpty(partitionIds)) {
             return null;
         }

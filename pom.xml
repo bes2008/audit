@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <langx-java.version>3.3.1</langx-java.version>
+        <langx-java.version>3.3.3</langx-java.version>
         <easyjson.version>3.0.4</easyjson.version>
         <disruptor.version>3.4.2</disruptor.version>
         <spring.version>4.3.25.RELEASE</spring.version>
