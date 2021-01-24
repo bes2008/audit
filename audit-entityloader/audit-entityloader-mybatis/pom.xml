@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-mybatis-spring-common</artifactId>
-            <version>3.4.1</version>
+            <version>${sqlhelper.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
