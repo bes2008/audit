@@ -67,7 +67,7 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
                         } catch (Throwable ex) {
                             Throwables.log(getLogger(),
                                     Level.ERROR,
-                                    StringTemplates.formatWithPlaceholder("error occur when load entities by {} loader , ids: {}", getName(), Strings.join(",", ids)),
+                                    StringTemplates.formatWithPlaceholder("error occur when load entities by {} loader , ids: {}, error: {}", getName(), Strings.join(",", ids), ex.getMessage()),
                                     ex);
                         }
                     }

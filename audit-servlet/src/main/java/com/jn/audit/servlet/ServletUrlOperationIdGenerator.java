@@ -7,7 +7,6 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 
 public class ServletUrlOperationIdGenerator extends AbstractOperationMethodIdGenerator<HttpServletRequest> {
     @Override
