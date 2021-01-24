@@ -1,4 +1,4 @@
-package com.jn.audit.entityloader.mybatis.spring;
+package com.jn.audit.entityloader.mybatis.spring.dynamicdatasource;
 
 import com.jn.audit.core.AuditRequest;
 import com.jn.langx.annotation.NonNull;
@@ -10,7 +10,7 @@ import com.jn.sqlhelper.mybatis.spring.session.factory.dynamicdatasource.Dynamic
 
 public class DynamicDataSourceFactoryProvider extends DynamicDataSourceSqlSessionFactoryProvider<AuditRequest> {
     public DynamicDataSourceFactoryProvider(@Nullable MethodInvocationDataSourceKeySelector delegateSelector, @NonNull DynamicSqlSessionFactory dynamicSqlSessionFactory) {
-        this(new AuditRequestDataSourceKeySelector(delegateSelector), dynamicSqlSessionFactory);
+        this(new AuditRequestDynamicDataSourceKeySelector(delegateSelector), dynamicSqlSessionFactory);
     }
 
     public DynamicDataSourceFactoryProvider(DataSourceKeySelector<AuditRequest> selector, DynamicSqlSessionFactory dynamicSqlSessionFactory) {

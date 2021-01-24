@@ -1,4 +1,4 @@
-package com.jn.audit.entityloader.mybatis.spring;
+package com.jn.audit.entityloader.mybatis.spring.dynamicdatasource;
 
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.AuditEvent;
@@ -12,16 +12,16 @@ import com.jn.sqlhelper.datasource.key.MethodInvocationDataSourceKeySelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AuditRequestDataSourceKeySelector implements DataSourceKeySelector<AuditRequest> {
-    private static final Logger logger = LoggerFactory.getLogger(AuditRequestDataSourceKeySelector.class);
+public class AuditRequestDynamicDataSourceKeySelector implements DataSourceKeySelector<AuditRequest> {
+    private static final Logger logger = LoggerFactory.getLogger(AuditRequestDynamicDataSourceKeySelector.class);
 
     private MethodInvocationDataSourceKeySelector delegate;
 
-    public AuditRequestDataSourceKeySelector(){
+    public AuditRequestDynamicDataSourceKeySelector(){
 
     }
 
-    public AuditRequestDataSourceKeySelector(MethodInvocationDataSourceKeySelector delegate){
+    public AuditRequestDynamicDataSourceKeySelector(MethodInvocationDataSourceKeySelector delegate){
         setDelegate(delegate);
     }
     public void setDelegate(MethodInvocationDataSourceKeySelector delegate) {
