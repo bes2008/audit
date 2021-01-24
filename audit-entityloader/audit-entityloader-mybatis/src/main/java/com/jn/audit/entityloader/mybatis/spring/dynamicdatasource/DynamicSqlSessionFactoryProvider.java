@@ -8,12 +8,12 @@ import com.jn.sqlhelper.datasource.key.MethodInvocationDataSourceKeySelector;
 import com.jn.sqlhelper.mybatis.spring.session.factory.dynamicdatasource.DynamicDataSourceSqlSessionFactoryProvider;
 import com.jn.sqlhelper.mybatis.spring.session.factory.dynamicdatasource.DynamicSqlSessionFactory;
 
-public class DynamicDataSourceFactoryProvider extends DynamicDataSourceSqlSessionFactoryProvider<AuditRequest> {
-    public DynamicDataSourceFactoryProvider(@Nullable MethodInvocationDataSourceKeySelector delegateSelector, @NonNull DynamicSqlSessionFactory dynamicSqlSessionFactory) {
+public class DynamicSqlSessionFactoryProvider extends DynamicDataSourceSqlSessionFactoryProvider<AuditRequest> {
+    public DynamicSqlSessionFactoryProvider(@Nullable MethodInvocationDataSourceKeySelector delegateSelector, @NonNull DynamicSqlSessionFactory dynamicSqlSessionFactory) {
         this(new AuditRequestDynamicDataSourceKeySelector(delegateSelector), dynamicSqlSessionFactory);
     }
 
-    public DynamicDataSourceFactoryProvider(DataSourceKeySelector<AuditRequest> selector, DynamicSqlSessionFactory dynamicSqlSessionFactory) {
+    public DynamicSqlSessionFactoryProvider(DataSourceKeySelector<AuditRequest> selector, DynamicSqlSessionFactory dynamicSqlSessionFactory) {
         setSelector(selector);
         setDynamicSqlSessionFactory(dynamicSqlSessionFactory);
     }

@@ -6,6 +6,8 @@ mybatis:
   mapper-locations: classpath*:mapper/*.xml
 
 sqlhelper:
+  dynamic-datasource:
+    enabled: true
   mybatis:
     instrumentor:
       name: mybatis
