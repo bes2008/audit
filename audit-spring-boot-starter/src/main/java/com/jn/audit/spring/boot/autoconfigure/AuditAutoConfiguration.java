@@ -30,19 +30,24 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @ConditionalOnProperty(value = "auditor.enabled", havingValue = "true", matchIfMissing = true)
 @Configuration
+@Import({OperationAutoConfiguration.class,ResourceExtractAutoConfiguration.class})
+@EnableConfigurationProperties(AuditProperties.class)
 public class AuditAutoConfiguration implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
