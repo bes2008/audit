@@ -1,5 +1,6 @@
 package com.jn.audit.entityloader.resttemplate;
 
+import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.exception.IllegalResourceDefinition;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.idresource.AbstractEntityLoader;
@@ -47,7 +48,7 @@ public class SpringRestTemplateEntityLoader extends AbstractEntityLoader<Object>
     }
 
     @Override
-    protected List<Object> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+    protected List<Object> loadInternal(AuditRequest request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         final List<Object> entities = Collects.emptyArrayList();
         String url = findHttpUrl(resourceDefinition);
         url = replaceAuditVariables(url, resourceDefinition, partitionIds);

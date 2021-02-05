@@ -1,5 +1,6 @@
 package com.jn.audit.entityloader.esmvc;
 
+import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.idresource.AbstractEntityLoader;
 import com.jn.esmvc.service.ESModelService;
@@ -46,7 +47,7 @@ public class EsmvcEntityLoader extends AbstractEntityLoader<Object> {
     }
 
     @Override
-    protected List<Object> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+    protected List<Object> loadInternal(AuditRequest request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         Preconditions.checkNotNull(esModelServiceFactory, "the EsModelServiceFactory is null or empty");
         if (Emptys.isEmpty(partitionIds)) {
             return null;

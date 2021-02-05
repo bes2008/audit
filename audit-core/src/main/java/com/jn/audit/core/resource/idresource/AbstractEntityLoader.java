@@ -1,5 +1,6 @@
 package com.jn.audit.core.resource.idresource;
 
+import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
@@ -28,7 +29,7 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
     protected abstract Logger getLogger();
 
     @Override
-    public List<E> load(final ResourceDefinition resourceDefinition, final List<Serializable> ids) {
+    public List<E> load(final AuditRequest request, final ResourceDefinition resourceDefinition, final List<Serializable> ids) {
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
 
         // 总数
@@ -61,12 +62,12 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
                     @Override
                     public void run() {
                         try {
-                            List<E> partition = loadInternal(resourceDefinition, partitionIds);
+                            List<E> partition = loadInternal(request, resourceDefinition, partitionIds);
                             entitiesVector.addAll(partition);
                         } catch (Throwable ex) {
                             Throwables.log(getLogger(),
                                     Level.ERROR,
-                                    StringTemplates.formatWithPlaceholder("error occur when load entities by {} loader , ids: {}", getName(), Strings.join(",", ids)),
+                                    StringTemplates.formatWithPlaceholder("error occur when load entities by {} loader , ids: {}, error: {}", getName(), Strings.join(",", ids), ex.getMessage()),
                                     ex);
                         }
                     }
@@ -101,7 +102,7 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
     /**
      * 一次性取一批
      */
-    protected abstract List<E> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds);
+    protected abstract List<E> loadInternal(AuditRequest request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds);
 
 
 }

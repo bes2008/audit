@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.fangjinuo.audit.entityloader</groupId>
         <artifactId>audit-entityloader</artifactId>
-        <version>2.2.9</version>
+        <version>2.3.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.github.fangjinuo.sqlhelper</groupId>
             <artifactId>sqlhelper-mybatis-spring-common</artifactId>
-            <version>3.4.1</version>
+            <version>${sqlhelper.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

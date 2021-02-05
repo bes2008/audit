@@ -1,5 +1,6 @@
 package com.jn.audit.entityloader.mybatis;
 
+import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.idresource.AbstractEntityLoader;
 import com.jn.langx.util.Emptys;
@@ -21,7 +22,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
     private static final String STATEMENT_ID = "statementId";
     private static final String SELECT_TYPE = "selectType";
     private String name = "mybatis";
-    private SqlSessionFactoryProvider<ResourceDefinition> sessionFactoryProvider;
+    private SqlSessionFactoryProvider<AuditRequest> sessionFactoryProvider;
 
     @Override
     public String getName() {
@@ -52,7 +53,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
     }
 
     @Override
-    protected List<Object> loadInternal(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
+    protected List<Object> loadInternal(AuditRequest request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
         if (Emptys.isEmpty(partitionIds)) {
             return null;
         }
@@ -61,7 +62,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
         String selectType = mapAccessor.getString(SELECT_TYPE, "selectList");
         Preconditions.checkNotEmpty(statementId, "the {} is undefined in the resource definition", STATEMENT_ID);
         if ("selectOne".equals(selectType)) {
-            SqlSessionFactory sessionFactory = getSessionFactory(resourceDefinition, partitionIds);
+            SqlSessionFactory sessionFactory = getSessionFactory(request);
             Preconditions.checkNotNull(sessionFactory, "the session factory is null");
             SqlSession session = sessionFactory.openSession();
             try {
@@ -71,7 +72,7 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
                 session.close();
             }
         } else if ("selectList".equals(selectType)) {
-            SqlSessionFactory sessionFactory = getSessionFactory(resourceDefinition, partitionIds);
+            SqlSessionFactory sessionFactory = getSessionFactory(request);
             Preconditions.checkNotNull(sessionFactory, "the session factory is null");
             final SqlSession session = sessionFactory.openSession();
             try {
@@ -86,17 +87,17 @@ public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
         return null;
     }
 
-    public SqlSessionFactory getSessionFactory(ResourceDefinition resourceDefinition, List<Serializable> partitionIds) {
-        return this.sessionFactoryProvider.get(resourceDefinition);
+    public SqlSessionFactory getSessionFactory(AuditRequest request) {
+        return this.sessionFactoryProvider.get(request);
     }
 
     public void setSessionFactory(SqlSessionFactory sessionFactory) {
         if (sessionFactory != null) {
-            setSessionFactoryProvider(new SimpleSqlSessionFactoryProvider<ResourceDefinition>(sessionFactory));
+            setSessionFactoryProvider(new SimpleSqlSessionFactoryProvider<AuditRequest>(sessionFactory));
         }
     }
 
-    public void setSessionFactoryProvider(SqlSessionFactoryProvider<ResourceDefinition> provider) {
+    public void setSessionFactoryProvider(SqlSessionFactoryProvider<AuditRequest> provider) {
         if (provider != null) {
             this.sessionFactoryProvider = provider;
         }

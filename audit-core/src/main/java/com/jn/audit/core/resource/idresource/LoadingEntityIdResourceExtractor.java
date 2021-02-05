@@ -10,7 +10,6 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.function.Predicate;
@@ -42,13 +41,13 @@ public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestC
     public List<E> findEntities(AuditRequest<AuditedRequest, AuditedRequestContext> request, List<Serializable> ids) {
         ResourceDefinition resourceDefinition = request.getAuditEvent().getOperation().getDefinition().getResourceDefinition();
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
-        if(Emptys.isEmpty(ids)){
+        if (Emptys.isEmpty(ids)) {
             return null;
         }
         boolean idIsString = ids.get(0) instanceof String;
 
         final String selectListIdSeparator = mapAccessor.getString(SELECT_LIST_SEPARATOR, "");
-        if(idIsString && Strings.isNotBlank(selectListIdSeparator)) {
+        if (idIsString && Strings.isNotBlank(selectListIdSeparator)) {
             final List transformedIds = Collects.emptyArrayList();
             // 过滤出有效的id,并根据指定的分隔符进行id 分割提取
             Pipeline.of(ids).filter(new Predicate<Serializable>() {
@@ -67,10 +66,10 @@ public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestC
             ids.clear();
             ids.addAll(transformedIds);
         }
-        if(Emptys.isEmpty(ids)){
+        if (Emptys.isEmpty(ids)) {
             return null;
         }
-        return entityLoader.load(resourceDefinition, ids);
+        return entityLoader.load(request, resourceDefinition, ids);
     }
 
     @Override

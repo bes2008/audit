@@ -1,5 +1,6 @@
 package com.jn.audit.core.resource.idresource;
 
+import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
@@ -21,7 +22,7 @@ public class EntityLoaderDispatcher<E> implements EntityLoader<E> {
     }
 
     @Override
-    public List<E> load(ResourceDefinition resourceDefinition, List<Serializable> ids) {
+    public List<E> load(AuditRequest request, ResourceDefinition resourceDefinition, List<Serializable> ids) {
         String entityLoaderName = resourceDefinition.getEntityLoader();
         if (Emptys.isEmpty(entityLoaderName)) {
             logger.warn("Can't load resource entities, because of the idLoader is null or empty");
@@ -35,7 +36,7 @@ public class EntityLoaderDispatcher<E> implements EntityLoader<E> {
         }
         List<E> entities = null;
         try {
-            entities = loader.load(resourceDefinition, ids);
+            entities = loader.load(request, resourceDefinition, ids);
         } catch (Throwable ex) {
             logger.error("error occur when loading auditing resources by the {} entity loader, ids: {} ", entityLoaderName, Strings.join(",", ids), ex);
         }
