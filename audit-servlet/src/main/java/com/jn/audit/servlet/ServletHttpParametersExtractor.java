@@ -9,16 +9,19 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
-import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.io.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ServletHttpParametersExtractor implements OperationParametersExtractor<HttpServletRequest, MethodInvocation> {
     private static final Logger logger = LoggerFactory.getLogger(ServletHttpParametersExtractor.class);
+
 
     @Override
     public Map<String, Object> get(AuditRequest<HttpServletRequest, MethodInvocation> wrappedRequest) {
@@ -53,9 +56,24 @@ public class ServletHttpParametersExtractor implements OperationParametersExtrac
             }
         }
 
+        if(readBody) {
+            // 在使用 spring mvc 时，文件上传时，可以不提供 multipart 请求头
+            // 从servlet 3.0 开始，有该方法
+            Collection<Part> parts = null;
+            try {
+                parts = request.getParts();
+            } catch (Throwable ex) {
+                // ignore it
+            }
+            if (Emptys.isNotEmpty(parts)) {
+                readBody = false;
+            }
+        }
+
         if (readBody) {
             try {
-                String content = IOs.readAsString(request.getInputStream());
+                HttpServletRequestStreamWrapper requestWrapper = (HttpServletRequestStreamWrapper) request;
+                String content = new String(requestWrapper.getRequestBody(), Charsets.UTF_8);
                 ret.put("REQUEST_BODY", content);
             } catch (Throwable ex) {
                 logger.warn(ex.getMessage(), ex);

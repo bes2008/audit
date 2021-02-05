@@ -20,6 +20,7 @@ import com.jn.audit.examples.springmvcdemo.common.dao.UserDao;
 import com.jn.audit.examples.springmvcdemo.common.model.User;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer;
 import com.jn.sqlhelper.apachedbutils.QueryRunner;
 import com.jn.sqlhelper.common.resultset.BeanRowMapper;
 import com.jn.sqlhelper.common.resultset.RowMapperResultSetExtractor;
@@ -30,13 +31,17 @@ import com.jn.sqlhelper.springjdbc.JdbcTemplate;
 import com.jn.sqlhelper.springjdbc.NamedParameterJdbcTemplate;
 import com.jn.sqlhelper.springjdbc.resultset.SqlHelperRowMapperResultSetExtractor;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -51,6 +56,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private UserDao userDao;
 
     @Autowired
@@ -347,4 +353,19 @@ public class UserController {
     public User getById(@RequestParam("id") String id) {
         return userDao.selectById(id);
     }
+
+    @ApiOperation(value = "upload", consumes = "multipart/form-data")
+    @PostMapping("/_upload/{id}")
+    public void upload(@RequestPart("files") MultipartFile[] files, @PathVariable("id") String id, @RequestParam("name") String name) {
+        logger.info("id: {}", id);
+        logger.info("name: {}", name);
+        Collects.forEach(files, new Consumer<MultipartFile>() {
+            @Override
+            public void accept(MultipartFile multipartFile) {
+                logger.info("file: {}", multipartFile);
+            }
+        });
+
+    }
+
 }

@@ -94,3 +94,11 @@ operationDefinitions:
     name: 使用SQLHelper提供的BatchAPI:SIMPLE
     type: batch_insert_simple
     importance: major
+  POST-/users/_upload/{id}:
+    code: Audit_springmvc_USER_UPLOAD
+    name: 测试上传文件
+    type: upload
+    importance: major
+    resourceDefinition:
+      entityLoader: mybatis
+      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectById
