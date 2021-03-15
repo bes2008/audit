@@ -4,7 +4,7 @@ import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.operation.method.AbstractOperationMethodIdGenerator;
 import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Emptys;
-import com.jn.langx.util.Objects;
+import com.jn.langx.util.Objs;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
                 paths = accessor.getValues();
             }
             List<String> controllerPaths = RequestMappings.getURLTemplates(method.getDeclaringClass());
-            if (Objects.isEmpty(httpMethods)) {
+            if (Objs.isEmpty(httpMethods)) {
                 return null;
             }
 
@@ -36,7 +36,15 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
             } else {
                 String urlAtController = Emptys.isEmpty(controllerPaths) ? "" : controllerPaths.get(0);
                 String urlAtMethod = Emptys.isEmpty(paths) ? "" : paths.get(0);
-                urlTemplate = urlAtController + urlAtMethod;
+                if (Objs.isEmpty(urlAtController)) {
+                    urlTemplate = urlAtMethod;
+                } else {
+                    if (urlAtMethod.startsWith("/")) {
+                        urlTemplate = urlAtController + urlAtMethod;
+                    } else {
+                        urlTemplate = urlAtController + "/" + urlAtMethod;
+                    }
+                }
             }
             return httpMethods.get(0).name() + "-" + urlTemplate;
         }
