@@ -2,7 +2,7 @@ package com.jn.audit.core.model;
 
 import java.io.Serializable;
 
-public class Service implements Serializable {
+public class Service  extends CommonProps implements Serializable {
     public static final long serialVersionUID = 1L;
 
     private String serviceId;   // {optional}, if not specified, equals the serviceName

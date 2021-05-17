@@ -2,7 +2,7 @@ package com.jn.audit.core.model;
 
 import java.io.Serializable;
 
-public class Principal implements Serializable {
+public class Principal  extends CommonProps implements Serializable {
     public static final long serialVersionUID = 1L;
 
     private String principalId;// {required} the user id
