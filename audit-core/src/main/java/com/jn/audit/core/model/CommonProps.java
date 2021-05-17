@@ -11,7 +11,6 @@ import java.util.Map;
  * 便于个性化扩展的属性
  */
 public class CommonProps implements Serializable {
-    public static final long serialVersionUID = 1L;
 
     protected Map<String, Object> props;
 
