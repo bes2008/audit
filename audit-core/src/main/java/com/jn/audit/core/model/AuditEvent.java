@@ -8,7 +8,7 @@ import com.jn.langx.util.collection.Collects;
 import java.io.Serializable;
 import java.util.List;
 
-public class AuditEvent implements Serializable {
+public class AuditEvent  extends CommonProps {
     public static final long serialVersionUID = 1L;
 
     // who

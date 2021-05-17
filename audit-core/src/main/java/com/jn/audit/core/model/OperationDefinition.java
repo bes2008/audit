@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * may be in any style: xml, yaml, database
  */
-public class OperationDefinition implements Configuration, Serializable {
+public class OperationDefinition extends CommonProps implements Configuration {
     public static final long serialVersionUID = 1L;
     private String id; // {required} the id , also the method full name
     private String code; // {required}  the operate code
@@ -23,7 +23,6 @@ public class OperationDefinition implements Configuration, Serializable {
     private String module; // {optional}  the module
     private String description;// {optional} the operate description
     private OperationImportance importance;  // {optional} the importance
-    private Map<String, Object> props; // {optional}  the props
     private ResourceDefinition resourceDefinition;
 
     public String getCode() {
@@ -34,17 +33,6 @@ public class OperationDefinition implements Configuration, Serializable {
         this.code = code;
     }
 
-    public Map<String, Object> getProps() {
-        return props;
-    }
-
-    public MapAccessor getPropsAccessor() {
-        return props == null ? new MapAccessor(Collects.<String, Object>emptyHashMap()) : new MapAccessor(props);
-    }
-
-    public void setProps(Map<String, Object> props) {
-        this.props = props;
-    }
 
     public String getName() {
         return name;
