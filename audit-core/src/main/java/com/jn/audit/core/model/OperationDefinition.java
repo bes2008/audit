@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * may be in any style: xml, yaml, database
  */
-public class OperationDefinition extends CommonProps implements Configuration, Serializable {
+public class OperationDefinition extends CommonProps implements Configuration {
     public static final long serialVersionUID = 1L;
     private String id; // {required} the id , also the method full name
     private String code; // {required}  the operate code

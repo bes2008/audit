@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 代表了AuditEvent中的Operation
  */
-public class Operation implements Serializable {
+public class Operation extends CommonProps {
     /**
      * 操作定义
      */
