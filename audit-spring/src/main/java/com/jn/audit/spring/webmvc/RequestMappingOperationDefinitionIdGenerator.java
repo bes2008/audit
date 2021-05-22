@@ -5,6 +5,7 @@ import com.jn.audit.core.operation.method.AbstractOperationMethodIdGenerator;
 import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
                 if (Objs.isEmpty(urlAtController)) {
                     urlTemplate = urlAtMethod;
                 } else {
-                    if(!urlAtMethod.equals("")) {
+                    if(Strings.isNotEmpty(urlAtMethod)) {
                         if (urlAtMethod.startsWith("/")) {
                             urlTemplate = urlAtController + urlAtMethod;
                         } else {
