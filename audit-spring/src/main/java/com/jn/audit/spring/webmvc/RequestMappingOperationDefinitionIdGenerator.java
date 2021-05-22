@@ -40,11 +40,12 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
                 if (Objs.isEmpty(urlAtController)) {
                     urlTemplate = urlAtMethod;
                 } else {
+                    urlTemplate = urlAtController;
                     if(Strings.isNotEmpty(urlAtMethod)) {
                         if (urlAtMethod.startsWith("/")) {
-                            urlTemplate = urlAtController + urlAtMethod;
+                            urlTemplate = urlTemplate + urlAtMethod;
                         } else {
-                            urlTemplate = urlAtController + "/" + urlAtMethod;
+                            urlTemplate = urlTemplate + "/" + urlAtMethod;
                         }
                     }
                 }
