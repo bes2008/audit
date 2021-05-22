@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>2.3.4</version>
 
-    <name>audit</name>
+    <name>${groupId}:${artifactId}:${version}</name>
 
     <description>
         A common audit framework for java application

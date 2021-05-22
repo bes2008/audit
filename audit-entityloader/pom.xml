@@ -8,7 +8,7 @@
         <version>2.3.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <name>${groupId}:${artifactId}:${version}</name>
     <groupId>com.github.fangjinuo.audit.entityloader</groupId>
     <artifactId>audit-entityloader</artifactId>
     <packaging>pom</packaging>
