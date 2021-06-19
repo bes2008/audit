@@ -1,7 +1,7 @@
 # audit
 一个通用的 Audit （审计）框架。如果要接入4A审计时，特别方便哟，同时也高度定制化。
 
-[![maven](https://img.shields.io/badge/maven-v2.3.4-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.audit%20AND%20v:2.3.4)
+[![maven](https://img.shields.io/badge/maven-v2.3.6-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.audit%20AND%20v:2.3.6)
 
 [教程](./.wiki/index.md)
 
@@ -108,7 +108,7 @@ public class AuditConfig {
 + [easyjson](https://github.com/fangjinuo/easyjson): 一个通用的JSON库门面，可以无缝的在各个JSON库之间切换，就像slf4j那样。
 + [sqlhelper](https://github.com/fangjinuo/sqlhelper): SQL工具套件（通用分页、DDL Dump、SQLParser、URL Parser、批量操作工具等）。
 + [esmvc](https://github.com/fangjinuo/es-mvc): ElasticSearch 通用客户端，就像MyBatis Mapper那样顺滑
-+ [redisclient](https://github.com/fangjinuo/redisclient): 基于Spring RestTemplate提供的客户端
++ [agileway](https://github.com/fangjinuo/agileway): 常用框架扩展
 + [audit](https://github.com/fangjinuo/audit)：通用的Java应用审计框架
 
 ## 鸣谢
