@@ -3,7 +3,10 @@ package com.jn.audit.spring.webmvc;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.Auditor;
 import com.jn.audit.core.model.OperationResult;
+import com.jn.langx.util.reflect.Reflects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,7 +54,11 @@ public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        if (handler instanceof HandlerMethod) {
+
+        if (handler instanceof HandlerMethod
+                || Reflects.hasAnnotation(handler.getClass(), Controller.class)
+                || Reflects.hasAnnotation(handler.getClass(), RestController.class)
+                || Reflects.isSubClass(org.springframework.web.servlet.mvc.Controller.class, handler.getClass())) {
             AuditRequest<HttpServletRequest, Method> wrappedRequest = Auditor.auditRequestHolder.get();
             if (wrappedRequest != null) {
                 OperationResult result = wrappedRequest.getResult();
