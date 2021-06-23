@@ -34,7 +34,7 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
             try {
                 wrappedRequest = auditor.startAudit(request, invocation);
             } catch (Throwable ex) {
-                Auditor.auditRequestHolder.reset();
+                Auditor.removeByOriginalRequest(request);
                 logger.error("error when the auditing starting, error: {}, request: {}", ex.getMessage(), request, ex);
             }
 

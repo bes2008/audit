@@ -59,7 +59,7 @@ public class AuditHttpHandlerInterceptor implements HandlerInterceptor {
                 || Reflects.hasAnnotation(handler.getClass(), Controller.class)
                 || Reflects.hasAnnotation(handler.getClass(), RestController.class)
                 || Reflects.isSubClass(org.springframework.web.servlet.mvc.Controller.class, handler.getClass())) {
-            AuditRequest<HttpServletRequest, Method> wrappedRequest = Auditor.auditRequestHolder.get();
+            AuditRequest<HttpServletRequest, Method> wrappedRequest = Auditor.getRequest();
             if (wrappedRequest != null) {
                 OperationResult result = wrappedRequest.getResult();
                 if (result == null) {

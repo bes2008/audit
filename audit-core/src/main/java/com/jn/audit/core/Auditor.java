@@ -20,11 +20,12 @@ import com.jn.langx.util.struct.ThreadLocalHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Stack;
 import java.util.concurrent.Executor;
 
 public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializable, Destroyable, MessageTopicDispatcherAware {
     private static Logger logger = LoggerFactory.getLogger(Auditor.class);
-    public static ThreadLocalHolder<AuditRequest> auditRequestHolder = new ThreadLocalHolder<AuditRequest>();
+    private static ThreadLocalHolder<Stack<AuditRequest>> auditRequestHolder = new ThreadLocalHolder<Stack<AuditRequest>>();
     private static ThreadLocalHolder<CompletableFuture<Void>> asyncTaskHolder = new ThreadLocalHolder<CompletableFuture<Void>>();
 
     /**
@@ -77,6 +78,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     /**
      * 判断request是否要进行异步审计
+     *
      * @param request
      * @return
      */
@@ -136,6 +138,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     /**
      * 开始审计，该方法要在请求执行之前执行，内部会调用 startAsyncAudit或者 startSyncAudit
+     *
      * @param request
      * @param ctx
      * @return
@@ -150,13 +153,14 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     /**
      * 开始审计，该方法要在请求执行之前执行
+     *
      * @param request
      * @param ctx
      * @return
      */
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAsyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = createAuditRequest(request, ctx);
-        auditRequestHolder.set(wrappedRequest);
+        cacheRequest(wrappedRequest);
         logger.warn("start async audit {}", wrappedRequest.toString());
         wrappedRequest.setStartTime(System.currentTimeMillis());
         final ClassLoader mThreadClassLoader = Thread.currentThread().getContextClassLoader();
@@ -177,6 +181,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     /**
      * 开始审计，该方法要在请求执行之前执行
+     *
      * @param request
      * @param ctx
      * @return
@@ -186,7 +191,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         logger.warn("start sync audit {}", wrappedRequest.toString());
         wrappedRequest.setStartTime(System.currentTimeMillis());
         startAuditInternal(wrappedRequest);
-        auditRequestHolder.set(wrappedRequest);
+        cacheRequest(wrappedRequest);
         return wrappedRequest;
     }
 
@@ -216,6 +221,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     /**
      * 完成审计，该方法要在请求执行之后执行，该方法内部会调用finishSyncAudit或者finishAsyncAudit
+     *
      * @param wrappedRequest
      * @return
      */
@@ -229,6 +235,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     /**
      * 完成审计，该方法要在请求执行之后执行
+     *
      * @param wrappedRequest
      * @return
      */
@@ -240,12 +247,13 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
             logger.warn(ex.getMessage(), ex);
         } finally {
             logger.warn("finish sync audit {}", wrappedRequest.toString());
-            auditRequestHolder.reset();
+            removeRequest();
         }
     }
 
     /**
      * 完成审计，该方法要在请求执行之后执行
+     *
      * @param wrappedRequest
      * @return
      */
@@ -262,7 +270,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
             }));
         }
         asyncTaskHolder.reset();
-        auditRequestHolder.reset();
+        removeRequest();
     }
 
     private void finishAuditInternal(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
@@ -345,5 +353,50 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     public void setAuditEventExtractor(AuditEventExtractor<AuditedRequest, AuditedRequestContext> auditEventExtractor) {
         this.auditEventExtractor = auditEventExtractor;
+    }
+
+    /**************************************************************
+     *
+     *  AuditRequest Cache
+     *
+     ***************************************************************/
+
+    public static void cacheRequest(AuditRequest wrappedRequest) {
+        Stack<AuditRequest> cache = auditRequestHolder.get();
+        if (cache == null) {
+            cache = new Stack<AuditRequest>();
+            auditRequestHolder.set(cache);
+        }
+        cache.push(wrappedRequest);
+    }
+
+    public static AuditRequest getRequest() {
+        return getOrRemoveRequest(false);
+    }
+
+    public static AuditRequest removeRequest() {
+        return getOrRemoveRequest(true);
+    }
+
+    private static AuditRequest getOrRemoveRequest(boolean remove) {
+        Stack<AuditRequest> cache = auditRequestHolder.get();
+        if (cache != null) {
+            if (remove) {
+                return cache.pop();
+            } else {
+                return cache.peek();
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public static <AuditedRequest> void removeByOriginalRequest(AuditedRequest originalRequest) {
+        AuditRequest wrapped = getOrRemoveRequest(false);
+        if (wrapped != null) {
+            if (wrapped.getRequest() == originalRequest) {
+                getOrRemoveRequest(true);
+            }
+        }
     }
 }
