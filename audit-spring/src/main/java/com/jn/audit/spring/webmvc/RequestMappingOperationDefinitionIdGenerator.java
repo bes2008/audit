@@ -27,9 +27,7 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
                 paths = accessor.getValues();
             }
             List<String> controllerPaths = RequestMappings.getURLTemplates(method.getDeclaringClass());
-            if (Objs.isEmpty(httpMethods)) {
-                return null;
-            }
+
 
             String urlTemplate = "";
             if (Emptys.isEmpty(paths) && Emptys.isEmpty(controllerPaths)) {
@@ -49,6 +47,9 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
                         }
                     }
                 }
+            }
+            if (Objs.isEmpty(httpMethods)) {
+                return urlTemplate;
             }
             return httpMethods.get(0).name() + "-" + urlTemplate;
         }
