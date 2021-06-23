@@ -39,7 +39,7 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
                     urlTemplate = urlAtMethod;
                 } else {
                     urlTemplate = urlAtController;
-                    if(Strings.isNotEmpty(urlAtMethod)) {
+                    if (Strings.isNotEmpty(urlAtMethod)) {
                         if (urlAtMethod.startsWith("/")) {
                             urlTemplate = urlTemplate + urlAtMethod;
                         } else {
@@ -48,7 +48,7 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
                     }
                 }
             }
-            if (Objs.isEmpty(httpMethods)) {
+            if (Objs.length(httpMethods) != 1) {
                 return urlTemplate;
             }
             return httpMethods.get(0).name() + "-" + urlTemplate;
