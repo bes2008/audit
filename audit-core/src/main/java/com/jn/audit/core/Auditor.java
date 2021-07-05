@@ -380,7 +380,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     private static AuditRequest getOrRemoveRequest(boolean remove) {
         Stack<AuditRequest> cache = auditRequestHolder.get();
-        if (cache != null) {
+        if (cache != null && !cache.empty()) {
             if (remove) {
                 return cache.pop();
             } else {
