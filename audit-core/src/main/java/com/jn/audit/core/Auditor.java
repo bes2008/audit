@@ -11,6 +11,7 @@ import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.concurrent.WrappedTasks;
 import com.jn.langx.util.concurrent.completion.CompletableFuture;
 import com.jn.langx.util.function.Function;
@@ -380,7 +381,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
 
     private static AuditRequest getOrRemoveRequest(boolean remove) {
         Stack<AuditRequest> cache = auditRequestHolder.get();
-        if (cache != null && !cache.empty()) {
+        if (Objs.isNotEmpty(cache)) {
             if (remove) {
                 return cache.pop();
             } else {
