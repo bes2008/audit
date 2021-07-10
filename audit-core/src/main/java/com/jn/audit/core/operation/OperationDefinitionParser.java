@@ -1,7 +1,7 @@
 package com.jn.audit.core.operation;
 
 import com.jn.audit.core.model.OperationDefinition;
-import com.jn.langx.Named;
+import com.jn.langx.Nameable;
 import com.jn.langx.Parser;
 
 /**
@@ -9,7 +9,7 @@ import com.jn.langx.Parser;
  *
  * @param <E>
  */
-public interface OperationDefinitionParser<E> extends Parser<E, OperationDefinition>, Named {
+public interface OperationDefinitionParser<E> extends Parser<E, OperationDefinition>, Nameable {
     String getName();
 
     @Override
