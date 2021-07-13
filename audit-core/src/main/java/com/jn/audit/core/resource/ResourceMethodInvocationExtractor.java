@@ -231,13 +231,13 @@ public class ResourceMethodInvocationExtractor<AuditedRequest> implements Resour
                     if (Reflects.isSubClassOrEquals(Map.class, parameterType0)) {
                         supplier = new CustomNamedMapParameterResourceSupplierParser(mapping).parse(parameter);
                     } else if (!Types.isLiteralType(parameterType0)) {
-                        if (parameterType0 != parameterType) {
+                        //if (parameterType0 != parameterType) {
                             // @Resource Array, @Resource Collection
                             // @Resource javaBean
+                        //    supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
+                        //}else{
                             supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
-                        }else{
-                            supplier = new CustomNamedEntityResourceSupplierParser(mapping).parse(parameterType0);
-                        }
+                        //}
                     }
 
                     if (supplier != null) {

@@ -16,7 +16,7 @@ public class ServletUrlOperationIdGenerator extends AbstractOperationMethodIdGen
         if (Emptys.isEmpty(method)) {
             return null;
         }
-        String context = Strings.getEmptyIfNull(request.getContextPath());
+        // String context = Strings.getEmptyIfNull(request.getContextPath());
         String servletPath = Strings.getEmptyIfNull(request.getServletPath());
         StringBuilder builder = new StringBuilder(255)
                 .append(request.getMethod())

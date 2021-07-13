@@ -44,12 +44,8 @@ public class RequestMappings {
         return getURLTemplates(mapping);
     }
 
-    public static List<String> getURLTemplates(Annotation requestMapping) {
+    public static List<String> getURLTemplates(@NonNull Annotation requestMapping) {
         RequestMappingAccessor<?> accessor = Preconditions.checkNotNull(RequestMappingAccessorFactory.createAccessor(requestMapping));
-        if (requestMapping == null) {
-            return Collections.emptyList();
-        }
-
         List<String> urls = accessor.getPaths();
         if (Objects.isEmpty(urls)) {
             return accessor.getValues();
