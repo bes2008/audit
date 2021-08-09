@@ -14,6 +14,7 @@ import com.jn.audit.core.operation.method.OperationMethodInvocationExtractor;
 import com.jn.audit.core.principal.PrincipalExtractor;
 import com.jn.audit.core.resource.ResourceMethodInvocationExtractor;
 import com.jn.audit.core.service.ServiceExtractor;
+import com.jn.audit.core.session.SessionIdExtractor;
 import com.jn.audit.servlet.*;
 import com.jn.audit.spring.simple.MethodAuditInterceptor;
 import com.jn.langx.exception.IllegalPropertyException;
@@ -45,7 +46,7 @@ import java.util.List;
 
 @ConditionalOnProperty(value = "auditor.enabled", havingValue = "true", matchIfMissing = true)
 @Configuration
-@Import({OperationAutoConfiguration.class,ResourceExtractAutoConfiguration.class})
+@Import({OperationAutoConfiguration.class, ResourceExtractAutoConfiguration.class})
 @EnableConfigurationProperties(AuditProperties.class)
 public class AuditAutoConfiguration implements ApplicationContextAware {
     private ApplicationContext applicationContext;
@@ -95,6 +96,13 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
         return new ServletAuditEventServiceExtractor();
     }
 
+    @Bean(name = "servletAuditEventSessionIdExtractor")
+    @ConditionalOnWebApplication
+    @ConditionalOnMissingBean(name = {"servletAuditEventSessionIdExtractor"})
+    public SessionIdExtractor servletAuditEventSessionIdExtractor() {
+        return new ServletAuditEventSessionIdExtractor();
+    }
+
 
     @Bean(name = "servletAuditEventExtractor")
     @ConditionalOnWebApplication
@@ -107,13 +115,16 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
             @Qualifier("servletAuditEventServiceExtractor")
                     ServiceExtractor serviceExtractor,
             @Qualifier("servletAuditEventPrincipalExtractor")
-                    PrincipalExtractor principalExtractor
+                    PrincipalExtractor principalExtractor,
+            @Qualifier("servletAuditEventSessionIdExtractor")
+                    SessionIdExtractor sessionIdExtractor
     ) {
         ServletAuditEventExtractor auditEventExtractor = new ServletAuditEventExtractor();
         auditEventExtractor.setOperationExtractor(operationMethodExtractor);
         auditEventExtractor.setResourceExtractor(resourceMethodInvocationExtractor);
         auditEventExtractor.setServiceExtractor(serviceExtractor);
         auditEventExtractor.setPrincipalExtractor(principalExtractor);
+        auditEventExtractor.setSessionIdExtractor(sessionIdExtractor);
         return auditEventExtractor;
     }
 
@@ -216,7 +227,7 @@ public class AuditAutoConfiguration implements ApplicationContextAware {
             AuditProperties auditProperties) {
 
         AspectJExpressionPointcutAdvisorProperties pointcutProperties = auditProperties.getAdvisorPointcut();
-        if(pointcutProperties==null){
+        if (pointcutProperties == null) {
             throw new IllegalPropertyException(StringTemplates.formatWithPlaceholder("Illegal property: audit.advisorPointcut is not found"));
         }
         String expression = pointcutProperties.getExpression();

@@ -9,5 +9,6 @@ public class ServletAuditEventExtractor extends AbstractAuditEventExtractor<Http
     public ServletAuditEventExtractor() {
         setPrincipalExtractor(new ServletAuditEventPrincipalExtractor());
         setServiceExtractor(new ServletAuditEventServiceExtractor());
+        setSessionIdExtractor(new ServletAuditEventSessionIdExtractor());
     }
 }

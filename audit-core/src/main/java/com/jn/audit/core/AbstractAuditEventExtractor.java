@@ -103,4 +103,12 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
     public void setServiceExtractor(ServiceExtractor<AuditedRequest, AuditedRequestContext> serviceExtractor) {
         this.serviceExtractor = serviceExtractor;
     }
+
+    public SessionIdExtractor<AuditedRequest, AuditedRequestContext> getSessionIdExtractor() {
+        return sessionIdExtractor;
+    }
+
+    public void setSessionIdExtractor(SessionIdExtractor<AuditedRequest, AuditedRequestContext> sessionIdExtractor) {
+        this.sessionIdExtractor = sessionIdExtractor;
+    }
 }

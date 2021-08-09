@@ -7,7 +7,7 @@ import com.jn.langx.invocation.MethodInvocation;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class ServletAuditSessionIdExtractor implements SessionIdExtractor<HttpServletRequest, MethodInvocation> {
+public class ServletAuditEventSessionIdExtractor implements SessionIdExtractor<HttpServletRequest, MethodInvocation> {
     @Override
     public String get(AuditRequest<HttpServletRequest, MethodInvocation> wrappedRequest) {
         HttpServletRequest request = wrappedRequest.getRequest();
