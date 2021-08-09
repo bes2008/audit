@@ -1,6 +1,8 @@
 package com.jn.audit.core.model;
 
-public class Principal  extends CommonProps  {
+import com.jn.langx.util.collection.CommonProps;
+
+public class Principal extends CommonProps {
     public static final long serialVersionUID = 1L;
 
     private String principalId;// {required} the user id

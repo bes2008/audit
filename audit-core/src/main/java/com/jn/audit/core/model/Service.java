@@ -1,8 +1,8 @@
 package com.jn.audit.core.model;
 
-import java.io.Serializable;
+import com.jn.langx.util.collection.CommonProps;
 
-public class Service  extends CommonProps  {
+public class Service  extends CommonProps {
     public static final long serialVersionUID = 1L;
 
     private String serviceId;   // {optional}, if not specified, equals the serviceName

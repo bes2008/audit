@@ -1,8 +1,8 @@
 package com.jn.audit.core.model;
 
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.util.collection.CommonProps;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**

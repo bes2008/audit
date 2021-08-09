@@ -4,12 +4,9 @@ import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.configuration.Configuration;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.collection.MapAccessor;
+import com.jn.langx.util.collection.CommonProps;
 import com.jn.langx.util.hash.HashCodeBuilder;
 
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * may be in any style: xml, yaml, database
