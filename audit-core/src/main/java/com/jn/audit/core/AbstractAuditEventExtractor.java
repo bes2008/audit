@@ -5,6 +5,7 @@ import com.jn.audit.core.operation.OperationExtractor;
 import com.jn.audit.core.principal.PrincipalExtractor;
 import com.jn.audit.core.resource.ResourceExtractor;
 import com.jn.audit.core.service.ServiceExtractor;
+import com.jn.audit.core.session.SessionIdExtractor;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 
@@ -17,6 +18,7 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
     protected ServiceExtractor<AuditedRequest, AuditedRequestContext> serviceExtractor;
     protected OperationExtractor<AuditedRequest, AuditedRequestContext> operationExtractor;
     protected ResourceExtractor<AuditedRequest, AuditedRequestContext> resourceExtractor;
+    protected SessionIdExtractor<AuditedRequest, AuditedRequestContext> sessionIdExtractor;
 
     @Override
     public AuditEvent get(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
@@ -26,6 +28,7 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
         event.setPrincipal(extractPrincipal(wrappedRequest));
         event.setOperation(extractOperation(wrappedRequest));
         event.setResources(extractResources(wrappedRequest));
+        event.setSessionId(extractSessionId(wrappedRequest));
         return event;
     }
 
@@ -57,6 +60,11 @@ public abstract class AbstractAuditEventExtractor<AuditedRequest, AuditedRequest
             }
         }
         return resources;
+    }
+
+    @Override
+    public String extractSessionId(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
+        return sessionIdExtractor == null ? null : sessionIdExtractor.get(wrappedRequest);
     }
 
     @Override

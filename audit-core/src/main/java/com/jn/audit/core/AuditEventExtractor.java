@@ -20,4 +20,5 @@ public interface AuditEventExtractor<AuditedRequest, AuditedRequestContext> exte
 
     Operation extractOperation(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest);
 
+    String extractSessionId(AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest);
 }

@@ -4,11 +4,11 @@ import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.CommonProps;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class AuditEvent  extends CommonProps {
+public class AuditEvent extends CommonProps {
     public static final long serialVersionUID = 1L;
 
     // who
@@ -19,6 +19,9 @@ public class AuditEvent  extends CommonProps {
     private long startTime;// {required} UTC time
     private long endTime;// {required} UTC time
     private long duration;  // endTime - startTime
+
+    @Nullable
+    private String sessionId;
 
     /**
      * service , also the main target
@@ -99,6 +102,14 @@ public class AuditEvent  extends CommonProps {
 
     public void addResource(Resource resource) {
         resources.add(resource);
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     @Override
