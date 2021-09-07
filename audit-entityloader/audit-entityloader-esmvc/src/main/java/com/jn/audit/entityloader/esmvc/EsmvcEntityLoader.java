@@ -4,7 +4,7 @@ import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.audit.core.resource.idresource.AbstractEntityLoader;
 import com.jn.esmvc.service.ESModelService;
-import com.jn.langx.factory.Factory;
+import com.jn.langx.Factory;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
