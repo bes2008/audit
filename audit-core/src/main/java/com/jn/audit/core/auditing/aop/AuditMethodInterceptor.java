@@ -3,10 +3,10 @@ package com.jn.audit.core.auditing.aop;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.Auditor;
 import com.jn.audit.core.model.OperationResult;
-import com.jn.langx.ThreadLocalFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.invocation.aop.MethodInterceptor;
+import com.jn.langx.util.concurrent.threadlocal.ThreadLocalFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
