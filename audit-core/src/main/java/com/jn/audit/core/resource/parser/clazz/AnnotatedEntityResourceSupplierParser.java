@@ -65,16 +65,18 @@ public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassReso
         // 基于成员进行解析
         try {
             final EntityResourceSupplier memberBasedEntityResourceSupplier = delegate.parse(entityClass);
-            // 进行合并
-            Collects.forEach(deficientProperties, new Consumer<String>() {
-                @Override
-                public void accept(String property) {
-                    MemberValueGetter valueGetter = (MemberValueGetter) memberBasedEntityResourceSupplier.getPropertyValueGetter(property);
-                    if (valueGetter != null) {
-                        supplier.register(property, valueGetter);
+            if (memberBasedEntityResourceSupplier != null) {
+                // 进行合并
+                Collects.forEach(deficientProperties, new Consumer<String>() {
+                    @Override
+                    public void accept(String property) {
+                        MemberValueGetter valueGetter = (MemberValueGetter) memberBasedEntityResourceSupplier.getPropertyValueGetter(property);
+                        if (valueGetter != null) {
+                            supplier.register(property, valueGetter);
+                        }
                     }
-                }
-            });
+                });
+            }
         } catch (Throwable ex) {
             logger.error("Error occur when parse class {}", Reflects.getFQNClassName(entityClass));
         }
