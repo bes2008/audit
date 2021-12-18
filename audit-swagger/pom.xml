@@ -12,7 +12,7 @@
     <artifactId>audit-swagger</artifactId>
     <name>${groupId}:${artifactId}:${version}</name>
     <properties>
-        <swagger.version>1.5.0</swagger.version>
+        <swagger.version>1.6.3</swagger.version>
     </properties>
     <dependencies>
         <dependency>
