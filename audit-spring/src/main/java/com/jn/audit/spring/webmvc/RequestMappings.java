@@ -1,7 +1,7 @@
 package com.jn.audit.spring.webmvc;
 
 import com.jn.langx.annotation.NonNull;
-import com.jn.langx.util.Objects;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.List;
 
 public class RequestMappings {
@@ -47,7 +46,7 @@ public class RequestMappings {
     public static List<String> getURLTemplates(@NonNull Annotation requestMapping) {
         RequestMappingAccessor<?> accessor = Preconditions.checkNotNull(RequestMappingAccessorFactory.createAccessor(requestMapping));
         List<String> urls = accessor.getPaths();
-        if (Objects.isEmpty(urls)) {
+        if (Objs.isEmpty(urls)) {
             return accessor.getValues();
         } else {
             return urls;
