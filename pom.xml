@@ -51,6 +51,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <langx-java.version>4.2.2</langx-java.version>
         <easyjson.version>3.2.12</easyjson.version>
+        <jackson.version>2.11.0</jackson.version>
         <disruptor.version>3.4.2</disruptor.version>
         <spring.version>4.3.29.RELEASE</spring.version>
         <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
@@ -152,6 +153,36 @@
                 <groupId>com.github.fangjinuo.audit.entityloader</groupId>
                 <artifactId>audit-entityloader-resttemplate</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-cbor</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-smile</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
