@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <slf4j.version>1.7.25</slf4j.version>
+        <slf4j.version>1.7.32</slf4j.version>
         <langx-java.version>4.2.2</langx-java.version>
         <easyjson.version>3.2.12</easyjson.version>
         <jackson.version>2.11.0</jackson.version>
@@ -76,7 +76,22 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.0</version>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jul-to-slf4j</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.easyjson</groupId>
