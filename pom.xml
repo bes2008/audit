@@ -48,7 +48,7 @@
     </licenses>
 
     <properties>
-        <slf4j.version>1.7.32</slf4j.version>
+        <slf4j.version>1.7.0</slf4j.version>
         <langx-java.version>4.2.2</langx-java.version>
         <easyjson.version>3.2.12</easyjson.version>
         <jackson.version>2.11.0</jackson.version>
@@ -383,8 +383,8 @@
                             <nexusUrl>https://oss.sonatype.org</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                             <sslAllowAll>true</sslAllowAll>
-                            <stagingProgressPauseDurationSeconds>20</stagingProgressPauseDurationSeconds>
-                            <stagingProgressTimeoutMinutes>30</stagingProgressTimeoutMinutes>
+                            <stagingProgressPauseDurationSeconds>5</stagingProgressPauseDurationSeconds>
+                            <stagingProgressTimeoutMinutes>5</stagingProgressTimeoutMinutes>
                             <detectBuildFailures>false</detectBuildFailures>
                         </configuration>
                     </plugin>
