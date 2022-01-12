@@ -13,8 +13,8 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.function.Function2;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 public class SpringRestTemplateEntityLoader extends AbstractEntityLoader<Object> {
 
-    private static final Logger logger = LoggerFactory.getLogger(SpringRestTemplateEntityLoader.class);
+    private static final Logger logger = Loggers.getLogger(SpringRestTemplateEntityLoader.class);
     private static Pattern restTemplateVariablePattern = Pattern.compile("\\{\\w+(\\.[\\w\\-]+)*}");
     private static Pattern httpUrlVariablePattern = Pattern.compile("\\$\\{\\w+(\\.[\\w\\-]+)*}");
     private Environment environment;

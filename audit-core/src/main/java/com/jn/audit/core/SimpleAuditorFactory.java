@@ -19,10 +19,10 @@ import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Supplier;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.lmax.disruptor.WaitStrategy;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class SimpleAuditorFactory<Settings extends AuditSettings> implements AuditorFactory<Settings> {
-    private static final Logger logger = LoggerFactory.getLogger(SimpleAuditorFactory.class);
+    private static final Logger logger = Loggers.getLogger(SimpleAuditorFactory.class);
 
     protected WaitStrategy getDefaultWaitStrategy(Settings settings) {
         String name = settings.getConsumerWaitStrategy();

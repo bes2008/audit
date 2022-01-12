@@ -13,10 +13,10 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class LoadingEntityIdResourceExtractor<E, AuditedRequest, AuditedRequestContext> extends AbstractIdResourceExtractor<E, AuditedRequest, AuditedRequestContext> {
-    private static final Logger logger = LoggerFactory.getLogger(LoadingEntityIdResourceExtractor.class);
+    private static final Logger logger = Loggers.getLogger(LoadingEntityIdResourceExtractor.class);
     private static final String SELECT_LIST_SEPARATOR = "separator";
     private final ConcurrentHashMap<Class, Holder<EntityResourceSupplier<E>>> entityResourceSupplierMap = new ConcurrentHashMap<Class, Holder<EntityResourceSupplier<E>>>();
 

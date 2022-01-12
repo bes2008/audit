@@ -5,15 +5,15 @@ import com.jn.audit.core.model.AuditEvent;
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.sqlhelper.datasource.DataSources;
 import com.jn.sqlhelper.datasource.key.DataSourceKey;
 import com.jn.sqlhelper.datasource.key.DataSourceKeySelector;
 import com.jn.sqlhelper.datasource.key.MethodInvocationDataSourceKeySelector;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AuditRequestDynamicDataSourceKeySelector implements DataSourceKeySelector<AuditRequest> {
-    private static final Logger logger = LoggerFactory.getLogger(AuditRequestDynamicDataSourceKeySelector.class);
+    private static final Logger logger = Loggers.getLogger(AuditRequestDynamicDataSourceKeySelector.class);
 
     private MethodInvocationDataSourceKeySelector delegate;
 

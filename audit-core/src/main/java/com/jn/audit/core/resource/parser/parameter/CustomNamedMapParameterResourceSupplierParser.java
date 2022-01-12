@@ -7,11 +7,11 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.valuegetter.MapValueGetter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @see ResourceAnnotatedMapParameterResourceSupplierParser
  */
 public class CustomNamedMapParameterResourceSupplierParser implements ResourceSupplierParser<Parameter, MapResourceSupplier> {
-    private static final Logger logger = LoggerFactory.getLogger(CustomNamedMapParameterResourceSupplierParser.class);
+    private static final Logger logger = Loggers.getLogger(CustomNamedMapParameterResourceSupplierParser.class);
 
     /**
      * key: resource property, e.g.

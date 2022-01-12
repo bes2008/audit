@@ -12,15 +12,15 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class EsmvcEntityLoader extends AbstractEntityLoader<Object> {
     private static final String SERVICE_IMPL_CLASS_NAME = "serviceImplClassName";
-    private static final Logger logger = LoggerFactory.getLogger(EsmvcEntityLoader.class);
+    private static final Logger logger = Loggers.getLogger(EsmvcEntityLoader.class);
 
     private String name = "esmvc";
     private Factory<Class, ESModelService> esModelServiceFactory;
