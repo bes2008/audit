@@ -1,5 +1,8 @@
 package com.jn.audit.spring.webmvc;
 
+import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessor;
+import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorFactory;
+import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappings;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.operation.method.AbstractOperationMethodIdGenerator;
 import com.jn.langx.invocation.MethodInvocation;
@@ -21,12 +24,12 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
         if (RequestMappings.hasAnyRequestMappingAnnotation(method)) {
             Annotation mappingOfMethod = RequestMappings.findFirstRequestMappingAnnotation(method);
             RequestMappingAccessor<?> accessor = RequestMappingAccessorFactory.createAccessor(mappingOfMethod);
-            List<RequestMethod> httpMethods = accessor.getMethods();
-            List<String> paths = accessor.getPaths();
+            List<RequestMethod> httpMethods = accessor.methods();
+            List<String> paths = accessor.paths();
             if (Emptys.isEmpty(paths)) {
-                paths = accessor.getValues();
+                paths = accessor.values();
             }
-            List<String> controllerPaths = RequestMappings.getURLTemplates(method.getDeclaringClass());
+            List<String> controllerPaths = SpringMvcRequestMappings.getURLTemplates(method.getDeclaringClass());
 
 
             String urlTemplate = "";

@@ -54,5 +54,11 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-spring</artifactId>
+            <version>${agileway.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
