@@ -3,14 +3,14 @@ package com.jn.audit.examples.springmvcdemo.service;
 import com.jn.agileway.dmmq.core.Consumer;
 import com.jn.agileway.dmmq.core.MessageHolder;
 import com.jn.audit.core.model.AuditEvent;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DbService implements Consumer<AuditEvent> {
-    private static final Logger logger = LoggerFactory.getLogger(DbService.class);
+    private static final Logger logger = Loggers.getLogger(DbService.class);
 
     @Override
     public String getName() {

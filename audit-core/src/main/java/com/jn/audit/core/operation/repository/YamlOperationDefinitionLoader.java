@@ -14,8 +14,8 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -28,7 +28,7 @@ import java.util.Map;
  * 基于YAML文件方式配置 Operation Definition
  */
 public class YamlOperationDefinitionLoader implements OperationDefinitionLoader {
-    private static final Logger logger = LoggerFactory.getLogger(YamlOperationDefinitionLoader.class);
+    private static final Logger logger = Loggers.getLogger(YamlOperationDefinitionLoader.class);
     private String definitionFilePath;
 
 

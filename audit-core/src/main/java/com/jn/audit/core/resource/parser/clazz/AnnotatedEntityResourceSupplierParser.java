@@ -12,11 +12,11 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Modifiers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.valuegetter.MemberValueGetter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -36,7 +36,7 @@ import java.util.Map;
 @Singleton
 @Deprecated
 public class AnnotatedEntityResourceSupplierParser<T> implements EntityClassResourceSupplierParser<T> {
-    private static final Logger logger = LoggerFactory.getLogger(AnnotatedEntityResourceSupplierParser.class);
+    private static final Logger logger = Loggers.getLogger(AnnotatedEntityResourceSupplierParser.class);
     public static final AnnotatedEntityResourceSupplierParser DEFAULT_INSTANCE = new AnnotatedEntityResourceSupplierParser();
 
     private final MemberNameEntityResourceSupplierParser delegate = MemberNameEntityResourceSupplierParser.DEFAULT_INSTANCE;

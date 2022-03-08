@@ -5,15 +5,15 @@ import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class EntityLoaderDispatcher<E> implements EntityLoader<E> {
-    private static final Logger logger = LoggerFactory.getLogger(EntityLoaderDispatcher.class);
+    private static final Logger logger = Loggers.getLogger(EntityLoaderDispatcher.class);
     private EntityLoaderRegistry registry;
 
     @Override

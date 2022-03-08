@@ -3,8 +3,8 @@ package com.jn.audit.spring.boot.autoconfigure;
 
 import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
 import com.jn.audit.spring.webmvc.AuditHttpHandlerInterceptor;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -15,7 +15,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 @Configuration
 public class AuditEntranceConfiguration implements ApplicationListener<ContextRefreshedEvent> {
-    private static final Logger logger = LoggerFactory.getLogger(AuditEntranceConfiguration.class);
+    private static final Logger logger = Loggers.getLogger(AuditEntranceConfiguration.class);
 
 
     private MessageTopicDispatcher dispatcher;

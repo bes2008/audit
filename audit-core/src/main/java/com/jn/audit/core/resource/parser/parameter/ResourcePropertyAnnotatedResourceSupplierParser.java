@@ -12,11 +12,11 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Predicate2;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Types;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.Map;
  * @see CustomResourcePropertyParameterResourceSupplierParser
  */
 public class ResourcePropertyAnnotatedResourceSupplierParser implements ResourceSupplierParser<Parameter[], IterableResourceSupplier> {
-    private static final Logger logger = LoggerFactory.getLogger(ResourcePropertyAnnotatedResourceSupplierParser.class);
+    private static final Logger logger = Loggers.getLogger(ResourcePropertyAnnotatedResourceSupplierParser.class);
     @Override
     public IterableResourceSupplier parse(Parameter[] parameters) {
 

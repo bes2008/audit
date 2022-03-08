@@ -2,16 +2,16 @@ package com.jn.audit.entityloader.resttemplate;
 
 import com.jn.audit.core.model.ResourceDefinition;
 import com.jn.langx.util.Throwables;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.type.Types;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 
 import java.lang.reflect.Type;
 
 public class DefaultParameterizedResponseClassProvider implements ParameterizedResponseClassProvider {
-    private static final Logger logger = LoggerFactory.getLogger(DefaultParameterizedResponseClassProvider.class);
+    private static final Logger logger = Loggers.getLogger(DefaultParameterizedResponseClassProvider.class);
 
     private Class unifiedResponseClass = null;
 

@@ -7,18 +7,18 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.sqlhelper.mybatis.session.factory.SimpleSqlSessionFactoryProvider;
 import com.jn.sqlhelper.mybatis.session.factory.SqlSessionFactoryProvider;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class MybatisEntityLoader extends AbstractEntityLoader<Object> {
-    private static final Logger logger = LoggerFactory.getLogger(MybatisEntityLoader.class);
+    private static final Logger logger = Loggers.getLogger(MybatisEntityLoader.class);
     private static final String STATEMENT_ID = "statementId";
     private static final String SELECT_TYPE = "selectType";
     private String name = "mybatis";

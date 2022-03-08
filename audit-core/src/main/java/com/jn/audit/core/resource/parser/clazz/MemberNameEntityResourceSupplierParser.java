@@ -4,10 +4,10 @@ import com.jn.audit.core.model.Resource;
 import com.jn.audit.core.resource.supplier.EntityResourceSupplier;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.valuegetter.MemberValueGetter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Member;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.Map;
 @Singleton
 @Deprecated
 public class MemberNameEntityResourceSupplierParser<T> implements EntityClassResourceSupplierParser<T> {
-    private static final Logger logger = LoggerFactory.getLogger(MemberNameEntityResourceSupplierParser.class);
+    private static final Logger logger = Loggers.getLogger(MemberNameEntityResourceSupplierParser.class);
     public static final MemberNameEntityResourceSupplierParser DEFAULT_INSTANCE = new MemberNameEntityResourceSupplierParser();
 
     @Override

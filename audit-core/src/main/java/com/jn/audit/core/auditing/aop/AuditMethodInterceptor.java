@@ -7,11 +7,11 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.invocation.aop.MethodInterceptor;
 import com.jn.langx.util.concurrent.threadlocal.ThreadLocalFactory;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(AuditMethodInterceptor.class);
+    private static final Logger logger = Loggers.getLogger(AuditMethodInterceptor.class);
     /**
      * 延迟finish时，不在该 Interceptor中进行 finish操作
      */

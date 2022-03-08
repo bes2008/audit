@@ -10,10 +10,10 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Predicate2;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Parameter;
 import com.jn.langx.util.reflect.type.Types;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @see ResourcePropertyAnnotatedResourceSupplierParser
  */
 public class CustomResourcePropertyParameterResourceSupplierParser implements ResourceSupplierParser<Parameter[], IterableResourceSupplier> {
-    private static final Logger logger = LoggerFactory.getLogger(CustomResourcePropertyParameterResourceSupplierParser.class);
+    private static final Logger logger = Loggers.getLogger(CustomResourcePropertyParameterResourceSupplierParser.class);
     /**
      * resource property to parameter name mapping
      */
