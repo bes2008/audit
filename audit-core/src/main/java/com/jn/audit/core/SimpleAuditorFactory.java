@@ -14,7 +14,7 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
-import com.jn.langx.util.concurrent.ExclusiveExecutor;
+import com.jn.langx.util.concurrent.executor.ExclusiveExecutor;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.function.Predicate;
