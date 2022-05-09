@@ -4,12 +4,13 @@ import com.jn.audit.core.model.OperationDefinition;
 import com.jn.audit.core.model.OperationImportance;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.configuration.ConfigurationLoader;
 import com.jn.langx.configuration.FullLoadConfigurationLoader;
 
 import java.util.List;
 import java.util.Map;
 
-public interface OperationDefinitionLoader extends FullLoadConfigurationLoader<OperationDefinition> {
+public interface OperationDefinitionLoader extends ConfigurationLoader<OperationDefinition> {
     @NonNull
     List<OperationDefinition> reload(@Nullable Map<String, OperationImportance> importances);
 

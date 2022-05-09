@@ -33,8 +33,8 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
 
 
     @Override
-    public List<OperationDefinition> loadAll() {
-        return reload(null);
+    public Map<String,OperationDefinition> loadAll() {
+        return reloadAll(null);
     }
 
     @NonNull

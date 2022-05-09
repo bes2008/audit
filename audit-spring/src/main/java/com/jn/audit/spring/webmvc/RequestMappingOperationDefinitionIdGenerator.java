@@ -1,7 +1,6 @@
 package com.jn.audit.spring.webmvc;
 
-import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessor;
-import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorFactory;
+import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
 import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappings;
 import com.jn.audit.core.AuditRequest;
 import com.jn.audit.core.operation.method.AbstractOperationMethodIdGenerator;
@@ -9,7 +8,7 @@ import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.jn.langx.util.net.http.HttpMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
@@ -23,8 +22,8 @@ public class RequestMappingOperationDefinitionIdGenerator extends AbstractOperat
         Method method = methodInvocation.getJoinPoint();
         if (RequestMappings.hasAnyRequestMappingAnnotation(method)) {
             Annotation mappingOfMethod = RequestMappings.findFirstRequestMappingAnnotation(method);
-            RequestMappingAccessor<?> accessor = RequestMappingAccessorFactory.createAccessor(mappingOfMethod);
-            List<RequestMethod> httpMethods = accessor.methods();
+            RequestMappingAccessor<?> accessor = RequestMappings.createAccessor(mappingOfMethod);
+            List<HttpMethod> httpMethods = accessor.methods();
             List<String> paths = accessor.paths();
             if (Emptys.isEmpty(paths)) {
                 paths = accessor.values();

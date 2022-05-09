@@ -1,7 +1,6 @@
 package com.jn.audit.spring.webmvc;
 
-import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessor;
-import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorFactory;
+import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
 import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappings;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Objs;
@@ -14,7 +13,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class SpringMvcRequestMappings {
-
 
     public static List<String> getURLTemplates(Class clazz) {
         RequestMapping mapping = RequestMappings.getRequestMapping(clazz);
@@ -33,7 +31,7 @@ public class SpringMvcRequestMappings {
     }
 
     public static List<String> getURLTemplates(@NonNull Annotation requestMapping) {
-        RequestMappingAccessor<?> accessor = Preconditions.checkNotNull(RequestMappingAccessorFactory.createAccessor(requestMapping));
+        RequestMappingAccessor<?> accessor = Preconditions.checkNotNull(RequestMappings.createAccessor(requestMapping));
         List<String> urls = accessor.paths();
         if (Objs.isEmpty(urls)) {
             return accessor.values();
