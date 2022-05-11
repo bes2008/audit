@@ -1590,3 +1590,138 @@ Caused by: java.io.IOException: 另一个程序已锁定文件的一部分，进
 	at org.h2.store.fs.FileUtils.readFully(FileUtils.java:359)
 	at org.h2.store.FileStore.readFully(FileStore.java:282)
 	... 149 more
+2022-05-09 21:28:05 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID = ?"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID = ? [42001-202]
+2022-05-09 21:31:07 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID = ?"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID = ? [42001-202]
+2022-05-09 21:33:00 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID IN\000a         (  \000a            ?\000a         )"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID in
+         (  
+            ?
+         ) [42001-202]
+2022-05-09 21:33:07 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID = ?"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID = ? [42001-202]
+2022-05-09 21:37:05 jdbc[11]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID IN\000a         (  \000a            ?\000a         )"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID in
+         (  
+            ?
+         ) [42001-202]
+2022-05-09 21:37:05 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID = ?"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID = ? [42001-202]
+2022-05-09 21:39:25 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID IN\000a         (  \000a            ?\000a         )"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID in
+         (  
+            ?
+         ) [42001-202]
+2022-05-09 21:39:26 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID = ?"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID = ? [42001-202]
+2022-05-09 21:41:30 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID IN\000a         (  \000a            ?\000a         )"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID in
+         (  
+            ?
+         ) [42001-202]
+2022-05-09 21:41:30 jdbc[11]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID = ?"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID = ? [42001-202]
+2022-05-09 21:42:42 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID IN\000a         (  \000a            ?\000a         )"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID in
+         (  
+            ?
+         ) [42001-202]
+2022-05-09 21:42:43 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT\000a         \000a        ID,\000a        NAME,\000a        AGE\000a     \000a        FROM USER[*]\000a        WHERE ID = ?"; expected "identifier"; SQL statement:
+SELECT
+         
+        ID,
+        NAME,
+        AGE
+     
+        FROM USER
+        WHERE ID = ? [42001-202]

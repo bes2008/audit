@@ -73,7 +73,7 @@ operationDefinitions:
     importance: minor
     resourceDefinition:
       entityLoader: mybatis
-      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectById
+      statementId: com.jn.audit.examples.springmvcdemo.common.dao.UserDao.selectByIds
   GET-/users/_useMyBatis:
     code: Audit_springmvc_USER_LIST_MyBatis
     name: 使用mybatis API 测试SQLHelper
