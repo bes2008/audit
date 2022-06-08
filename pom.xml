@@ -55,11 +55,11 @@
         <disruptor.version>3.4.2</disruptor.version>
         <spring.version>4.3.29.RELEASE</spring.version>
         <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
-        <sqlhelper.version>3.6.9</sqlhelper.version>
+        <sqlhelper.version>3.6.13</sqlhelper.version>
         <snakeyaml.version>1.26</snakeyaml.version>
         <mybatis.version>3.4.0</mybatis.version>
         <mybatis.spring.version>1.3.2</mybatis.spring.version>
-        <agileway.version>3.1.0</agileway.version>
+        <agileway.version>3.1.2</agileway.version>
     </properties>
 
     <modules>
