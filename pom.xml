@@ -49,7 +49,7 @@
 
     <properties>
         <slf4j.version>1.7.0</slf4j.version>
-        <langx-java.version>4.6.4</langx-java.version>
+        <langx-java.version>4.6.7</langx-java.version>
         <easyjson.version>3.2.16</easyjson.version>
         <jackson.version>2.11.0</jackson.version>
         <disruptor.version>3.4.2</disruptor.version>

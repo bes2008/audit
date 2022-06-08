@@ -160,6 +160,12 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 if (Objs.isNotEmpty(resourceDefinitionMap) && resourceDefinitionMap instanceof Map) {
                     definition.setResourceDefinition(new ResourceDefinition((Map<String, Object>) resourceDefinitionMap));
                 }
+
+                // props
+                Object props = propertyPairMap.get("props");
+                if(Objs.isNotEmpty(props) && props instanceof Map ){
+                    definition.setProps((Map)props);
+                }
                 definitionMap.put(id, definition);
             }
         });

@@ -12,6 +12,8 @@ operationDefinitions:
     type: user_create
     importance: major
     description: 使用MyBatis来创建用户
+    props:
+      a: 2
     resourceDefinition:
       resource: user
   PUT-/users/{id}:  # the http URL
