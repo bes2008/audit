@@ -11,6 +11,7 @@ import com.jn.langx.io.resource.Resources;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.CommonProps;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.io.IOs;
@@ -78,9 +79,16 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                 logger.warn("Had not any operationImportance found in the location:{}", definitionFilePath);
                 throw new InvalidConfigurationFileException(definitionFilePath);
             }
+
+            // common props
+            Map<String, Object> commonProps = null;
+            if(segments.containsKey("operationCommonProps")){
+                commonProps = doLoadCommonProps((Map) segments.get("operationCommonProps"));
+            }
+
             // load definitions
             if (segments.containsKey("operationDefinitions")) {
-                doLoadDefinitions(definitionMap, importanceMap, (Map<String, Map<String, Object>>) segments.get("operationDefinitions"));
+                doLoadDefinitions(definitionMap, importanceMap, commonProps, (Map<String, Map<String, Object>>) segments.get("operationDefinitions"));
             } else {
                 logger.warn("Had not any operationImportance found in the location:{}", definitionFilePath);
                 throw new InvalidConfigurationFileException(definitionFilePath);
@@ -105,7 +113,14 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
         });
     }
 
-    private void doLoadDefinitions(@NonNull final Map<String, OperationDefinition> definitionMap, final Map<String, OperationImportance> importanceMap, Map<String, Map<String, Object>> rawMap) {
+    private Map<String, Object> doLoadCommonProps(@Nullable Map<String, Object> rawMap){
+        if(rawMap==null){
+            return Collects.emptyHashMap();
+        }
+        return rawMap;
+    }
+
+    private void doLoadDefinitions(@NonNull final Map<String, OperationDefinition> definitionMap, final Map<String, OperationImportance> importanceMap, final Map<String, Object> commonProps, Map<String, Map<String, Object>> rawMap) {
         Collects.forEach(rawMap, new Consumer2<String, Map<String, Object>>() {
             @Override
             public void accept(String id, Map<String, Object> propertyPairMap) {
@@ -161,11 +176,12 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
                     definition.setResourceDefinition(new ResourceDefinition((Map<String, Object>) resourceDefinitionMap));
                 }
 
-                // props
-                Object props = propertyPairMap.get("props");
+                Map<String, Object> props = Collects.newHashMap(commonProps);
+                Object privateProps = propertyPairMap.get("props");
                 if(Objs.isNotEmpty(props) && props instanceof Map ){
-                    definition.setProps((Map)props);
+                    props.putAll((Map)privateProps);
                 }
+                definition.setProps(props);
                 definitionMap.put(id, definition);
             }
         });

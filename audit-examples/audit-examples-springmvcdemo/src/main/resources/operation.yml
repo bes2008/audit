@@ -5,6 +5,9 @@ operationImportance:
   major: 重要
   veryImportant: 很重要
 ---
+operationCommonProps:
+  prop1: hello-xx
+---
 operationDefinitions:
   com.jn.audit.examples.springmvcdemo.common.controller.UserController.add: # the method name
     code: Audit_springmvc_USER_CREATE
