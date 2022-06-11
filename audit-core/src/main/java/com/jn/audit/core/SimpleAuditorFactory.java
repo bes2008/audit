@@ -180,12 +180,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
                 }
                 MessageTranslator translator = topicConfig.getMessageTranslator();
                 if (translator == null) {
-                    if (Strings.isNotEmpty(topicConfig.getMessageTranslatorClass())) {
-                        translator = newMessageTranslator(topicConfig.getMessageTranslatorClass());
-                    }
-                    if (translator == null) {
-                        translator = new DefaultMessageTranslator();
-                    }
+                    translator = new DefaultMessageTranslator();
                 }
                 topicConfig.setMessageTranslator(translator);
                 topic.setConfiguration(topicConfig);
