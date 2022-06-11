@@ -11,7 +11,6 @@ import com.jn.langx.io.resource.Resources;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.collection.CommonProps;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.io.IOs;
@@ -34,7 +33,7 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
 
 
     @Override
-    public Map<String,OperationDefinition> loadAll() {
+    public Map<String, OperationDefinition> loadAll() {
         return reloadAll(null);
     }
 
@@ -82,7 +81,7 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
 
             // common props
             Map<String, Object> commonProps = null;
-            if(segments.containsKey("operationCommonProps")){
+            if (segments.containsKey("operationCommonProps")) {
                 commonProps = doLoadCommonProps((Map) segments.get("operationCommonProps"));
             }
 
@@ -113,8 +112,8 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
         });
     }
 
-    private Map<String, Object> doLoadCommonProps(@Nullable Map<String, Object> rawMap){
-        if(rawMap==null){
+    private Map<String, Object> doLoadCommonProps(@Nullable Map<String, Object> rawMap) {
+        if (rawMap == null) {
             return Collects.emptyHashMap();
         }
         return rawMap;
@@ -178,8 +177,8 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
 
                 Map<String, Object> props = Collects.newHashMap(commonProps);
                 Object privateProps = propertyPairMap.get("props");
-                if(Objs.isNotEmpty(props) && props instanceof Map ){
-                    props.putAll((Map)privateProps);
+                if (Objs.isNotEmpty(privateProps) && privateProps instanceof Map) {
+                    props.putAll((Map) privateProps);
                 }
                 definition.setProps(props);
                 definitionMap.put(id, definition);
