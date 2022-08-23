@@ -14,6 +14,8 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.regexp.Regexp;
+import com.jn.langx.util.regexp.Regexps;
 import org.slf4j.Logger;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
@@ -27,13 +29,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class SpringRestTemplateEntityLoader extends AbstractEntityLoader<Object> {
 
     private static final Logger logger = Loggers.getLogger(SpringRestTemplateEntityLoader.class);
-    private static Pattern restTemplateVariablePattern = Pattern.compile("\\{\\w+(\\.[\\w\\-]+)*}");
-    private static Pattern httpUrlVariablePattern = Pattern.compile("\\$\\{\\w+(\\.[\\w\\-]+)*}");
+    private static Regexp restTemplateVariablePattern = Regexps.compile("\\{\\w+(\\.[\\w\\-]+)*}");
+    private static Regexp httpUrlVariablePattern = Regexps.compile("\\$\\{\\w+(\\.[\\w\\-]+)*}");
     private Environment environment;
     private HttpRequestProvider httpRequestProvider = new DefaultHttpRequestProvider();
     private ParameterizedResponseClassProvider parameterizedResponseClassProvider = new DefaultParameterizedResponseClassProvider();
