@@ -46,10 +46,12 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
                     wrappedRequest.setResult(OperationResult.FAIL);
                     e = ex;
                 } finally {
-                    try {
-                        auditor.finishAudit(wrappedRequest);
-                    } catch (Throwable ex) {
-                        logger.error("error when the auditing finished, error: {}, request: {}", ex.getMessage(), request, ex);
+                    if(wrappedRequest!=null){
+                        try {
+                            auditor.finishAudit(wrappedRequest);
+                        } catch (Throwable ex) {
+                            logger.error("error when the auditing finished, error: {}, request: {}", ex.getMessage(), request, ex);
+                        }
                     }
                     if (e != null) {
                         throw e;
