@@ -18,7 +18,7 @@ import com.jn.audit.core.annotation.Resource;
 import com.jn.audit.core.annotation.ResourceId;
 import com.jn.audit.examples.springmvcdemo.common.dao.UserDao;
 import com.jn.audit.examples.springmvcdemo.common.model.User;
-import com.jn.easyjson.core.JSONBuilderProvider;
+import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.logging.Loggers;
@@ -137,9 +137,9 @@ public class UserController {
         request.setCount(count);
         request.setUseLastPageIfPageOut(useLastPageIfPageOut);
         List<User> users = userDao.selectByLimit(queryCondition);
-        String json = JSONBuilderProvider.simplest().toJson(request.getResult());
+        String json = JSONs.toJson(request.getResult());
         System.out.println(json);
-        json = JSONBuilderProvider.simplest().toJson(users);
+        json = JSONs.toJson(users);
         System.out.println(json);
         return request.getResult();
     }
@@ -161,9 +161,9 @@ public class UserController {
         request.setCount(count);
         request.setUseLastPageIfPageOut(useLastPageIfPageOut);
         List<User> users = userDao.selectByLimit_subqueryPagination(queryCondition);
-        String json = JSONBuilderProvider.simplest().toJson(request.getResult());
+        String json = JSONs.toJson(request.getResult());
         System.out.println(json);
-        json = JSONBuilderProvider.simplest().toJson(users);
+        json = JSONs.toJson(users);
         System.out.println(json);
         return request.getResult();
     }
@@ -193,7 +193,7 @@ public class UserController {
                 return u;
             }
         });
-        String json = JSONBuilderProvider.simplest().toJson(users);
+        String json = JSONs.toJson(users);
         System.out.println(json);
         return request.getResult();
     }
@@ -224,7 +224,7 @@ public class UserController {
                 return users;
             }
         });
-        String json = JSONBuilderProvider.simplest().toJson(request.getResult());
+        String json = JSONs.toJson(request.getResult());
         System.out.println(json);
         return request.getResult();
     }
@@ -257,7 +257,7 @@ public class UserController {
                 return users;
             }
         });
-        String json = JSONBuilderProvider.simplest().toJson(request.getResult());
+        String json = JSONs.toJson(request.getResult());
         System.out.println(json);
         return request.getResult();
     }
@@ -277,9 +277,9 @@ public class UserController {
                 ps.setInt(1, 10);
             }
         }, new SqlHelperRowMapperResultSetExtractor<User>(beanRowMapper));
-        String json = JSONBuilderProvider.simplest().toJson(request.getResult());
+        String json = JSONs.toJson(request.getResult());
         System.out.println(json);
-        System.out.println(JSONBuilderProvider.simplest().toJson(users));
+        System.out.println(JSONs.toJson(users));
         return request.getResult();
     }
 
@@ -309,7 +309,7 @@ public class UserController {
                 return u;
             }
         });
-        String json = JSONBuilderProvider.simplest().toJson(users);
+        String json = JSONs.toJson(users);
         System.out.println(json);
         return request.getResult();
     }
@@ -343,7 +343,7 @@ public class UserController {
                 return extractor.extract(rs);
             }
         }, Collects.toArray(params));
-        String json = JSONBuilderProvider.simplest().toJson(users);
+        String json = JSONs.toJson(users);
         System.out.println(json);
         return request.getResult();
     }

@@ -1,7 +1,7 @@
 package com.jn.audit.examples.springmvcdemo.common.controller;
 
 import com.jn.audit.core.annotation.Audit;
-import com.jn.easyjson.core.JSONBuilderProvider;
+import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.Dates;
 import com.jn.sqlhelper.dialect.pagination.PagingRequest;
 import com.jn.sqlhelper.dialect.pagination.PagingResult;
@@ -70,9 +70,9 @@ public class CustomerController {
         request.setCount(count);
         request.setUseLastPageIfPageOut(useLastPageIfPageOut);
         List<Customer> users = customerDao.selectByLimit(queryCondition);
-        String json = JSONBuilderProvider.simplest().toJson(request.getResult());
+        String json = JSONs.toJson(request.getResult());
         System.out.println(json);
-        json = JSONBuilderProvider.simplest().toJson(users);
+        json = JSONs.toJson(users);
         System.out.println(json);
         return request.getResult();
     }

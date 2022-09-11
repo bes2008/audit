@@ -1,6 +1,6 @@
 package com.jn.audit.core.model;
 
-import com.jn.easyjson.core.JSONBuilderProvider;
+import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.configuration.Configuration;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -143,6 +143,6 @@ public class OperationDefinition extends CommonProps implements Configuration {
 
     @Override
     public String toString() {
-        return JSONBuilderProvider.simplest().toJson(this);
+        return JSONs.toJson(this);
     }
 }

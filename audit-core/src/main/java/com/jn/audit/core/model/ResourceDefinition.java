@@ -1,6 +1,6 @@
 package com.jn.audit.core.model;
 
-import com.jn.easyjson.core.JSONBuilderProvider;
+import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
 
@@ -105,7 +105,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
 
     @Override
     public String toString() {
-        return JSONBuilderProvider.simplest().toJson(this);
+        return JSONs.toJson(this);
     }
 
     public void setEntityLoader(String entityLoaderKey) {
