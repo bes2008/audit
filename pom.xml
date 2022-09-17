@@ -46,7 +46,7 @@
     </licenses>
 
     <properties>
-        <slf4j.version>1.7.0</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <langx-java.version>5.0.0</langx-java.version>
         <easyjson.version>4.0.0</easyjson.version>
         <jackson.version>2.11.0</jackson.version>
