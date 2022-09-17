@@ -15,7 +15,7 @@
         <mybatis.springboot.version>1.3.5</mybatis.springboot.version>
         <swagger.version>2.9.2</swagger.version>
         <junit.version>4.13.1</junit.version>
-        <tomcat.version>8.5.55</tomcat.version>
+        <tomcat.version>8.5.63</tomcat.version>
     </properties>
 
     <dependencyManagement>
