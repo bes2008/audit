@@ -7,7 +7,7 @@
 引入如下包即可：
 ```xml
 <dependency>
-    <groupId>com.github.fangjinuo.audit</groupId>
+    <groupId>io.github.bes2008.solution.audit</groupId>
     <artifactId>audit-spring-boot-starter</artifactId>
     <version>${audit.version}</version>
 </dependency>
@@ -19,7 +19,7 @@
 引入如下包即可：
 ```xml
 <dependency>
-    <groupId>com.github.fangjinuo.audit</groupId>
+    <groupId>io.github.bes2008.solution.audit</groupId>
     <artifactId>audit-spring</artifactId>
     <version>${audit.version}</version>
 </dependency>
@@ -32,7 +32,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.github.fangjinuo.audit</groupId>
+    <groupId>io.github.bes2008.solution.audit</groupId>
     <artifactId>audit-servlet</artifactId>
     <version>${audit.version}</version>
 </dependency>
@@ -45,7 +45,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.github.fangjinuo.audit</groupId>
+    <groupId>io.github.bes2008.solution.audit</groupId>
     <artifactId>audit-core</artifactId>
     <version>${audit.version}</version>
 </dependency>

@@ -1,7 +1,7 @@
 # audit
 一个通用的 Audit （审计）框架。如果要接入4A审计时，特别方便哟，同时也高度定制化。
 
-[![maven](https://img.shields.io/badge/maven-v2.3.20-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.audit%20AND%20v:2.3.20)
+[![maven](https://img.shields.io/badge/maven-v2.3.20-green.svg)](https://search.maven.org/search?q=g:io.github.bes2008.solution.audit%20AND%20v:2.3.20)
 
 [教程](./.wiki/index.md)
 
@@ -26,7 +26,7 @@
 第一步：引入相关Jar包
 ```xml
     <dependency>
-        <groupId>com.github.fangjinuo.audit</groupId>
+        <groupId>io.github.bes2008.solution.audit</groupId>
         <artifactId>audit-spring-boot-starter</artifactId>
         <version>${audit.version}</version>
     </dependency>
