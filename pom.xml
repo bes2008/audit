@@ -14,7 +14,7 @@
     <description>
         A common audit framework for java application
     </description>
-    <url>https://github.com/fangjinuo/audit</url>
+    <url>https://github.com/bes2008/audit</url>
     <developers>
         <developer>
             <id>bes2008</id>
@@ -388,7 +388,7 @@
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>sonatype_oss</serverId>
-                            <nexusUrl>https://oss.sonatype.org</nexusUrl>
+                            <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                             <sslAllowAll>true</sslAllowAll>
                             <stagingProgressPauseDurationSeconds>5</stagingProgressPauseDurationSeconds>
