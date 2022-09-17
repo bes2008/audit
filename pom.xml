@@ -167,7 +167,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.bes2008.solution.audit.entityloader</groupId>
-                <artifactId>audit-entityloader-esmvc</artifactId>
+                <artifactId>audit-entityloader-esorm</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
