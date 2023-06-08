@@ -51,7 +51,7 @@
         <easyjson.version>4.0.0</easyjson.version>
         <jackson.version>2.11.0</jackson.version>
         <disruptor.version>3.4.2</disruptor.version>
-        <spring.version>4.3.29.RELEASE</spring.version>
+        <spring.version>5.2.19.RELEASE</spring.version>
         <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
         <sqlhelper.version>4.0.0</sqlhelper.version>
         <snakeyaml.version>1.26</snakeyaml.version>
